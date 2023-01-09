@@ -11,13 +11,14 @@ import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.util.Color;
 import com.kauailabs.navx.frc.AHRS;
 
 
 //holds robot-wide constants
 public final class Constants {
-    public static final AHRS gyro = new AHRS(SPI.Port.kMXP); // FIXME change to correct 
+    public static final AHRS gyro = new AHRS(SPI.Port.kMXP); // FIXME change to correct
 
 
     // timeout for CAN commands and error checking
