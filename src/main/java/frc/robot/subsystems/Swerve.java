@@ -26,6 +26,7 @@ public class Swerve extends SubsystemBase {
     private final AHRS gyro = new AHRS(SPI.Port.kMXP, (byte) 200);
 
     public Swerve() {
+        gyro.setAngleAdjustment(180);
         zeroGyro();
 
         mSwerveMods = new SwerveModule[] {
@@ -70,7 +71,9 @@ public class Swerve extends SubsystemBase {
     }
 
     public void resetOdometry(Pose2d pose) {
+        gyro.reset();
         swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
+        // gyro.setAngleAdjustment(pose.getRotation().getDegrees());
     }
 
     public SwerveModuleState[] getModuleStates() {
@@ -111,7 +114,9 @@ public class Swerve extends SubsystemBase {
     public void periodic() {
         swerveOdometry.update(getYaw(), getModulePositions());
 
-        SmartDashboard.putNumber("yaw", getYaw().getDegrees());
+
+        SmartDashboard.putNumber("nav-rot", getYaw().getDegrees());
+        SmartDashboard.putNumber("odo-rot", getPose().getRotation().getDegrees());
         SmartDashboard.putNumber("x-pos", getPose().getX());
         SmartDashboard.putNumber("y-pos", getPose().getY());
 
