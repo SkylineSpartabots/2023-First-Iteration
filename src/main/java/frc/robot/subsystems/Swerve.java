@@ -8,8 +8,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
-import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.Pigeon2;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -23,11 +23,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Swerve extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
+    public Supplier<Pose2d> poseSupplier = () -> getPose();
+    public Consumer<ChassisSpeeds> chassisConsumer = a -> {
+        drive(new Translation2d(a.vxMetersPerSecond, a.vyMetersPerSecond), a.omegaRadiansPerSecond, true, true);
+    };
     private final AHRS gyro = new AHRS(SPI.Port.kMXP, (byte) 200);
 
     public Swerve() {
-        gyro.setAngleAdjustment(180);
-        zeroGyro();
+        gyro.reset();
 
         mSwerveMods = new SwerveModule[] {
                 new SwerveModule(0, Constants.Swerve.Mod0.constants),
@@ -113,7 +116,6 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic() {
         swerveOdometry.update(getYaw(), getModulePositions());
-
 
         SmartDashboard.putNumber("nav-rot", getYaw().getDegrees());
         SmartDashboard.putNumber("odo-rot", getPose().getRotation().getDegrees());
