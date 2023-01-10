@@ -58,7 +58,7 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(s_Swerve.getPose())));
+        zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
     }
 
     /**
