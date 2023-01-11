@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.autos.*;
 import frc.robot.commands.*;
+import frc.robot.factories.AutonomousCommandFactory;
 import frc.robot.subsystems.*;
 
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class RobotContainer {
     private final JoystickButton auto = new JoystickButton(driver, XboxController.Button.kA.value);
 
     /* Subsystems */
-    private final Swerve s_Swerve = new Swerve();
+    private final Swerve s_Swerve = Swerve.getInstance();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -99,27 +100,19 @@ public class RobotContainer {
 
         // auto.onTrue(sweWait);
 
-        ArrayList<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("path with wait event",
-                new PathConstraints(3.5, 2));
-
-        auto.onTrue(new SequentialCommandGroup(
-            runPath(pathGroup.get(0)), 
-            new WaitCommand(2), 
-            runPath(pathGroup.get(1)))
-        );
-
+        auto.onTrue(AutonomousCommandFactory.getAutonoumousCommand());
     }
 
-    private Command runPath(PathPlannerTrajectory path) {
-        PIDController xController = new PIDController(0, 0, 0);
-        PIDController yController = new PIDController(0, 0, 0);
-        PIDController thetaController = new PIDController(0, 0, 0);
-        thetaController.enableContinuousInput(-Math.PI, Math.PI);
-        PPSwerveControllerCommand pathCommand = new PPSwerveControllerCommand(path, s_Swerve.poseSupplier,
-                xController, yController, thetaController, s_Swerve.chassisConsumer,
-                s_Swerve);
-        return pathCommand;
-    }
+    // private Command runPath(PathPlannerTrajectory path) {
+    //     PIDController xController = new PIDController(0, 0, 0);
+    //     PIDController yController = new PIDController(0, 0, 0);
+    //     PIDController thetaController = new PIDController(0, 0, 0);
+    //     thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    //     PPSwerveControllerCommand pathCommand = new PPSwerveControllerCommand(path, s_Swerve.poseSupplier,
+    //             xController, yController, thetaController, s_Swerve.chassisConsumer,
+    //             s_Swerve);
+    //     return pathCommand;
+    // }
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -128,6 +121,6 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        return new exampleAuto(s_Swerve);
+        return AutonomousCommandFactory.getAutonoumousCommand();
     }
 }

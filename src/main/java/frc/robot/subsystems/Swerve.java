@@ -30,6 +30,15 @@ public class Swerve extends SubsystemBase {
     };
     private final AHRS gyro = new AHRS(SPI.Port.kMXP, (byte) 200);
 
+    static Swerve instance;
+
+    public static Swerve getInstance() {
+        if (instance == null) {
+            instance = new Swerve();
+        }
+        return instance;
+    }
+
     public Swerve() {
         gyro.reset();
 
