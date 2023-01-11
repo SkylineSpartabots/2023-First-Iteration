@@ -8,8 +8,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
-import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.Pigeon2;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -23,10 +23,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Swerve extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
+    public Supplier<Pose2d> poseSupplier = () -> getPose();
+    public Consumer<Pose2d> poseConsumer = a -> {resetOdometry(a);};
+    public Consumer<ChassisSpeeds> chassisConsumer = a -> {
+        autoDrive(a, true);
+    };
     private final AHRS gyro = new AHRS(SPI.Port.kMXP, (byte) 200);
 
     public Swerve() {
-        zeroGyro();
+        gyro.reset();
 
         mSwerveMods = new SwerveModule[] {
                 new SwerveModule(0, Constants.Swerve.Mod0.constants),
@@ -56,6 +61,15 @@ public class Swerve extends SubsystemBase {
         }
     }
 
+    public void autoDrive(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
+        SwerveModuleState[] swerveModuleStates = Constants.Swerve.swerveKinematics.toSwerveModuleStates(chassisSpeeds);
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
+
+        for (SwerveModule mod : mSwerveMods) {
+            mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
+        }
+    }
+
     /* Used by SwerveControllerCommand in Auto */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.maxSpeed);
@@ -70,7 +84,9 @@ public class Swerve extends SubsystemBase {
     }
 
     public void resetOdometry(Pose2d pose) {
+        gyro.reset();
         swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
+        // gyro.setAngleAdjustment(pose.getRotation().getDegrees());
     }
 
     public SwerveModuleState[] getModuleStates() {
@@ -111,7 +127,8 @@ public class Swerve extends SubsystemBase {
     public void periodic() {
         swerveOdometry.update(getYaw(), getModulePositions());
 
-        SmartDashboard.putNumber("yaw", getYaw().getDegrees());
+        SmartDashboard.putNumber("nav-rot", getYaw().getDegrees());
+        SmartDashboard.putNumber("odo-rot", getPose().getRotation().getDegrees());
         SmartDashboard.putNumber("x-pos", getPose().getX());
         SmartDashboard.putNumber("y-pos", getPose().getY());
 
