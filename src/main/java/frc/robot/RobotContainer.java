@@ -7,15 +7,22 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 /**
@@ -48,6 +55,7 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
+        s_Swerve.resetOdometry(new Pose2d());
         s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
                         s_Swerve,
@@ -71,16 +79,46 @@ public class RobotContainer {
     private void configureButtonBindings() {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
 
+        // PIDController xController = new PIDController(0, 0, 0);
+        // PIDController yController = new PIDController(0, 0, 0);
+        // PIDController thetaController = new PIDController(0, 0, 0);
+        // thetaController.enableContinuousInput(-Math.PI, Math.PI);
+        // PPSwerveControllerCommand swe = new PPSwerveControllerCommand(examplePath,
+        // s_Swerve.poseSupplier,
+        // xController, yController, thetaController, s_Swerve.chassisConsumer,
+        // s_Swerve);
+
+        // PathPlannerTrajectory examplePath = PathPlanner.loadPath("path with wait event", new PathConstraints(2, 2));
+        // HashMap<String, Command> eventMap = new HashMap<>();
+        // eventMap.put("wait", new WaitCommand(2));
+
+        // FollowPathWithEvents sweWait = new FollowPathWithEvents(
+        //         swe,
+        //         examplePath.getMarkers(),
+        //         eventMap);
+
+        // auto.onTrue(sweWait);
+
+        ArrayList<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("path with wait event",
+                new PathConstraints(3.5, 2));
+
+        auto.onTrue(new SequentialCommandGroup(
+            runPath(pathGroup.get(0)), 
+            new WaitCommand(2), 
+            runPath(pathGroup.get(1)))
+        );
+
+    }
+
+    private Command runPath(PathPlannerTrajectory path) {
         PIDController xController = new PIDController(0, 0, 0);
         PIDController yController = new PIDController(0, 0, 0);
         PIDController thetaController = new PIDController(0, 0, 0);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
-        PathPlannerTrajectory examplePath = PathPlanner.loadPath("test", new PathConstraints(1, 1));
-        PPSwerveControllerCommand swe = new PPSwerveControllerCommand(examplePath, s_Swerve.poseSupplier,
+        PPSwerveControllerCommand pathCommand = new PPSwerveControllerCommand(path, s_Swerve.poseSupplier,
                 xController, yController, thetaController, s_Swerve.chassisConsumer,
                 s_Swerve);
-        auto.onTrue(swe);
-
+        return pathCommand;
     }
 
     /**

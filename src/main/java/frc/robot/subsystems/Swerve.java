@@ -24,8 +24,9 @@ public class Swerve extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
     public Supplier<Pose2d> poseSupplier = () -> getPose();
+    public Consumer<Pose2d> poseConsumer = a -> {resetOdometry(a);};
     public Consumer<ChassisSpeeds> chassisConsumer = a -> {
-        drive(new Translation2d(a.vxMetersPerSecond, a.vyMetersPerSecond), a.omegaRadiansPerSecond, true, true);
+        autoDrive(a, true);
     };
     private final AHRS gyro = new AHRS(SPI.Port.kMXP, (byte) 200);
 
@@ -53,6 +54,15 @@ public class Swerve extends SubsystemBase {
                                 translation.getX(),
                                 translation.getY(),
                                 rotation));
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
+
+        for (SwerveModule mod : mSwerveMods) {
+            mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
+        }
+    }
+
+    public void autoDrive(ChassisSpeeds chassisSpeeds, boolean isOpenLoop) {
+        SwerveModuleState[] swerveModuleStates = Constants.Swerve.swerveKinematics.toSwerveModuleStates(chassisSpeeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.Swerve.maxSpeed);
 
         for (SwerveModule mod : mSwerveMods) {
