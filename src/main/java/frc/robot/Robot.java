@@ -5,8 +5,11 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.factories.AutoCommandFactory;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -18,7 +21,11 @@ public class Robot extends TimedRobot {
   public static CTREConfigs ctreConfigs;
 
   private Command m_autonomousCommand;
-
+  private static final String auto1 = "straightAuto";
+  private static final String auto2 = "rightAuto";
+  private static final String auto3 = "waitAuto";
+  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  
   private RobotContainer m_robotContainer;
 
   /**
@@ -28,8 +35,10 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     ctreConfigs = new CTREConfigs();
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
+    m_chooser.setDefaultOption("straightAuto", auto1);
+    m_chooser.addOption("rightAuto", auto2);
+    m_chooser.addOption("waitAuto", auto3);
+    SmartDashboard.putData("Auto choices", m_chooser);
     m_robotContainer = new RobotContainer();
   }
 
@@ -59,7 +68,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand(m_chooser.getSelected());
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

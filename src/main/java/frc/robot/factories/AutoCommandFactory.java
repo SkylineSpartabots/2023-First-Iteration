@@ -14,23 +14,32 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class AutonomousCommandFactory {
+public class AutoCommandFactory {
     
-    static Swerve s_Swerve = Swerve.getInstance();
+    private final Swerve s_Swerve = Swerve.getInstance();
+    private Command selectedAuto;
 
-    public static Command getAutonoumousCommand() { 
-        // return twoArcs();
-        // return forwardAndRightCommand();
-        return pathWithWait();
-        // return null;
+    public Command getAutoCommand(String auto) { 
+        if (auto == "straightAuto")
+            return selectedAuto = straight();
+        else if (auto == "rightAuto")
+            return selectedAuto = forwardAndRightCommand();
+        else if (auto == "waitAuto")
+            return selectedAuto = pathWithWait();
+        return null;
     } 
+    
+    public Command getSelectedAuto() {
+        return selectedAuto;
+    }
 
-    private static Command followPathCommand(PathPlannerTrajectory path, boolean isFirstPath) {
+    private Command followPathCommand(PathPlannerTrajectory path, boolean isFirstPath) {
         PIDController xController = new PIDController(0, 0, 0);
         PIDController yController = new PIDController(0, 0, 0);
         PIDController thetaController = new PIDController(0, 0, 0);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
-        var command = new SequentialCommandGroup(
+
+        Command command = new SequentialCommandGroup(
             new InstantCommand(() -> {
             if(isFirstPath){
                 s_Swerve.resetOdometry(new Pose2d());
@@ -47,17 +56,17 @@ public class AutonomousCommandFactory {
         return command;
     }
 
-    private static Command twoArcs() {
-        PathPlannerTrajectory path = PathPlanner.loadPath("2 arcs", new PathConstraints(4, 3));
+    private Command straight() {
+        PathPlannerTrajectory path = PathPlanner.loadPath("test", new PathConstraints(4, 3));
         return followPathCommand(path, true);
     }
 
-    private static Command forwardAndRightCommand() {
+    private Command forwardAndRightCommand() {
         PathPlannerTrajectory path = PathPlanner.loadPath("forward and right", new PathConstraints(4, 3));
         return followPathCommand(path, true);
     }
 
-    private static Command pathWithWait() {
+    private Command pathWithWait() {
         ArrayList<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("path with wait event",
             new PathConstraints(3.5, 2));
         return new SequentialCommandGroup(
