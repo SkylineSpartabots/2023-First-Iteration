@@ -69,7 +69,7 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
-        auto.onTrue(c_AutoFactory.getSelectedAuto());
+        auto.onTrue(c_AutoFactory.getAutoCommand("waitAuto")); // change based on which auto needs to be tested
     }
 
     /**
