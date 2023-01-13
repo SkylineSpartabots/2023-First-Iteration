@@ -52,4 +52,9 @@ public class SmartResetOdometry extends CommandBase {
     public boolean isFinished() {
         return isReset;
     }
+    
+    @Override
+    public void end(boolean interrupted){
+        //code for targetDestination pose2d.
+    }
 }

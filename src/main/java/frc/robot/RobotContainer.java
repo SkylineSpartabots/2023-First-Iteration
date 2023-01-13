@@ -4,8 +4,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.commands.*;
@@ -35,6 +37,7 @@ public class RobotContainer {
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kBack.value);
     // private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
     private final JoystickButton auto = new JoystickButton(driver, XboxController.Button.kA.value);
+    private final JoystickButton smartPathing  = new JoystickButton(driver, XboxController.Button.kB.value);
 
     /* Subsystems */
     private final Swerve s_Swerve = Swerve.getInstance();
@@ -69,6 +72,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
         auto.onTrue(AutoCommandFactory.getAutoCommand("waitAuto")); // change based on which auto needs to be tested
+        smartPathing.onTrue(new SequentialCommandGroup(new SmartResetOdometry(), new OnTheFlyGeneration(s_Swerve.getPose(), Constants.targetPosition)));
     }
 
     /**
