@@ -16,10 +16,10 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class AutoCommandFactory {
     
-    private final Swerve s_Swerve = Swerve.getInstance();
-    private Command selectedAuto;
+    private static final Swerve s_Swerve = Swerve.getInstance();
+    private static Command selectedAuto;
 
-    public Command getAutoCommand(String auto) { 
+    public static Command getAutoCommand(String auto) { 
         if (auto == "straightAuto")
             return selectedAuto = straight();
         else if (auto == "rightAuto")
@@ -29,11 +29,11 @@ public class AutoCommandFactory {
         return null;
     } 
     
-    public Command getSelectedAuto() {
+    public static Command getSelectedAuto() {
         return selectedAuto;
     }
 
-    private Command followPathCommand(PathPlannerTrajectory path, boolean isFirstPath) {
+    public static Command followPathCommand(PathPlannerTrajectory path, boolean isFirstPath) {
         PIDController xController = new PIDController(0, 0, 0);
         PIDController yController = new PIDController(0, 0, 0);
         PIDController thetaController = new PIDController(0, 0, 0);
@@ -56,17 +56,17 @@ public class AutoCommandFactory {
         return command;
     }
 
-    private Command straight() {
+    private static Command straight() {
         PathPlannerTrajectory path = PathPlanner.loadPath("test", new PathConstraints(4, 3));
         return followPathCommand(path, true);
     }
 
-    private Command forwardAndRightCommand() {
+    private static Command forwardAndRightCommand() {
         PathPlannerTrajectory path = PathPlanner.loadPath("forward and right", new PathConstraints(4, 3));
         return followPathCommand(path, true);
     }
 
-    private Command pathWithWait() {
+    private static Command pathWithWait() {
         ArrayList<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("path with wait event",
             new PathConstraints(3.5, 2));
         return new SequentialCommandGroup(

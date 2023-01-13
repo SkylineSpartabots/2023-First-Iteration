@@ -40,7 +40,6 @@ public class RobotContainer {
     private final Swerve s_Swerve = Swerve.getInstance();
     
     /* Commands */
-    AutoCommandFactory c_AutoFactory = new AutoCommandFactory();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -69,7 +68,7 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
-        auto.onTrue(c_AutoFactory.getAutoCommand("waitAuto")); // change based on which auto needs to be tested
+        auto.onTrue(AutoCommandFactory.getAutoCommand("waitAuto")); // change based on which auto needs to be tested
     }
 
     /**
@@ -79,6 +78,6 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand(String auto) {
         // An ExampleCommand will run in autonomous
-        return c_AutoFactory.getAutoCommand(auto);
+        return AutoCommandFactory.getAutoCommand(auto);
     }
 }
