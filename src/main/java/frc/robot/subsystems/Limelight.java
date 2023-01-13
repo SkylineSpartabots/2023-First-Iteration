@@ -62,10 +62,12 @@ public class Limelight extends SubsystemBase {
 
 	public double getDistance() {
 		if (result.hasTargets()) {
-			lastDistance = PhotonUtils.calculateDistanceToTargetMeters(Constants.Limelight.cameraHeightMeters,
-					Constants.Limelight.gameAprilTags[getID() - 1].getZ(),
-					Constants.Limelight.gameAprilTags[getID() - 1].getRotation().getY(),
-					Units.degreesToRadians(result.getBestTarget().getPitch()));
+			lastDistance = PhotonUtils.calculateDistanceToTargetMeters(
+				Constants.Limelight.cameraOffsets.getZ(),
+				Constants.Limelight.gameAprilTags[getID() - 1].getZ(),
+				Constants.Limelight.cameraAngleOffsets.getY(),
+				Units.degreesToRadians(result.getBestTarget().getPitch())
+			);
 		}
 		return lastDistance;
 	}

@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -18,18 +19,26 @@ public final class Constants {
 
     public static final class Limelight {
         public static final String photonCamName = "gloworm";
-        public static final double cameraHeightMeters = Units.inchesToMeters(34);
-        public static final double cameraPitchRadians = Units.degreesToRadians(0);
-        // have to add pitch for tags (maybe) but i think they should all be the same
+        public static final Translation3d cameraOffsets = new Translation3d(
+            Units.inchesToMeters(0), // x (right-left) offset
+            Units.inchesToMeters(14.5), // y (front-back) offset
+            Units.inchesToMeters(34) // z (up-down)
+        );
+        public static final Rotation3d cameraAngleOffsets = new Rotation3d(
+            Units.degreesToRadians(0), // x (roll)
+            Units.degreesToRadians(0), // y (pitch)
+            Units.degreesToRadians(0) // z (yaw)
+        );
+        // have to edit pitch for tags (maybe) but i think they should all be the same
         public static final Pose3d[] gameAprilTags = {
-            new Pose3d(15.51, 1.07, 0.46, new Rotation3d(0, cameraPitchRadians, Math.PI)),
-            new Pose3d(15.51, 2.74, 0.46, new Rotation3d(0, cameraPitchRadians, Math.PI)),
-            new Pose3d(15.51, 4.42, 0.46, new Rotation3d(0, cameraPitchRadians, Math.PI)),
-            new Pose3d(16.18, 6.75, 0.69, new Rotation3d(0, cameraPitchRadians, Math.PI)),
-            new Pose3d(0.36, 6.75, 0.69, new Rotation3d(0, cameraPitchRadians, 0)),
-            new Pose3d(1.03, 4.42, 0.46,  new Rotation3d(0, cameraPitchRadians, 0)),
-            new Pose3d(1.03, 2.74, 0.46, new Rotation3d(0, cameraPitchRadians, 0)),
-            new Pose3d(1.03, 1.07, 0.46, new Rotation3d(0, cameraPitchRadians, 0))
+                new Pose3d(15.51, 1.07, 0.46, new Rotation3d(0, 0, Math.PI)),
+                new Pose3d(15.51, 2.74, 0.46, new Rotation3d(0, 0, Math.PI)),
+                new Pose3d(15.51, 4.42, 0.46, new Rotation3d(0, 0, Math.PI)),
+                new Pose3d(16.18, 6.75, 0.69, new Rotation3d(0, 0, Math.PI)),
+                new Pose3d(0.36, 6.75, 0.69, new Rotation3d(0, 0, 0)),
+                new Pose3d(1.03, 4.42, 0.46, new Rotation3d(0, 0, 0)),
+                new Pose3d(1.03, 2.74, 0.46, new Rotation3d(0, 0, 0)),
+                new Pose3d(1.03, 1.07, 0.46, new Rotation3d(0, 0, 0))
         };
     }
 
