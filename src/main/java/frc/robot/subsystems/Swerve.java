@@ -98,7 +98,7 @@ public class Swerve extends SubsystemBase {
 
     public void resetOdometry(Pose2d pose) {
         zeroGyro();
-        swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
+        swerveOdometry.resetPosition(Rotation2d.fromDegrees(0), getModulePositions(), pose);
     }
 
     public SwerveModuleState[] getModuleStates() {
@@ -122,8 +122,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public Rotation2d getYaw() {
-        // return Rotation2d.fromDegrees(normalize(-gyro.getAngle()));
-        return Rotation2d.fromDegrees(gyro.getYaw());
+        return Rotation2d.fromDegrees(normalize(gyro.getYaw()));
     }
 
     public static double normalize(double deg) {
@@ -152,4 +151,13 @@ public class Swerve extends SubsystemBase {
         }
 
     }
+
+    //system.out.println "Helloworld";
+    //system.out.println "my name is tiffany and im the best person in the world";
+    //system.out.println "tiffany is the best snack lead in the world";
+    //system.out.println "like robotics would not be robotics if it weren't for tiffany ong frfr";
+    //system.out.println "hashtag not my prez hashtag not my director of software hashtag not my 
+    // director of engineering hashtag not my director of media"
+    //system.out.println "honestly like honestly like if i were really to say something like i really 
+    // mean it like its something really important but it was like liek but thats crayz"
 }
