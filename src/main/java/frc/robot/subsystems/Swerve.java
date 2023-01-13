@@ -15,25 +15,22 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.SPI;
 
 import com.ctre.phoenix.sensors.Pigeon2;
-import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
-    public SwerveDriveOdometry swerveOdometry;
-    public SwerveModule[] mSwerveMods;
+    private SwerveDriveOdometry swerveOdometry;
+    private Pigeon2 gyro;
+    private SwerveModule[] mSwerveMods;
     public Supplier<Pose2d> poseSupplier = () -> getPose();
     public Consumer<Pose2d> poseConsumer = a -> {resetOdometry(a);};
     public Consumer<ChassisSpeeds> chassisConsumer = a -> {
         autoDrive(a, true);
     };
-    private Pigeon2 gyro;
-    // private final AHRS gyro = new AHRS(SPI.Port.kMXP, (byte) 200);
 
-    static Swerve instance;
+    private static Swerve instance;
 
     public static Swerve getInstance() {
         if (instance == null) {
