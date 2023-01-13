@@ -80,14 +80,14 @@ public class Swerve extends SubsystemBase {
         }
     }
 
-    /* Used by SwerveControllerCommand in Auto */
-    public void setModuleStates(SwerveModuleState[] desiredStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.maxSpeed);
+    // /* Used by SwerveControllerCommand in Auto */
+    // public void setModuleStates(SwerveModuleState[] desiredStates) {
+    //     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.maxSpeed);
 
-        for (SwerveModule mod : mSwerveMods) {
-            mod.setDesiredState(desiredStates[mod.moduleNumber], false);
-        }
-    }
+    //     for (SwerveModule mod : mSwerveMods) {
+    //         mod.setDesiredState(desiredStates[mod.moduleNumber], false);
+    //     }
+    // }
 
     public Pose2d getPose() {
         return swerveOdometry.getPoseMeters();
