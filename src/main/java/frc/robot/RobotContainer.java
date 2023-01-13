@@ -1,29 +1,17 @@
 package frc.robot;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
-import frc.robot.autos.*;
 import frc.robot.commands.*;
+import frc.robot.factories.AutoCommandFactory;
 import frc.robot.subsystems.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
-import com.pathplanner.lib.commands.FollowPathWithEvents;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -49,7 +37,10 @@ public class RobotContainer {
     private final JoystickButton auto = new JoystickButton(driver, XboxController.Button.kA.value);
 
     /* Subsystems */
-    private final Swerve s_Swerve = new Swerve();
+    private final Swerve s_Swerve = Swerve.getInstance();
+    
+    /* Commands */
+    AutoCommandFactory c_AutoFactory = new AutoCommandFactory();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -78,47 +69,7 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
-
-        // PIDController xController = new PIDController(0, 0, 0);
-        // PIDController yController = new PIDController(0, 0, 0);
-        // PIDController thetaController = new PIDController(0, 0, 0);
-        // thetaController.enableContinuousInput(-Math.PI, Math.PI);
-        // PPSwerveControllerCommand swe = new PPSwerveControllerCommand(examplePath,
-        // s_Swerve.poseSupplier,
-        // xController, yController, thetaController, s_Swerve.chassisConsumer,
-        // s_Swerve);
-
-        // PathPlannerTrajectory examplePath = PathPlanner.loadPath("path with wait event", new PathConstraints(2, 2));
-        // HashMap<String, Command> eventMap = new HashMap<>();
-        // eventMap.put("wait", new WaitCommand(2));
-
-        // FollowPathWithEvents sweWait = new FollowPathWithEvents(
-        //         swe,
-        //         examplePath.getMarkers(),
-        //         eventMap);
-
-        // auto.onTrue(sweWait);
-
-        ArrayList<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("path with wait event",
-                new PathConstraints(3.5, 2));
-
-        auto.onTrue(new SequentialCommandGroup(
-            runPath(pathGroup.get(0)), 
-            new WaitCommand(2), 
-            runPath(pathGroup.get(1)))
-        );
-
-    }
-
-    private Command runPath(PathPlannerTrajectory path) {
-        PIDController xController = new PIDController(0, 0, 0);
-        PIDController yController = new PIDController(0, 0, 0);
-        PIDController thetaController = new PIDController(0, 0, 0);
-        thetaController.enableContinuousInput(-Math.PI, Math.PI);
-        PPSwerveControllerCommand pathCommand = new PPSwerveControllerCommand(path, s_Swerve.poseSupplier,
-                xController, yController, thetaController, s_Swerve.chassisConsumer,
-                s_Swerve);
-        return pathCommand;
+        auto.onTrue(c_AutoFactory.getAutoCommand("waitAuto")); // change based on which auto needs to be tested
     }
 
     /**
@@ -126,8 +77,8 @@ public class RobotContainer {
      *
      * @return the command to run in autonomous
      */
-    public Command getAutonomousCommand() {
+    public Command getAutonomousCommand(String auto) {
         // An ExampleCommand will run in autonomous
-        return new exampleAuto(s_Swerve);
+        return c_AutoFactory.getAutoCommand(auto);
     }
 }

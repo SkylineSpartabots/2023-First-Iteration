@@ -16,6 +16,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
+
+import com.ctre.phoenix.sensors.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,10 +30,21 @@ public class Swerve extends SubsystemBase {
     public Consumer<ChassisSpeeds> chassisConsumer = a -> {
         autoDrive(a, true);
     };
-    private final AHRS gyro = new AHRS(SPI.Port.kMXP, (byte) 200);
+    private Pigeon2 gyro;
+    // private final AHRS gyro = new AHRS(SPI.Port.kMXP, (byte) 200);
+
+    static Swerve instance;
+
+    public static Swerve getInstance() {
+        if (instance == null) {
+            instance = new Swerve();
+        }
+        return instance;
+    }
 
     public Swerve() {
-        gyro.reset();
+        gyro = new Pigeon2(Constants.Swerve.pigeonID);
+        gyro.configFactoryDefault();
 
         mSwerveMods = new SwerveModule[] {
                 new SwerveModule(0, Constants.Swerve.Mod0.constants),
@@ -84,9 +97,8 @@ public class Swerve extends SubsystemBase {
     }
 
     public void resetOdometry(Pose2d pose) {
-        gyro.reset();
+        zeroGyro();
         swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
-        // gyro.setAngleAdjustment(pose.getRotation().getDegrees());
     }
 
     public SwerveModuleState[] getModuleStates() {
@@ -106,11 +118,12 @@ public class Swerve extends SubsystemBase {
     }
 
     public void zeroGyro() {
-        gyro.zeroYaw();
+        gyro.setYaw(0);
     }
 
     public Rotation2d getYaw() {
-        return Rotation2d.fromDegrees(normalize(-gyro.getAngle()));
+        // return Rotation2d.fromDegrees(normalize(-gyro.getAngle()));
+        return Rotation2d.fromDegrees(gyro.getYaw());
     }
 
     public static double normalize(double deg) {
@@ -127,7 +140,7 @@ public class Swerve extends SubsystemBase {
     public void periodic() {
         swerveOdometry.update(getYaw(), getModulePositions());
 
-        SmartDashboard.putNumber("nav-rot", getYaw().getDegrees());
+        SmartDashboard.putNumber("gyro-rot", getYaw().getDegrees());
         SmartDashboard.putNumber("odo-rot", getPose().getRotation().getDegrees());
         SmartDashboard.putNumber("x-pos", getPose().getX());
         SmartDashboard.putNumber("y-pos", getPose().getY());
