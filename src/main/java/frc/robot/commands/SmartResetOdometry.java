@@ -35,7 +35,7 @@ public class SmartResetOdometry extends CommandBase {
     public void execute() {
         if (s_Limelight.hasTarget()) {
             PhotonTrackedTarget target = s_Limelight.getBestTarget();
-            Pose3d targetPose = Constants.Limelight.gameAprilTags[s_Limelight.getID() - 1];
+            Pose3d targetPose = Constants.Limelight.gameAprilTags[target.getFiducialId() - 1];
             Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
                 target.getBestCameraToTarget(), 
                 targetPose,
