@@ -26,6 +26,8 @@ public class AutoCommandFactory {
             return selectedAuto = forwardAndRightCommand();
         else if (auto == "waitAuto")
             return selectedAuto = pathWithWait();
+        else if (auto == "twoGP")
+            return selectedAuto = twoGPBottom();
         return null;
     } 
     
@@ -73,6 +75,16 @@ public class AutoCommandFactory {
             followPathCommand(pathGroup.get(0), true), 
             new WaitCommand(2), 
             followPathCommand(pathGroup.get(1), false));
+    }
+
+    private static Command twoGPBottom() {
+        ArrayList<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("two cone", new PathConstraints(4, 3));
+        return new SequentialCommandGroup(
+            new WaitCommand(1),
+            followPathCommand(pathGroup.get(0), true),
+            new WaitCommand(1.5),
+            followPathCommand(pathGroup.get(1), false)
+        );
     }
 
 }
