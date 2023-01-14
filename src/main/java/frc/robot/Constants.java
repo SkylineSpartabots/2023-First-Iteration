@@ -17,6 +17,8 @@ public final class Constants {
     public static Pose2d targetPosition;
 
     public static final double stickDeadband = 0.1;
+    public static final Translation2d TOP_LEFT_CHARGE = new Translation2d(2.52, 4.35);
+    public static final Translation2d TOP_RIGHT_CHARGE = new Translation2d(5.25, 4.37); 
 
     public static final class Limelight {
         public static final String photonCamName = "OV5647";
