@@ -7,7 +7,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.pathplanner.lib.PathConstraints;
@@ -22,11 +21,11 @@ public class AutoCommandFactory {
     private static Command selectedAuto;
 
     public static Command getAutoCommand(String auto) { 
-        if (auto == "straightAuto")
+        if (auto.equals("straightAuto"))
             return selectedAuto = straight();
-        else if (auto == "rightAuto")
+        else if (auto.equals("rightAuto"))
             return selectedAuto = forwardAndRightCommand();
-        else if (auto == "waitAuto")
+        else if (auto.equals("waitAuto"))
             return selectedAuto = pathWithWait();
         return null;
     } 

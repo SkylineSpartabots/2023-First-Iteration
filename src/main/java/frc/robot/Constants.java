@@ -32,7 +32,6 @@ public final class Constants {
             Units.degreesToRadians(0), // y (pitch)
             Units.degreesToRadians(0) // z (yaw)
         );
-        // have to edit pitch for tags (maybe) but i think they should all be the same
         public static final Pose3d[] gameAprilTags = {
                 new Pose3d(15.51, 1.07, 0.46, new Rotation3d(0, 0, Math.PI)),
                 new Pose3d(15.51, 2.74, 0.46, new Rotation3d(0, 0, Math.PI)),
@@ -43,6 +42,18 @@ public final class Constants {
                 new Pose3d(1.03, 2.74, 0.46, new Rotation3d(0, 0, 0)),
                 new Pose3d(1.03, 1.07, 0.46, new Rotation3d(0, 0, 0))
         };
+
+        public static final Pose2d[] gameAprilTags2d = {
+            new Pose2d(15.51, 1.07, new Rotation2d(0)),
+            new Pose2d(15.51, 2.74, new Rotation2d(0)),
+            new Pose2d(15.51, 4.42, new Rotation2d(0)),
+            new Pose2d(16.18, 6.75, new Rotation2d(0)),
+            new Pose2d(2, 1, new Rotation2d(0)),
+            // new Pose2d(0.36, 6.75, new Rotation2d(0)),
+            new Pose2d(1.03, 4.42, new Rotation2d(0)),
+            new Pose2d(1.03, 2.74, new Rotation2d(0)),
+            new Pose2d(1.03, 1.07, new Rotation2d(0))
+    };
     }
 
     public static final class Swerve {
