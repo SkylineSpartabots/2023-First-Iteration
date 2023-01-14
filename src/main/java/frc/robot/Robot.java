@@ -25,6 +25,7 @@ public class Robot extends TimedRobot {
   private static final String auto2 = "rightAuto";
   private static final String auto3 = "waitAuto";
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private RobotContainer m_robotContainer;
   
 
   /**
@@ -39,7 +40,7 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("waitAuto", auto3);
     SmartDashboard.putData("Auto choices", m_chooser);
     m_autonomousCommand = AutoCommandFactory.getAutoCommand(m_chooser.getSelected());
-    // m_robotContainer = new RobotContainer();
+    m_robotContainer = new RobotContainer();
   }
 
   /**
@@ -60,7 +61,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    m_robotContainer.onRobotDisabled();
+  }
 
   @Override
   public void disabledPeriodic() {}
