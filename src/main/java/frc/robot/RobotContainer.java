@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -79,9 +80,15 @@ public class RobotContainer {
         //     // new SmartResetOdometry(), 
         //     new OnTheFlyGeneration(
         //         s_Swerve.getPose(), 
-        //         s_Swerve.getPose().plus(new Transform2d(new Translation2d(-1, 0), new Rotation2d()))))
-        // );
-        smartPathing.onTrue(new OnTheFlyGeneration(s_Swerve.getPose(), s_Swerve.getPose().plus(new Transform2d(new Translation2d(0, 2), new Rotation2d()))));
+        //         Constants.Limelight.gameAprilTags2d[s_Limelight.getBestTarget().getFiducialId()-1])
+        // ));
+        // smartPathing.onTrue(new OnTheFlyGeneration(
+        //     s_Swerve.getPose(), 
+        //     s_Swerve.getPose().plus(new Transform2d(new Translation2d(-0.5, 0), new Rotation2d()))));
+        smartPathing.onTrue(new OnTheFlyGeneration(
+            new Pose2d(new Translation2d(0, 1), new Rotation2d(0)),
+            // s_Swerve.getPose(), 
+            4));
     }
 
     /**

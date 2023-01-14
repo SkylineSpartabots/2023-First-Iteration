@@ -1,15 +1,20 @@
 package frc.robot.commands;
 
+import java.io.Console;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants;
 import frc.robot.factories.AutoCommandFactory;
 
 public class OnTheFlyGeneration extends CommandBase {
@@ -19,6 +24,11 @@ public class OnTheFlyGeneration extends CommandBase {
     public OnTheFlyGeneration(Pose2d currentPos, Pose2d targetPos) {
         this.targetPos = targetPos;
         this.currentPos = currentPos;
+    }
+
+    public OnTheFlyGeneration(Pose2d currentPos, int targetID) {
+        this.currentPos = currentPos;
+        this.targetPos = Constants.Limelight.gameAprilTags2d[targetID].plus(new Transform2d(new Translation2d(-0.5, 0), new Rotation2d()));
     }
 
     private PathPoint getPathPoint(Pose2d pose) {

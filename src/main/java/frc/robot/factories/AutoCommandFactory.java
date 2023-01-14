@@ -7,7 +7,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-import java.util.ArrayList;
+import java.util.List;
+
 import com.pathplanner.lib.PathConstraints;
 import frc.robot.subsystems.*;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
@@ -20,11 +21,11 @@ public class AutoCommandFactory {
     private static Command selectedAuto;
 
     public static Command getAutoCommand(String auto) { 
-        if (auto == "straightAuto")
+        if (auto.equals("straightAuto"))
             return selectedAuto = straight();
-        else if (auto == "rightAuto")
+        else if (auto.equals("rightAuto"))
             return selectedAuto = forwardAndRightCommand();
-        else if (auto == "waitAuto")
+        else if (auto.equals("waitAuto"))
             return selectedAuto = pathWithWait();
         return null;
     } 
@@ -67,7 +68,7 @@ public class AutoCommandFactory {
     }
 
     private static Command pathWithWait() {
-        ArrayList<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("path with wait event",
+        List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("path with wait event",
             new PathConstraints(3.5, 2));
         return new SequentialCommandGroup(
             followPathCommand(pathGroup.get(0), true), 
