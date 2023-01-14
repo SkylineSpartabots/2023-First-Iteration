@@ -86,11 +86,12 @@ public class RobotContainer {
         // s_Swerve.getPose().plus(new Transform2d(new Translation2d(-0.5, 0), new
         // Rotation2d()))));
         // CommandScheduler.getInstance().
-        smartPathing.onTrue(new OnTheFlyGeneration(
-                0, true));
+        // smartPathing.onTrue(new OnTheFlyGeneration(
+        //         0, true));
         smartPathing.onTrue(new ConditionalCommand(
-                new InstantCommand(() -> s_Swerve.getCurrentCommand().cancel()),
-                new InstantCommand(() -> new OnTheFlyGeneration(0, true)),
+                // new InstantCommand(() -> s_Swerve.getCurrentCommand().cancel()),
+                new InstantCommand(() -> AutoCommandFactory.cancelLastCommand()),
+                new InstantCommand(() -> CommandScheduler.getInstance().schedule(new OnTheFlyGeneration(0, true))),
                 s_Swerve.isPathRunningSupplier));
     }
 

@@ -135,7 +135,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public boolean pathInProgress() {
-        return !instance.getDefaultCommand().isScheduled();
+        return !getDefaultCommand().isScheduled();
     }
 
     @Override
