@@ -54,16 +54,15 @@ public final class Constants {
         };
 
         public static final Pose2d[] gameAprilTags2d = {
-                new Pose2d(15.51, 1.07, new Rotation2d(0)),
-                new Pose2d(15.51, 2.74, new Rotation2d(0)),
-                new Pose2d(15.51, 4.42, new Rotation2d(0)),
-                new Pose2d(16.18, 6.75, new Rotation2d(0)),
-                new Pose2d(2, 1, new Rotation2d(0)),
-                // new Pose2d(0.36, 6.75, new Rotation2d(0)),
-                new Pose2d(1.03, 4.42, new Rotation2d(0)),
-                new Pose2d(1.03, 2.74, new Rotation2d(0)),
-                new Pose2d(1.03, 1.07, new Rotation2d(0))
-        };
+            new Pose2d(15.51, 1.07, new Rotation2d(0)),
+            new Pose2d(15.51, 2.74, new Rotation2d(0)),
+            new Pose2d(15.51, 4.42, new Rotation2d(0)),
+            new Pose2d(16.18, 6.75, new Rotation2d(0)),
+            new Pose2d(0.36, 6.75, new Rotation2d(0)),
+            new Pose2d(1.03, 4.42, new Rotation2d(0)),
+            new Pose2d(1.03, 2.74, new Rotation2d(0)),
+            new Pose2d(1.03, 1.07, new Rotation2d(0))
+    };
     }
 
     public static final double FIELD_WIDTH_METERS = 8.02;
@@ -76,8 +75,8 @@ public final class Constants {
                 .SDSMK4(COTSFalconSwerveConstants.driveGearRatios.SDSMK4_L2);
 
         /* Drivetrain Constants */
-        public static final double trackWidth = 0.4953;
-        public static final double wheelBase = 0.4953;
+        public static final double trackWidth = 0.5715;
+        public static final double wheelBase = 0.5715;
         public static final double wheelCircumference = chosenModule.wheelCircumference;
         /*
          * Swerve Kinematics

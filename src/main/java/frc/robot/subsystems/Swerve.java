@@ -8,6 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -29,6 +30,7 @@ public class Swerve extends SubsystemBase {
     public Consumer<ChassisSpeeds> chassisConsumer = a -> {
         autoDrive(a, true);
     };
+    public BooleanSupplier isPathRunningSupplier = () -> pathInProgress();
 
     private static Swerve instance;
 
@@ -132,6 +134,10 @@ public class Swerve extends SubsystemBase {
         return angle;
     }
 
+    public boolean pathInProgress() {
+        return !instance.getDefaultCommand().isScheduled();
+    }
+
     @Override
     public void periodic() {
         swerveOdometry.update(getYaw(), getModulePositions());
@@ -140,6 +146,7 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putNumber("odo-rot", getPose().getRotation().getDegrees());
         SmartDashboard.putNumber("x-pos", getPose().getX());
         SmartDashboard.putNumber("y-pos", getPose().getY());
+        SmartDashboard.putBoolean("is OTF running", pathInProgress());
 
         for (SwerveModule mod : mSwerveMods) {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
