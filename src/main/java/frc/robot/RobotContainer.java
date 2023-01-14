@@ -80,8 +80,9 @@ public class RobotContainer {
         //     s_Swerve.getPose(), 
         //     s_Swerve.getPose().plus(new Transform2d(new Translation2d(-0.5, 0), new Rotation2d()))));
         smartPathing.onTrue(new OnTheFlyGeneration(
-            4
-        ));
+            // new Pose2d(new Translation2d(0, 1), new Rotation2d(0)),
+            // s_Swerve.getPose(), 
+            4));
     }
 
     /**
