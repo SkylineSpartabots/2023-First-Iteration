@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.factories.AutoCommandFactory;
 
 public class OnTheFlyGeneration extends CommandBase {
@@ -21,12 +22,12 @@ public class OnTheFlyGeneration extends CommandBase {
     }
 
     private PathPoint getPathPoint(Pose2d pose) {
-        return new PathPoint(new Translation2d(currentPos.getX(), currentPos.getY()), 
-            Rotation2d.fromDegrees(0), 
-            currentPos.getRotation());
+        return new PathPoint(new Translation2d(pose.getX(), pose.getY()),
+                Rotation2d.fromDegrees(0),
+                pose.getRotation());
     }
 
-    @Override 
+    @Override
     public void initialize() {
 
     }
@@ -34,10 +35,10 @@ public class OnTheFlyGeneration extends CommandBase {
     @Override
     public void execute() {
         PathPlannerTrajectory trajectory = PathPlanner.generatePath(
-            new PathConstraints(4, 3), 
+                new PathConstraints(4, 3),
                 getPathPoint(currentPos),
                 getPathPoint(targetPos));
-        AutoCommandFactory.followPathCommand(trajectory, false);
+        CommandScheduler.getInstance().schedule(AutoCommandFactory.followPathCommand(trajectory, false));
     }
 
     @Override

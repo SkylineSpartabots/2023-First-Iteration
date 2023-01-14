@@ -19,10 +19,10 @@ public final class Constants {
     public static final double stickDeadband = 0.1;
 
     public static final class Limelight {
-        public static final String photonCamName = "gloworm";
+        public static final String photonCamName = "OV5647";
         public static final Translation3d cameraOffsets = new Translation3d(
-            Units.inchesToMeters(0), // x (right-left) offset
-            Units.inchesToMeters(14.5), // y (front-back) offset
+            Units.inchesToMeters(14.5), // x (front-back) offset
+            Units.inchesToMeters(0), // y (right-left) offset
             Units.inchesToMeters(34) // z (up-down)
         );
         public static final Rotation3d cameraAngleOffsets = new Rotation3d(

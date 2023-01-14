@@ -1,10 +1,12 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -41,6 +43,7 @@ public class RobotContainer {
 
     /* Subsystems */
     private final Swerve s_Swerve = Swerve.getInstance();
+    private final Limelight s_Limelight = Limelight.getInstance();
     
     /* Commands */
 
@@ -71,8 +74,14 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
-        auto.onTrue(AutoCommandFactory.getAutoCommand("waitAuto")); // change based on which auto needs to be tested
-        smartPathing.onTrue(new SequentialCommandGroup(new SmartResetOdometry(), new OnTheFlyGeneration(s_Swerve.getPose(), Constants.targetPosition)));
+        auto.onTrue(AutoCommandFactory.getSelectedAuto()); // change based on which auto needs to be tested
+        // smartPathing.onTrue(new SequentialCommandGroup(
+        //     // new SmartResetOdometry(), 
+        //     new OnTheFlyGeneration(
+        //         s_Swerve.getPose(), 
+        //         s_Swerve.getPose().plus(new Transform2d(new Translation2d(-1, 0), new Rotation2d()))))
+        // );
+        smartPathing.onTrue(new OnTheFlyGeneration(s_Swerve.getPose(), s_Swerve.getPose().plus(new Transform2d(new Translation2d(0, 2), new Rotation2d()))));
     }
 
     /**
@@ -80,8 +89,8 @@ public class RobotContainer {
      *
      * @return the command to run in autonomous
      */
-    public Command getAutonomousCommand(String auto) {
-        // An ExampleCommand will run in autonomous
-        return AutoCommandFactory.getAutoCommand(auto);
-    }
+    // public Command getAutonomousCommand(String auto) {
+    //     // An ExampleCommand will run in autonomous
+    //     return AutoCommandFactory.getAutoCommand(auto);
+    // }
 }

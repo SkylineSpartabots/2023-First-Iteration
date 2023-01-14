@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.factories.AutoCommandFactory;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -38,6 +39,7 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("rightAuto", auto2);
     m_chooser.addOption("waitAuto", auto3);
     SmartDashboard.putData("Auto choices", m_chooser);
+    m_autonomousCommand = AutoCommandFactory.getAutoCommand(m_chooser.getSelected());
     m_robotContainer = new RobotContainer();
   }
 
@@ -67,8 +69,6 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand(m_chooser.getSelected());
-
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();

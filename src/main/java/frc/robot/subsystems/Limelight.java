@@ -37,37 +37,39 @@ public class Limelight extends SubsystemBase {
 
 	public PhotonTrackedTarget getBestTarget() {
 		if (result.hasTargets()) {
-			return result.getBestTarget();
+			if (result.getBestTarget().getFiducialId() > 0
+					&& result.getBestTarget().getFiducialId() < Constants.Limelight.gameAprilTags.length) {
+				return result.getBestTarget();
+			}
 		}
 		return null;
 	}
 
 	public double getYaw() {
-		if (result.hasTargets()) {
-			lastYaw = result.getBestTarget().getYaw();
+		if (getBestTarget() != null) {
+			lastYaw = getBestTarget().getYaw();
 		}
 		return lastYaw;
 	}
 
 	public double getPitch() {
-		if (result.hasTargets()) {
-			lastPitch = result.getBestTarget().getPitch();
+		if (getBestTarget() != null) {
+			lastPitch = getBestTarget().getPitch();
 		}
 		return lastPitch;
 	}
 
 	public int getID() {
-		return result.getBestTarget().getFiducialId();
+		return getBestTarget().getFiducialId();
 	}
 
 	public double getDistance() {
-		if (result.hasTargets()) {
+		if (getBestTarget() != null) {
 			lastDistance = PhotonUtils.calculateDistanceToTargetMeters(
-				Constants.Limelight.cameraOffsets.getZ(),
-				Constants.Limelight.gameAprilTags[getID() - 1].getZ(),
-				Constants.Limelight.cameraAngleOffsets.getY(),
-				Units.degreesToRadians(result.getBestTarget().getPitch())
-			);
+					Constants.Limelight.cameraOffsets.getZ(),
+					Constants.Limelight.gameAprilTags[getBestTarget().getFiducialId() - 1].getZ(),
+					Constants.Limelight.cameraAngleOffsets.getY(),
+					Units.degreesToRadians(getBestTarget().getPitch()));
 		}
 		return lastDistance;
 	}
