@@ -16,10 +16,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants;
 import frc.robot.factories.AutoCommandFactory;
+import frc.robot.subsystems.Swerve;
 
 public class OnTheFlyGeneration extends CommandBase {
-    Pose2d currentPos;
-    Pose2d targetPos;
+    private Pose2d currentPos;
+    private Pose2d targetPos;
+    private Swerve s_Swerve = Swerve.getInstance();
 
     public OnTheFlyGeneration(Pose2d currentPos, Pose2d targetPos) {
         this.targetPos = targetPos;
@@ -28,6 +30,11 @@ public class OnTheFlyGeneration extends CommandBase {
 
     public OnTheFlyGeneration(Pose2d currentPos, int targetID) {
         this.currentPos = currentPos;
+        this.targetPos = Constants.Limelight.gameAprilTags2d[targetID].plus(new Transform2d(new Translation2d(-0.5, 0), new Rotation2d()));
+    }
+
+    public OnTheFlyGeneration(int targetID) {
+        this.currentPos = s_Swerve.getPose();
         this.targetPos = Constants.Limelight.gameAprilTags2d[targetID].plus(new Transform2d(new Translation2d(-0.5, 0), new Rotation2d()));
     }
 
