@@ -8,6 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -15,25 +16,23 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.SPI;
 
 import com.ctre.phoenix.sensors.Pigeon2;
-import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
-    public SwerveDriveOdometry swerveOdometry;
-    public SwerveModule[] mSwerveMods;
+    private SwerveDriveOdometry swerveOdometry;
+    private Pigeon2 gyro;
+    private SwerveModule[] mSwerveMods;
     public Supplier<Pose2d> poseSupplier = () -> getPose();
     public Consumer<Pose2d> poseConsumer = a -> {resetOdometry(a);};
     public Consumer<ChassisSpeeds> chassisConsumer = a -> {
         autoDrive(a, true);
     };
-    private Pigeon2 gyro;
-    // private final AHRS gyro = new AHRS(SPI.Port.kMXP, (byte) 200);
+    public BooleanSupplier isPathRunningSupplier = () -> pathInProgress();
 
-    static Swerve instance;
+    private static Swerve instance;
 
     public static Swerve getInstance() {
         if (instance == null) {
@@ -83,14 +82,14 @@ public class Swerve extends SubsystemBase {
         }
     }
 
-    /* Used by SwerveControllerCommand in Auto */
-    public void setModuleStates(SwerveModuleState[] desiredStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.maxSpeed);
+    // /* Used by SwerveControllerCommand in Auto */
+    // public void setModuleStates(SwerveModuleState[] desiredStates) {
+    //     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.maxSpeed);
 
-        for (SwerveModule mod : mSwerveMods) {
-            mod.setDesiredState(desiredStates[mod.moduleNumber], false);
-        }
-    }
+    //     for (SwerveModule mod : mSwerveMods) {
+    //         mod.setDesiredState(desiredStates[mod.moduleNumber], false);
+    //     }
+    // }
 
     public Pose2d getPose() {
         return swerveOdometry.getPoseMeters();
@@ -98,7 +97,7 @@ public class Swerve extends SubsystemBase {
 
     public void resetOdometry(Pose2d pose) {
         zeroGyro();
-        swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
+        swerveOdometry.resetPosition(Rotation2d.fromDegrees(0), getModulePositions(), pose);
     }
 
     public SwerveModuleState[] getModuleStates() {
@@ -122,8 +121,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public Rotation2d getYaw() {
-        // return Rotation2d.fromDegrees(normalize(-gyro.getAngle()));
-        return Rotation2d.fromDegrees(gyro.getYaw());
+        return Rotation2d.fromDegrees(normalize(gyro.getYaw()));
     }
 
     public static double normalize(double deg) {
@@ -136,6 +134,10 @@ public class Swerve extends SubsystemBase {
         return angle;
     }
 
+    public boolean pathInProgress() {
+        return !getDefaultCommand().isScheduled();
+    }
+
     @Override
     public void periodic() {
         swerveOdometry.update(getYaw(), getModulePositions());
@@ -144,6 +146,7 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putNumber("odo-rot", getPose().getRotation().getDegrees());
         SmartDashboard.putNumber("x-pos", getPose().getX());
         SmartDashboard.putNumber("y-pos", getPose().getY());
+        SmartDashboard.putBoolean("is OTF running", pathInProgress());
 
         for (SwerveModule mod : mSwerveMods) {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
@@ -152,4 +155,13 @@ public class Swerve extends SubsystemBase {
         }
 
     }
+
+    //system.out.println "Helloworld";
+    //system.out.println "my name is tiffany and im the best person in the world";
+    //system.out.println "tiffany is the best snack lead in the world";
+    //system.out.println "like robotics would not be robotics if it weren't for tiffany ong frfr";
+    //system.out.println "hashtag not my prez hashtag not my director of software hashtag not my 
+    // director of engineering hashtag not my director of media"
+    //system.out.println "honestly like honestly like if i were really to say something like i really 
+    // mean it like its something really important but it was like liek but thats crayz"
 }
