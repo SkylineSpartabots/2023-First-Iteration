@@ -1,6 +1,8 @@
 package frc.robot.commands;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -18,11 +20,12 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants;
 import frc.robot.factories.AutoCommandFactory;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 public class SmartPathGenerating extends CommandBase {
     Pose2d startPos;
     Pose2d endPos;
-    List<PathPoint> list = new ArrayList<>();
 
     public SmartPathGenerating(Pose2d startPos, Pose2d endPos) {
         this.startPos = startPos;
@@ -38,7 +41,7 @@ public class SmartPathGenerating extends CommandBase {
     }
 
     public Translation2d convertToRed(Translation2d x) {
-        if (DriverStation.getAlliance() == DriverStation.Alliance.Red)
+        if (DriverStation.getAlliance() != DriverStation.Alliance.Red)
             return x;
         var y = new Translation2d(x.getX(), Constants.FIELD_WIDTH_METERS - x.getY());
         return y;
@@ -54,14 +57,14 @@ public class SmartPathGenerating extends CommandBase {
         var tEnd = translation(endPos);
 
         Translation2d[] tempArray = new Translation2d[6];
-        for (int i = 1; i <= 5; i++)
-            tempArray[i] = convertToRed(Constants.cornersBlue[i]);
+        for (int i = 1; i <= 4; i++)
+            tempArray[i] = convertToRed(Constants.cornersBlue[i - 1]);
         tempArray[0] = convertToRed(tStart);
         tempArray[5] = convertToRed(tEnd);
 
         double[] distance = new double[6];
         distance[0] = 0;
-        for (int i = 0; i < 6; i++)
+        for (int i = 1; i < 6; i++)
             distance[i] = 1e4;
 
         int[] last = new int[6];
@@ -72,8 +75,8 @@ public class SmartPathGenerating extends CommandBase {
         pq.add(new Node(0, 0));
         while (!pq.isEmpty()) {
             Node top = pq.peek();
-            pq.remove();
-            if (top.cost > distance[top.node] + 1e-6) {
+            pq.poll();
+            if (top.cost > distance[top.node] + 1e-2) {
                 continue;
             }
             for (int i = 0; i < 6; i++) {
@@ -82,27 +85,47 @@ public class SmartPathGenerating extends CommandBase {
                 if (!checkIfInterfere(convertToRed(Constants.BOTTOM_LEFT_CHARGE),
                         convertToRed(Constants.BOTTOM_RIGHT_CHARGE), convertToRed(Constants.TOP_LEFT_CHARGE),
                         convertToRed(Constants.TOP_RIGHT_CHARGE), tempArray[top.node], tempArray[i])) {
+                        // SmartDashboard.putNumber("FF2 " + top.node + i, distance[i]);
                     if (distance[i] > distance[top.node] + getDistance(tempArray[i], tempArray[top.node])) {
+                        // SmartDashboard.putNumber("FF3 " + i, i);
                         distance[i] = distance[top.node] + getDistance(tempArray[i], tempArray[top.node]);
                         last[i] = top.node;
+
+                        pq.add(new Node(i, distance[i]));
                     }
                 }
             }
         }
+        for (int i = 0; i < 6; i++) {
+            for (int j = i + 1; j < 6; j++) {
+                if (!checkIfInterfere(convertToRed(Constants.BOTTOM_LEFT_CHARGE),
+                        convertToRed(Constants.BOTTOM_RIGHT_CHARGE), convertToRed(Constants.TOP_LEFT_CHARGE),
+                        convertToRed(Constants.TOP_RIGHT_CHARGE), tempArray[i], tempArray[j])) {
+                    SmartDashboard.putNumber("num " + i + j, 0);
+                }
+            }
+        }
+
+        // for (int i = 0; i < 6; i++) {
+        //     SmartDashboard.putNumber("dist " + i, distance[i]);
+        //     SmartDashboard.putNumber("last " + i, last[i]);
+        // }
+
 
         List<PathPoint> result = new ArrayList<>();
-        var x = 5;
+        int x = 5;
         while (x != -1) {
             PathPoint p = new PathPoint(convertToRed(tempArray[x]), Rotation2d.fromDegrees(0));
             if (x == 0) {
                 p = new PathPoint(convertToRed(tempArray[x]), Rotation2d.fromDegrees(0), startPos.getRotation());
             } else if (x == 5) {
                 p = new PathPoint(convertToRed(tempArray[x]), Rotation2d.fromDegrees(0), endPos.getRotation());
-            } else {
-                result.add(p);
             }
+            result.add(p);
             x = last[x];
         }
+
+        Collections.reverse(result);
 
         PathPlannerTrajectory trajectory = PathPlanner.generatePath(
                 new PathConstraints(4, 3),
@@ -113,6 +136,11 @@ public class SmartPathGenerating extends CommandBase {
     @Override
     public void execute() {
 
+    }
+
+    @Override
+    public boolean isFinished() {
+        return true;
     }
 
     public double crossProduct(Translation2d a, Translation2d b) {
@@ -138,6 +166,7 @@ public class SmartPathGenerating extends CommandBase {
             return false;
         if (orient(b1, b2, a1) == orient(b1, b2, a2))
             return false;
+        // SmartDashboard.putNumber("intersection", 0);
         return true;
     }
 
@@ -151,17 +180,18 @@ public class SmartPathGenerating extends CommandBase {
     public boolean checkIfInterfere(Translation2d bottomLeft, Translation2d bottomRight, Translation2d topLeft,
             Translation2d topRight, Translation2d line1, Translation2d line2) {
         for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                if (i != j) {
-                    if (equal(Constants.cornersBlue[i], line2) || equal(Constants.cornersBlue[i], line1) ||
-                            equal(Constants.cornersBlue[j], line1) || equal(Constants.cornersBlue[j], line2)) {
-                        continue;
-                    }
-                    if (intersectLines(Constants.cornersBlue[i], Constants.cornersBlue[j], line1, line2))
-                        return true;
+            for (int j = 0; j < i; j++) {
+                if (i == 3 && j == 0) continue;
+                if (i == 2 && j == 1) continue;
+                if (equal(Constants.cornersBlue[i], line2) || equal(Constants.cornersBlue[i], line1) ||
+                        equal(Constants.cornersBlue[j], line1) || equal(Constants.cornersBlue[j], line2)) {
+                    continue;
                 }
+                if (intersectLines(Constants.cornersBlue[i], Constants.cornersBlue[j], line1, line2))
+                    return true;
             }
         }
+
         return false;
     }
 

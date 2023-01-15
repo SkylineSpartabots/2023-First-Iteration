@@ -1,13 +1,10 @@
 package frc.robot;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -86,12 +83,18 @@ public class RobotContainer {
         // s_Swerve.getPose().plus(new Transform2d(new Translation2d(-0.5, 0), new
         // Rotation2d()))));
         // CommandScheduler.getInstance().
-        smartPathing.onTrue(new OnTheFlyGeneration(
-                0, true));
-        smartPathing.onTrue(new ConditionalCommand(
-                new InstantCommand(() -> s_Swerve.getCurrentCommand().cancel()),
-                new InstantCommand(() -> new OnTheFlyGeneration(0, true)),
-                s_Swerve.isPathRunningSupplier));
+        // smartPathing.onTrue(new OnTheFlyGeneration(
+        //         0, true));
+        // Pose2d pose = new Pose2d(2.22, 2.9, Rotation2d.fromDegrees(0));
+        // Pose2d pose2 = new Pose2d(5.4, 2.69, Rotation2d.fromDegrees(0));
+        Pose2d pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+        Pose2d pose2 = new Pose2d(1, 1, Rotation2d.fromDegrees(0));
+        smartPathing.onTrue(new SmartPathGenerating(pose, pose2));
+
+        // smartPathing.onTrue(new ConditionalCommand(
+        //         new InstantCommand(() -> s_Swerve.getCurrentCommand().cancel()),
+        //         new InstantCommand(() -> new OnTheFlyGeneration(0, true)),
+        //         s_Swerve.isPathRunningSupplier));
     }
 
     public void onRobotDisabled() {
