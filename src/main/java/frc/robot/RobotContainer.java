@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -85,10 +84,10 @@ public class RobotContainer {
         // CommandScheduler.getInstance().
         // smartPathing.onTrue(new OnTheFlyGeneration(
         //         0, true));
-        // Pose2d pose = new Pose2d(2.22, 2.9, Rotation2d.fromDegrees(0));
-        // Pose2d pose2 = new Pose2d(5.4, 2.69, Rotation2d.fromDegrees(0));
-        Pose2d pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
-        Pose2d pose2 = new Pose2d(1, 1, Rotation2d.fromDegrees(0));
+        Pose2d pose2 = new Pose2d(10.07, 2.80, Rotation2d.fromDegrees(0));
+        Pose2d pose = new Pose2d(2.22, 2.90, Rotation2d.fromDegrees(0));
+        // Pose2d pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+        // Pose2d pose2 = new Pose2d(1, 1, Rotation2d.fromDegrees(0));
         smartPathing.onTrue(new SmartPathGenerating(pose, pose2));
 
         // smartPathing.onTrue(new ConditionalCommand(
@@ -110,4 +109,5 @@ public class RobotContainer {
     // // An ExampleCommand will run in autonomous
     // return AutoCommandFactory.getAutoCommand(auto);
     // }
+
 }

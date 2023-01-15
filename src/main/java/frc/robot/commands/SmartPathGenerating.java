@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -20,8 +19,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants;
 import frc.robot.factories.AutoCommandFactory;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SmartPathGenerating extends CommandBase {
     Pose2d startPos;
@@ -85,7 +83,7 @@ public class SmartPathGenerating extends CommandBase {
                 if (!checkIfInterfere(convertToRed(Constants.BOTTOM_LEFT_CHARGE),
                         convertToRed(Constants.BOTTOM_RIGHT_CHARGE), convertToRed(Constants.TOP_LEFT_CHARGE),
                         convertToRed(Constants.TOP_RIGHT_CHARGE), tempArray[top.node], tempArray[i])) {
-                        // SmartDashboard.putNumber("FF2 " + top.node + i, distance[i]);
+                    // SmartDashboard.putNumber("FF2 " + top.node + i, distance[i]);
                     if (distance[i] > distance[top.node] + getDistance(tempArray[i], tempArray[top.node])) {
                         // SmartDashboard.putNumber("FF3 " + i, i);
                         distance[i] = distance[top.node] + getDistance(tempArray[i], tempArray[top.node]);
@@ -96,21 +94,22 @@ public class SmartPathGenerating extends CommandBase {
                 }
             }
         }
-        for (int i = 0; i < 6; i++) {
-            for (int j = i + 1; j < 6; j++) {
-                if (!checkIfInterfere(convertToRed(Constants.BOTTOM_LEFT_CHARGE),
-                        convertToRed(Constants.BOTTOM_RIGHT_CHARGE), convertToRed(Constants.TOP_LEFT_CHARGE),
-                        convertToRed(Constants.TOP_RIGHT_CHARGE), tempArray[i], tempArray[j])) {
-                    SmartDashboard.putNumber("num " + i + j, 0);
-                }
-            }
-        }
+        
 
         // for (int i = 0; i < 6; i++) {
-        //     SmartDashboard.putNumber("dist " + i, distance[i]);
-        //     SmartDashboard.putNumber("last " + i, last[i]);
+        //     for (int j = i + 1; j < 6; j++) {
+        //         if (!checkIfInterfere(convertToRed(Constants.BOTTOM_LEFT_CHARGE),
+        //                 convertToRed(Constants.BOTTOM_RIGHT_CHARGE), convertToRed(Constants.TOP_LEFT_CHARGE),
+        //                 convertToRed(Constants.TOP_RIGHT_CHARGE), tempArray[i], tempArray[j])) {
+        //             SmartDashboard.putNumber("num " + i + j, 0);
+        //         }
+        //     }
         // }
 
+        // for (int i = 0; i < 6; i++) {
+        // SmartDashboard.putNumber("dist " + i, distance[i]);
+        // SmartDashboard.putNumber("last " + i, last[i]);
+        // }
 
         List<PathPoint> result = new ArrayList<>();
         int x = 5;
@@ -124,9 +123,7 @@ public class SmartPathGenerating extends CommandBase {
             result.add(p);
             x = last[x];
         }
-
         Collections.reverse(result);
-
         PathPlannerTrajectory trajectory = PathPlanner.generatePath(
                 new PathConstraints(4, 3),
                 result);
@@ -181,13 +178,18 @@ public class SmartPathGenerating extends CommandBase {
             Translation2d topRight, Translation2d line1, Translation2d line2) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < i; j++) {
-                if (i == 3 && j == 0) continue;
-                if (i == 2 && j == 1) continue;
-                if (equal(Constants.cornersBlue[i], line2) || equal(Constants.cornersBlue[i], line1) ||
-                        equal(Constants.cornersBlue[j], line1) || equal(Constants.cornersBlue[j], line2)) {
+                if (i == 3 && j == 0)
+                    continue;
+                if (i == 2 && j == 1)
+                    continue;
+                if (equal(convertToRed(Constants.cornersBlue[i]), line2)
+                        || equal(convertToRed(Constants.cornersBlue[i]), line1) ||
+                        equal(convertToRed(Constants.cornersBlue[j]), line1)
+                        || equal(convertToRed(Constants.cornersBlue[j]), line2)) {
                     continue;
                 }
-                if (intersectLines(Constants.cornersBlue[i], Constants.cornersBlue[j], line1, line2))
+                if (intersectLines(convertToRed(Constants.cornersBlue[i]), convertToRed(Constants.cornersBlue[j]),
+                        line1, line2))
                     return true;
             }
         }
