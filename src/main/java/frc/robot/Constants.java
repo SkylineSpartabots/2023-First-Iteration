@@ -33,7 +33,8 @@ public final class Constants {
         public static final Pose3d[] gameAprilTags = {
                 new Pose3d(15.51, 1.07, 0.46, new Rotation3d(0, 0, Math.PI)),
                 new Pose3d(15.51, 2.74, 0.46, new Rotation3d(0, 0, Math.PI)),
-                new Pose3d(15.51, 4.42, 0.46, new Rotation3d(0, 0, Math.PI)),
+                // new Pose3d(15.51, 4.42, 0.46, new Rotation3d(0, 0, Math.PI)),
+                new Pose3d(0, 0, 0.46, new Rotation3d(0, 0, 0)),
                 new Pose3d(16.18, 6.75, 0.69, new Rotation3d(0, 0, Math.PI)),
                 new Pose3d(0.36, 6.75, 0.69, new Rotation3d(0, 0, 0)),
                 new Pose3d(1.03, 4.42, 0.46, new Rotation3d(0, 0, 0)),

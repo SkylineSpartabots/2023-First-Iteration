@@ -37,10 +37,11 @@ public class RobotContainer {
     // XboxController.Button.kLeftBumper.value);
     private final JoystickButton auto = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton smartPathing = new JoystickButton(driver, XboxController.Button.kB.value);
+    private final JoystickButton smartOdo = new JoystickButton(driver, XboxController.Button.kX.value);
 
     /* Subsystems */
     private final Swerve s_Swerve = Swerve.getInstance();
-    // private final Limelight s_Limelight = Limelight.getInstance();
+    private final Limelight s_Limelight = Limelight.getInstance();
 
     /* Commands */
 
@@ -90,6 +91,7 @@ public class RobotContainer {
                 new InstantCommand(() -> AutoCommandFactory.cancelLastCommand()),
                 new InstantCommand(() -> CommandScheduler.getInstance().schedule(new OnTheFlyGeneration(0, true))),
                 s_Swerve.isPathRunningSupplier));
+        smartOdo.onTrue(new SmartResetOdometry());
     }
 
     public void onRobotDisabled() {
