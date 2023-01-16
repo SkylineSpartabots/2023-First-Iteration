@@ -26,8 +26,8 @@ public class Robot extends TimedRobot {
   private static final String auto3 = "waitAuto";
   private static final String auto4 = "twoGP";
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-  
   private RobotContainer m_robotContainer;
+  
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -63,7 +63,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    m_robotContainer.onRobotDisabled();
+  }
 
   @Override
   public void disabledPeriodic() {}

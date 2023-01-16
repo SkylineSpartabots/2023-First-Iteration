@@ -21,7 +21,7 @@ public final class Constants {
     public static final class Limelight {
         public static final String photonCamName = "OV5647";
         public static final Translation3d cameraOffsets = new Translation3d(
-            Units.inchesToMeters(14.5), // x (front-back) offset
+            Units.inchesToMeters(-14.5), // x (front-back) offset
             Units.inchesToMeters(0), // y (right-left) offset
             Units.inchesToMeters(34) // z (up-down)
         );
@@ -30,17 +30,28 @@ public final class Constants {
             Units.degreesToRadians(0), // y (pitch)
             Units.degreesToRadians(0) // z (yaw)
         );
-        // have to edit pitch for tags (maybe) but i think they should all be the same
         public static final Pose3d[] gameAprilTags = {
                 new Pose3d(15.51, 1.07, 0.46, new Rotation3d(0, 0, Math.PI)),
                 new Pose3d(15.51, 2.74, 0.46, new Rotation3d(0, 0, Math.PI)),
-                new Pose3d(15.51, 4.42, 0.46, new Rotation3d(0, 0, Math.PI)),
+                // new Pose3d(15.51, 4.42, 0.46, new Rotation3d(0, 0, Math.PI)),
+                new Pose3d(0, 0, 0.46, new Rotation3d(0, 0, 0)),
                 new Pose3d(16.18, 6.75, 0.69, new Rotation3d(0, 0, Math.PI)),
                 new Pose3d(0.36, 6.75, 0.69, new Rotation3d(0, 0, 0)),
                 new Pose3d(1.03, 4.42, 0.46, new Rotation3d(0, 0, 0)),
                 new Pose3d(1.03, 2.74, 0.46, new Rotation3d(0, 0, 0)),
                 new Pose3d(1.03, 1.07, 0.46, new Rotation3d(0, 0, 0))
         };
+
+        public static final Pose2d[] gameAprilTags2d = {
+            new Pose2d(15.51, 1.07, new Rotation2d(0)),
+            new Pose2d(15.51, 2.74, new Rotation2d(0)),
+            new Pose2d(15.51, 4.42, new Rotation2d(0)),
+            new Pose2d(16.18, 6.75, new Rotation2d(0)),
+            new Pose2d(0.36, 6.75, new Rotation2d(0)),
+            new Pose2d(1.03, 4.42, new Rotation2d(0)),
+            new Pose2d(1.03, 2.74, new Rotation2d(0)),
+            new Pose2d(1.03, 1.07, new Rotation2d(0))
+    };
     }
 
     public static final class Swerve {
@@ -51,8 +62,8 @@ public final class Constants {
                 .SDSMK4(COTSFalconSwerveConstants.driveGearRatios.SDSMK4_L2);
 
         /* Drivetrain Constants */
-        public static final double trackWidth = 0.4953;
-        public static final double wheelBase = 0.4953;
+        public static final double trackWidth = 0.5715;
+        public static final double wheelBase = 0.5715;
         public static final double wheelCircumference = chosenModule.wheelCircumference;
 
         /*

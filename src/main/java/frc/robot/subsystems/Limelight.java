@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+// import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,48 +27,56 @@ public class Limelight extends SubsystemBase {
 	private double lastYaw;
 	private double lastDistance;
 	private double lastPitch;
+	private int lastID;
+	private PhotonTrackedTarget lastTarget;
 
 	public Limelight() {
 		// might have to put some nt initilizations in here...
 	}
 
 	public boolean hasTarget() {
-		return result.hasTargets();
+		if (result.hasTargets()) {
+			if (result.getBestTarget().getFiducialId() > 0 
+			&& result.getBestTarget().getFiducialId() < Constants.Limelight.gameAprilTags.length) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public PhotonTrackedTarget getBestTarget() {
-		if (result.hasTargets()) {
-			if (result.getBestTarget().getFiducialId() > 0
-					&& result.getBestTarget().getFiducialId() < Constants.Limelight.gameAprilTags.length) {
-				return result.getBestTarget();
-			}
+		if (hasTarget()) {
+			lastTarget = result.getBestTarget();
 		}
-		return null;
+		return lastTarget;
 	}
 
 	public double getYaw() {
-		if (getBestTarget() != null) {
-			lastYaw = getBestTarget().getYaw();
+		if (hasTarget()) {
+			lastYaw = lastTarget.getYaw();
 		}
 		return lastYaw;
 	}
 
 	public double getPitch() {
-		if (getBestTarget() != null) {
-			lastPitch = getBestTarget().getPitch();
+		if (hasTarget()) {
+			lastPitch = lastTarget.getPitch();
 		}
 		return lastPitch;
 	}
 
 	public int getID() {
-		return getBestTarget().getFiducialId();
+		if (hasTarget()) {
+			lastID = lastTarget.getFiducialId();
+		}
+		return lastID;
 	}
 
 	public double getDistance() {
-		if (getBestTarget() != null) {
+		if (hasTarget()) {
 			lastDistance = PhotonUtils.calculateDistanceToTargetMeters(
 					Constants.Limelight.cameraOffsets.getZ(),
-					Constants.Limelight.gameAprilTags[getBestTarget().getFiducialId() - 1].getZ(),
+					Constants.Limelight.gameAprilTags[getID() - 1].getZ(),
 					Constants.Limelight.cameraAngleOffsets.getY(),
 					Units.degreesToRadians(getBestTarget().getPitch()));
 		}
@@ -77,9 +86,14 @@ public class Limelight extends SubsystemBase {
 	@Override
 	public void periodic() {
 		result = camera.getLatestResult();
-		SmartDashboard.putBoolean("PV has target", hasTarget());
-		SmartDashboard.putNumber("PV last yaw", getYaw());
-		SmartDashboard.putNumber("PV last pitch", getPitch());
-		SmartDashboard.putNumber("PV last distance", getDistance());
+		getBestTarget();
+		SmartDashboard.putBoolean("cam has target", hasTarget());
+		SmartDashboard.putNumber("cam last yaw", getYaw());
+		SmartDashboard.putNumber("cam last pitch", getPitch());
+		SmartDashboard.putNumber("cam last distance", getDistance());
+		SmartDashboard.putNumber("Tag id", getID());
+		
+		// SmartDashboard.putNumber("Tag x-pos", Constants.Limelight.gameAprilTags2d[getID()-1].getX());
+		// SmartDashboard.putNumber("Tag y-pos", Constants.Limelight.gameAprilTags2d[getID()-1].getY());
 	}
 }
