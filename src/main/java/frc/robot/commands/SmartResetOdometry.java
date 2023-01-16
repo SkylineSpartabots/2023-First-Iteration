@@ -38,9 +38,7 @@ public class SmartResetOdometry extends CommandBase {
         if (s_Limelight.hasTarget()) {
             PhotonTrackedTarget target = s_Limelight.getBestTarget();
             Pose3d targetPose = Constants.Limelight.gameAprilTags[target.getFiducialId() - 1];
-            SmartDashboard.putNumber("cam-SO-x", target.getBestCameraToTarget().getX());
-            SmartDashboard.putNumber("cam-SO-y", target.getBestCameraToTarget().getY());
-            SmartDashboard.putNumber("cam-SO-z", target.getBestCameraToTarget().getZ());
+            SmartDashboard.putNumber("pose-amb", target.getPoseAmbiguity());
             Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
                 target.getBestCameraToTarget(), 
                 targetPose,
@@ -49,7 +47,7 @@ public class SmartResetOdometry extends CommandBase {
             SmartDashboard.putNumber("robot-SO-x", robotPose.getX());
             SmartDashboard.putNumber("robot-SO-y", robotPose.getY());
             SmartDashboard.putNumber("robot-SO-z", robotPose.getZ());
-            // SmartDashboard.putNumber("robot-SO-rot", Units.radiansToDegrees(robotPose.getRotation().getY()));
+            SmartDashboard.putNumber("robot-SO-rot", Units.radiansToDegrees(robotPose.getRotation().getY()));
             // s_Swerve.resetOdometry(new Pose2d(robotPose.getX(), robotPose.getY(),
             //         Rotation2d.fromDegrees(robotPose.getRotation().getZ())));
             isReset = true;
