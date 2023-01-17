@@ -124,6 +124,10 @@ public class Swerve extends SubsystemBase {
         return Rotation2d.fromDegrees(normalize(gyro.getYaw()));
     }
 
+    public double getPitch() {
+        return gyro.getPitch();
+    }
+
     public static double normalize(double deg) {
         double angle = deg % 360;
         if (angle < -180) {
