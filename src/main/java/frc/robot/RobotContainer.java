@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -33,11 +34,11 @@ public class RobotContainer {
 
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kBack.value);
-    // private final JoystickButton robotCentric = new JoystickButton(driver,
-    // XboxController.Button.kLeftBumper.value);
     private final JoystickButton auto = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton smartPathing = new JoystickButton(driver, XboxController.Button.kB.value);
     private final JoystickButton smartOdo = new JoystickButton(driver, XboxController.Button.kX.value);
+    private final JoystickButton autoBalance = new JoystickButton(driver, XboxController.Button.kY.value);
+    private final JoystickButton cancelAutoBalance = new JoystickButton(driver, XboxController.Button.kStart.value);
 
     /* Subsystems */
     private final Swerve s_Swerve = Swerve.getInstance();
@@ -50,6 +51,7 @@ public class RobotContainer {
      */
     public RobotContainer() {
         s_Swerve.resetOdometry(new Pose2d());
+        s_Swerve.zeroGyro();
         s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
                         s_Swerve,
@@ -92,6 +94,8 @@ public class RobotContainer {
                 new InstantCommand(() -> CommandScheduler.getInstance().schedule(new OnTheFlyGeneration(0, true))),
                 s_Swerve.isPathRunningSupplier));
         smartOdo.onTrue(new SmartResetOdometry());
+        autoBalance.onTrue(new AutoBalance());
+        cancelAutoBalance.onTrue(new InstantCommand(() -> s_Swerve.getCurrentCommand().cancel()));
     }
 
     public void onRobotDisabled() {

@@ -96,8 +96,8 @@ public class Swerve extends SubsystemBase {
     }
 
     public void resetOdometry(Pose2d pose) {
-        zeroGyro();
-        swerveOdometry.resetPosition(Rotation2d.fromDegrees(0), getModulePositions(), pose);
+        swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
+        gyro.setYaw(pose.getRotation().getDegrees());
     }
 
     public SwerveModuleState[] getModuleStates() {
@@ -125,7 +125,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public double getPitch() {
-        return gyro.getPitch();
+        return gyro.getRoll();
     }
 
     public static double normalize(double deg) {

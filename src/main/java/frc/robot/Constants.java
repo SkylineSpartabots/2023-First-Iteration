@@ -23,7 +23,7 @@ public final class Constants {
         public static final Translation3d cameraOffsets = new Translation3d(
             Units.inchesToMeters(-14.5), // x (front-back) offset
             Units.inchesToMeters(0), // y (right-left) offset
-            Units.inchesToMeters(34) // z (up-down)
+            Units.inchesToMeters(-34) // z (up-down)
         );
         public static final Rotation3d cameraAngleOffsets = new Rotation3d(
             Units.degreesToRadians(0), // x (roll)
