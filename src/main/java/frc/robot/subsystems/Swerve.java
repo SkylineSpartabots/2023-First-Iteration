@@ -161,16 +161,4 @@ public class Swerve extends SubsystemBase {
 
     }
 
-    //system.out.println "Helloworld";
-    //system.out.println "my name is tiffany and im the best person in the world";
-    //system.out.println "tiffany is the best snack lead in the world";
-    //system.out.println "like robotics would not be robotics if it weren't for tiffany ong frfr";
-    //system.out.println "hashtag not my prez hashtag not my director of software hashtag not my 
-    // director of engineering hashtag not my director of media"
-    //system.out.println "honestly like honestly like if i were really to say something like i really 
-    // mean it like its something really important but it was like liek but thats crayz"
-    //system.out.println("tiffany lifts way way way way way way way way WAYYYY more than ved. VED? 
-    // MORE LIKE HE STAYS IN BED! VED? WHAT IS MY BLUD WAFFLING ABOUT RN????????????")
-    //system.out.println("i bet ved lifts like 5 pounds max on all machines because of his figure");
-    //system.out.println("tiffany lifts 700kg with her brain and her fingers");
 }
