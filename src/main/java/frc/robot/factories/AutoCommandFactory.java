@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public class AutoCommandFactory {
     
     private static final Swerve s_Swerve = Swerve.getInstance();
+    private static Command lastCommand;
     private static Command selectedAuto;
 
     public static Command getAutoCommand(String auto) { 
@@ -34,13 +35,17 @@ public class AutoCommandFactory {
         return selectedAuto;
     }
 
+    public static void cancelLastCommand() {
+        lastCommand.cancel();
+    }
+
     public static Command followPathCommand(PathPlannerTrajectory path, boolean isFirstPath) {
         PIDController xController = new PIDController(0, 0, 0);
         PIDController yController = new PIDController(0, 0, 0);
         PIDController thetaController = new PIDController(0, 0, 0);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-        Command command = new SequentialCommandGroup(
+        lastCommand = new SequentialCommandGroup(
             new InstantCommand(() -> {
             if(isFirstPath){
                 s_Swerve.resetOdometry(new Pose2d());
@@ -54,7 +59,7 @@ public class AutoCommandFactory {
                 thetaController, 
                 s_Swerve.chassisConsumer,
                 s_Swerve));
-        return command;
+        return lastCommand;
     }
 
     private static Command straight() {

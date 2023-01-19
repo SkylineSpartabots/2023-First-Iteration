@@ -5,6 +5,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -32,14 +35,15 @@ public class RobotContainer {
 
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kBack.value);
-    // private final JoystickButton robotCentric = new JoystickButton(driver,
-    // XboxController.Button.kLeftBumper.value);
     private final JoystickButton auto = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton smartPathing = new JoystickButton(driver, XboxController.Button.kB.value);
+    private final JoystickButton smartOdo = new JoystickButton(driver, XboxController.Button.kX.value);
+    private final JoystickButton autoBalance = new JoystickButton(driver, XboxController.Button.kY.value);
+    private final JoystickButton cancelAutoBalance = new JoystickButton(driver, XboxController.Button.kStart.value);
 
     /* Subsystems */
     private final Swerve s_Swerve = Swerve.getInstance();
-    // private final Limelight s_Limelight = Limelight.getInstance();
+    private final Limelight s_Limelight = Limelight.getInstance();
 
     /* Commands */
 
@@ -48,6 +52,7 @@ public class RobotContainer {
      */
     public RobotContainer() {
         s_Swerve.resetOdometry(new Pose2d());
+        s_Swerve.zeroGyro();
         s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
                         s_Swerve,
@@ -84,16 +89,14 @@ public class RobotContainer {
         // CommandScheduler.getInstance().
         // smartPathing.onTrue(new OnTheFlyGeneration(
         //         0, true));
-        Pose2d pose2 = new Pose2d(10.07, 2.80, Rotation2d.fromDegrees(0));
-        Pose2d pose = new Pose2d(2.22, 2.90, Rotation2d.fromDegrees(0));
-        // Pose2d pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
-        // Pose2d pose2 = new Pose2d(1, 1, Rotation2d.fromDegrees(0));
-        smartPathing.onTrue(new SmartPathGenerating(pose, pose2));
-
-        // smartPathing.onTrue(new ConditionalCommand(
-        //         new InstantCommand(() -> s_Swerve.getCurrentCommand().cancel()),
-        //         new InstantCommand(() -> new OnTheFlyGeneration(0, true)),
-        //         s_Swerve.isPathRunningSupplier));
+        smartPathing.onTrue(new ConditionalCommand(
+                // new InstantCommand(() -> s_Swerve.getCurrentCommand().cancel()),
+                new InstantCommand(() -> AutoCommandFactory.cancelLastCommand()),
+                new InstantCommand(() -> CommandScheduler.getInstance().schedule(new OnTheFlyGeneration(0, true))),
+                s_Swerve.isPathRunningSupplier));
+        smartOdo.onTrue(new SmartResetOdometry());
+        autoBalance.onTrue(new AutoBalance());
+        cancelAutoBalance.onTrue(new InstantCommand(() -> s_Swerve.getCurrentCommand().cancel()));
     }
 
     public void onRobotDisabled() {

@@ -96,8 +96,8 @@ public class Swerve extends SubsystemBase {
     }
 
     public void resetOdometry(Pose2d pose) {
-        zeroGyro();
-        swerveOdometry.resetPosition(Rotation2d.fromDegrees(0), getModulePositions(), pose);
+        swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
+        gyro.setYaw(pose.getRotation().getDegrees());
     }
 
     public SwerveModuleState[] getModuleStates() {
@@ -124,6 +124,10 @@ public class Swerve extends SubsystemBase {
         return Rotation2d.fromDegrees(normalize(gyro.getYaw()));
     }
 
+    public double getPitch() {
+        return gyro.getRoll();
+    }
+
     public static double normalize(double deg) {
         double angle = deg % 360;
         if (angle < -180) {
@@ -135,13 +139,14 @@ public class Swerve extends SubsystemBase {
     }
 
     public boolean pathInProgress() {
-        return !instance.getDefaultCommand().isScheduled();
+        return !getDefaultCommand().isScheduled();
     }
 
     @Override
     public void periodic() {
         swerveOdometry.update(getYaw(), getModulePositions());
 
+        SmartDashboard.putNumber("gyro-pitch", getPitch());
         SmartDashboard.putNumber("gyro-rot", getYaw().getDegrees());
         SmartDashboard.putNumber("odo-rot", getPose().getRotation().getDegrees());
         SmartDashboard.putNumber("x-pos", getPose().getX());
@@ -164,4 +169,8 @@ public class Swerve extends SubsystemBase {
     // director of engineering hashtag not my director of media"
     //system.out.println "honestly like honestly like if i were really to say something like i really 
     // mean it like its something really important but it was like liek but thats crayz"
+    //system.out.println("tiffany lifts way way way way way way way way WAYYYY more than ved. VED? 
+    // MORE LIKE HE STAYS IN BED! VED? WHAT IS MY BLUD WAFFLING ABOUT RN????????????")
+    //system.out.println("i bet ved lifts like 5 pounds max on all machines because of his figure");
+    //system.out.println("tiffany lifts 700kg with her brain and her fingers");
 }

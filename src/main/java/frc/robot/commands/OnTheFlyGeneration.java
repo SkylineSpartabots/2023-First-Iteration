@@ -53,7 +53,7 @@ public class OnTheFlyGeneration extends CommandBase {
     public void initialize() {
         if(swervePose) {
             currentPos = s_Swerve.getPose();
-            targetPos = new Pose2d(new Translation2d(5, 5), new Rotation2d());
+            targetPos = new Pose2d(new Translation2d(0, 0), new Rotation2d());
         }
     }
 
