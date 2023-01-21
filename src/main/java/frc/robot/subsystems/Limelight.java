@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-// import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -12,10 +11,9 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Limelight extends SubsystemBase {
-	private static Limelight instance = null;
+	private static Limelight instance;
 
 	public static Limelight getInstance() {
-
 		if (instance == null) {
 			instance = new Limelight();
 		}
@@ -86,7 +84,6 @@ public class Limelight extends SubsystemBase {
 	@Override
 	public void periodic() {
 		result = camera.getLatestResult();
-		getBestTarget();
 		SmartDashboard.putBoolean("cam has target", hasTarget());
 		SmartDashboard.putNumber("cam last yaw", getYaw());
 		SmartDashboard.putNumber("cam last pitch", getPitch());

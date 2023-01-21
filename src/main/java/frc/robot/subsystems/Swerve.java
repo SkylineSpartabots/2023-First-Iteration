@@ -22,6 +22,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
+    private static Swerve instance;
+    
+    public static Swerve getInstance() {
+        if (instance == null) {
+            instance = new Swerve();
+        }
+        return instance;
+    }
+
     private SwerveDriveOdometry swerveOdometry;
     private Pigeon2 gyro;
     private SwerveModule[] mSwerveMods;
@@ -31,16 +40,7 @@ public class Swerve extends SubsystemBase {
         autoDrive(a, true);
     };
     public BooleanSupplier isPathRunningSupplier = () -> pathInProgress();
-
-    private static Swerve instance;
-
-    public static Swerve getInstance() {
-        if (instance == null) {
-            instance = new Swerve();
-        }
-        return instance;
-    }
-
+    
     public Swerve() {
         gyro = new Pigeon2(Constants.Swerve.pigeonID);
         gyro.configFactoryDefault();

@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -75,19 +74,6 @@ public class RobotContainer {
     private void configureButtonBindings() {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
         auto.onTrue(AutoCommandFactory.getSelectedAuto()); // change based on which auto needs to be tested
-        // smartPathing.onTrue(new SequentialCommandGroup(
-        // // new SmartResetOdometry(),
-        // new OnTheFlyGeneration(
-        // s_Swerve.getPose(),
-        // Constants.Limelight.gameAprilTags2d[s_Limelight.getBestTarget().getFiducialId()-1])
-        // ));
-        // smartPathing.onTrue(new OnTheFlyGeneration(
-        // s_Swerve.getPose(),
-        // s_Swerve.getPose().plus(new Transform2d(new Translation2d(-0.5, 0), new
-        // Rotation2d()))));
-        // CommandScheduler.getInstance().
-        // smartPathing.onTrue(new OnTheFlyGeneration(
-        //         0, true));
         smartPathing.onTrue(new ConditionalCommand(
                 // new InstantCommand(() -> s_Swerve.getCurrentCommand().cancel()),
                 new InstantCommand(() -> AutoCommandFactory.cancelLastCommand()),
@@ -102,13 +88,4 @@ public class RobotContainer {
         // reset mechanisms so it does not have to be done manually
     }
 
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
-     * @return the command to run in autonomous
-     */
-    // public Command getAutonomousCommand(String auto) {
-    // // An ExampleCommand will run in autonomous
-    // return AutoCommandFactory.getAutoCommand(auto);
-    // }
 }

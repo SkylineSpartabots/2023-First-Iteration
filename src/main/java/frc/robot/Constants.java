@@ -14,9 +14,13 @@ import frc.lib.util.COTSFalconSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
-    public static Pose2d targetPosition;
-
+    public static final int timeOutMs = 10;
     public static final double stickDeadband = 0.1;
+
+    public static final class Motors {
+        public static final int pivotMasterMotor = 0;
+        public static final int pivotFollowerMotor = 0;
+    }
 
     public static final class Limelight {
         public static final String photonCamName = "OV5647";
