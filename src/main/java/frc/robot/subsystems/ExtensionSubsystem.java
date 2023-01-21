@@ -26,7 +26,19 @@ public class ExtensionSubsystem {
         extensionMotor.config_kD(0, 0);
     }
     
-    public void setExtensionPosition(double outputValue) {
-        extensionMotor.set(ControlMode.Position, extensionMotor.getClosedLoopError() );
+    public void setExtensionPosition(ExtensionControl position) {
+        extensionMotor.set(ControlMode.Position, position.value);
+    }
+    public enum ExtensionControl {
+        GROUND(9000),
+        SUBSTATION(6000),
+        FIRST_STAIR(4000),
+        SECOND_STAIR(6000),
+        THIRD_STAIR(9000);
+
+        private int value;
+        private ExtensionControl(int value) {
+            this.value = value;
+        }
     }
 }
