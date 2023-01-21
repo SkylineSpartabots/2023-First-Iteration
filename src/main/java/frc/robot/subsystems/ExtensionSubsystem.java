@@ -20,6 +20,8 @@ public class ExtensionSubsystem {
     TalonFX extensionMotor;
     public ExtensionSubsystem() {
         extensionMotor = new TalonFX(Constants.Arm.extensionMotorID);
+        extensionMotor.configVoltageCompSaturation(12.0, Constants.timeOutMs);
+        extensionMotor.enableVoltageCompensation(true);
         extensionMotor.setNeutralMode(NeutralMode.Brake);
         extensionMotor.config_kP(0, 1.0);
         extensionMotor.config_kI(0, 0);

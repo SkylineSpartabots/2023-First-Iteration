@@ -14,6 +14,7 @@ import frc.lib.util.COTSFalconSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
+    public static final int timeOutMs = 10;
     public static Pose2d targetPosition;
 
     public static final double stickDeadband = 0.1;
