@@ -17,10 +17,13 @@ public final class Constants {
     public static final int timeOutMs = 10;
     public static final double stickDeadband = 0.1;
 
-    public static final class Motors {
+    public static final class HardwarePorts {
         public static final int pivotMasterMotor = 0;
         public static final int pivotFollowerMotor = 0;
         public static final int extensionMotor = 0;
+        public static final int intakeMotor = 0;
+        public static final int intakeSolenoidForwardChannel = 0;
+        public static final int intakeSolenoidReverseChannel = 0;
     }
 
     // ALL OF THESE ARE ONLY TRUE ON BLUE ALLIANCE

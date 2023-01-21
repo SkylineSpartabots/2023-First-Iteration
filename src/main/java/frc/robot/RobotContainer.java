@@ -45,6 +45,7 @@ public class RobotContainer {
     private final Limelight s_Limelight = Limelight.getInstance();
     private final Extension s_Extension = Extension.getInstance();
     private final Pivot s_Pivot = Pivot.getInstance();
+    private final Intake s_Intake = Intake.getInstance();
 
     /* Commands */
 

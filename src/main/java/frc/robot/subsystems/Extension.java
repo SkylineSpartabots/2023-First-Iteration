@@ -39,7 +39,7 @@ public class Extension extends SubsystemBase {
     }
 
     public Extension() {
-        mExtensionMotor = new TalonFX(Constants.Motors.extensionMotor);
+        mExtensionMotor = new TalonFX(Constants.HardwarePorts.extensionMotor);
         configureMotor(mExtensionMotor, false); // check inversion
     }
 

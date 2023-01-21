@@ -39,11 +39,11 @@ public class Pivot extends SubsystemBase {
 	}
 
 	public Pivot() {
-		mMasterPivotMotor = new TalonFX(Constants.Motors.pivotMasterMotor);
+		mMasterPivotMotor = new TalonFX(Constants.HardwarePorts.pivotMasterMotor);
 		configureMotor(mMasterPivotMotor, false);
-		mFollowerPivotMotor = new TalonFX(Constants.Motors.pivotFollowerMotor);
+		mFollowerPivotMotor = new TalonFX(Constants.HardwarePorts.pivotFollowerMotor);
 		configureMotor(mFollowerPivotMotor, false); // check inversions
-		mFollowerPivotMotor.set(ControlMode.Follower, Constants.Motors.pivotMasterMotor);
+		mFollowerPivotMotor.set(ControlMode.Follower, Constants.HardwarePorts.pivotMasterMotor);
 	}
 
 	private void configureMotor(TalonFX talon, boolean b){
