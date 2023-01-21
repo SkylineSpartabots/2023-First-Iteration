@@ -24,7 +24,6 @@ public class Robot extends TimedRobot {
   private static final String auto1 = "straightAuto";
   private static final String auto2 = "rightAuto";
   private static final String auto3 = "waitAuto";
-  private static final String auto4 = "twoGP";
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private RobotContainer m_robotContainer;
   
@@ -39,7 +38,6 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("straightAuto", auto1);
     m_chooser.addOption("rightAuto", auto2);
     m_chooser.addOption("waitAuto", auto3);
-    m_chooser.addOption("twoGP", auto4);
     SmartDashboard.putData("Auto choices", m_chooser);
     m_autonomousCommand = AutoCommandFactory.getAutoCommand(m_chooser.getSelected());
     m_robotContainer = new RobotContainer();
