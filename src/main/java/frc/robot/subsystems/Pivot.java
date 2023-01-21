@@ -18,8 +18,8 @@ public class Pivot extends SubsystemBase {
 		return instance;
 	}
 
-	private double velocity;
 	private TalonFX mMasterPivotMotor, mFollowerPivotMotor;
+	private double velocity;
 	private PivotStates pivotState = PivotStates.ZERO;
 	private double position = pivotState.statePosition;
 	
@@ -42,7 +42,7 @@ public class Pivot extends SubsystemBase {
 		mMasterPivotMotor = new TalonFX(Constants.Motors.pivotMasterMotor);
 		configureMotor(mMasterPivotMotor, false);
 		mFollowerPivotMotor = new TalonFX(Constants.Motors.pivotFollowerMotor);
-		configureMotor(mFollowerPivotMotor, false); // figure out inversions
+		configureMotor(mFollowerPivotMotor, false); // check inversions
 		mFollowerPivotMotor.set(ControlMode.Follower, Constants.Motors.pivotMasterMotor);
 	}
 
@@ -85,8 +85,8 @@ public class Pivot extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		SmartDashboard.putNumber("Pivot pos setpoint", getPositionSetpoint());
-		SmartDashboard.putNumber("Pivot pos measured", getMeasuredPosition());
-		SmartDashboard.putNumber("Pivot set velo", getVelocitySetpoint());
+		SmartDashboard.putNumber("pivot pos setpoint", getPositionSetpoint());
+		SmartDashboard.putNumber("pivot pos measured", getMeasuredPosition());
+		SmartDashboard.putNumber("pivot set velo", getVelocitySetpoint());
 	}
 }

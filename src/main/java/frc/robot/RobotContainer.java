@@ -42,6 +42,8 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve s_Swerve = Swerve.getInstance();
     private final Limelight s_Limelight = Limelight.getInstance();
+    private final Extension s_Extension = Extension.getInstance();
+    private final Pivot s_Pivot = Pivot.getInstance();
 
     /* Commands */
 

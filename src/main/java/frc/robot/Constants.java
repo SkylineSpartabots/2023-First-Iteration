@@ -20,6 +20,7 @@ public final class Constants {
     public static final class Motors {
         public static final int pivotMasterMotor = 0;
         public static final int pivotFollowerMotor = 0;
+        public static final int extensionMotor = 0;
     }
 
     public static final class Limelight {
