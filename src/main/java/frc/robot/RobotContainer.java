@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -37,7 +38,7 @@ public class RobotContainer {
     private final JoystickButton smartPathing = new JoystickButton(driver, XboxController.Button.kB.value);
     private final JoystickButton smartOdo = new JoystickButton(driver, XboxController.Button.kX.value);
     private final JoystickButton autoBalance = new JoystickButton(driver, XboxController.Button.kY.value);
-    private final JoystickButton cancelAutoBalance = new JoystickButton(driver, XboxController.Button.kStart.value);
+    private final JoystickButton setArm = new JoystickButton(driver, XboxController.Button.kStart.value);
 
     /* Subsystems */
     private final Swerve s_Swerve = Swerve.getInstance();
@@ -77,13 +78,16 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
         auto.onTrue(AutoCommandFactory.getSelectedAuto()); // change based on which auto needs to be tested
         smartPathing.onTrue(new ConditionalCommand(
-                // new InstantCommand(() -> s_Swerve.getCurrentCommand().cancel()),
                 new InstantCommand(() -> AutoCommandFactory.cancelLastCommand()),
                 new InstantCommand(() -> CommandScheduler.getInstance().schedule(new OnTheFlyGeneration(0, true))),
                 s_Swerve.isPathRunningSupplier));
         smartOdo.onTrue(new SmartResetOdometry());
-        autoBalance.onTrue(new AutoBalance());
-        cancelAutoBalance.onTrue(new InstantCommand(() -> s_Swerve.getCurrentCommand().cancel()));
+        Command autoBalanceCommand = new AutoBalance();
+        autoBalance.onTrue(new ConditionalCommand(
+                autoBalanceCommand,
+                new InstantCommand(() -> autoBalanceCommand.cancel()),
+                s_Swerve.isPathRunningSupplier));
+        setArm.onTrue(new SetArm(Extension.ExtensionStates.ZERO, Pivot.PivotStates.ZERO));
     }
 
     public void onRobotDisabled() {
