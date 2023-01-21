@@ -44,12 +44,12 @@ public class SmartResetOdometry extends CommandBase {
                 targetPose,
                 new Transform3d(Constants.Limelight.cameraOffsets, Constants.Limelight.cameraAngleOffsets)
             );
-            SmartDashboard.putNumber("robot-SO-x", robotPose.getX());
-            SmartDashboard.putNumber("robot-SO-y", robotPose.getY());
-            SmartDashboard.putNumber("robot-SO-z", robotPose.getZ());
-            SmartDashboard.putNumber("robot-SO-rot", Units.radiansToDegrees(robotPose.getRotation().getY()));
-            // s_Swerve.resetOdometry(new Pose2d(robotPose.getX(), robotPose.getY(),
-            //         Rotation2d.fromDegrees(robotPose.getRotation().getZ())));
+            SmartDashboard.putNumber("robot-SO-x",  /*Units.metersToInches*/(robotPose.getX()));
+            SmartDashboard.putNumber("robot-SO-y", /*Units.metersToInches*/(robotPose.getY()));
+            SmartDashboard.putNumber("robot-SO-z", /*Units.metersToInches*/(robotPose.getZ()));
+            SmartDashboard.putNumber("robot-SO-rot", Units.radiansToDegrees(robotPose.getRotation().getZ()));
+            s_Swerve.resetOdometry(new Pose2d(robotPose.getX(), robotPose.getY(),
+                    Rotation2d.fromRadians(robotPose.getRotation().getZ())));
             isReset = true;
         }
     }

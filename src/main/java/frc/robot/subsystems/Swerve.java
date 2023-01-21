@@ -22,6 +22,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
+    private static Swerve instance;
+    
+    public static Swerve getInstance() {
+        if (instance == null) {
+            instance = new Swerve();
+        }
+        return instance;
+    }
+
     private SwerveDriveOdometry swerveOdometry;
     private Pigeon2 gyro;
     private SwerveModule[] mSwerveMods;
@@ -31,16 +40,7 @@ public class Swerve extends SubsystemBase {
         autoDrive(a, true);
     };
     public BooleanSupplier isPathRunningSupplier = () -> pathInProgress();
-
-    private static Swerve instance;
-
-    public static Swerve getInstance() {
-        if (instance == null) {
-            instance = new Swerve();
-        }
-        return instance;
-    }
-
+    
     public Swerve() {
         gyro = new Pigeon2(Constants.Swerve.pigeonID);
         gyro.configFactoryDefault();
@@ -96,8 +96,8 @@ public class Swerve extends SubsystemBase {
     }
 
     public void resetOdometry(Pose2d pose) {
-        zeroGyro();
-        swerveOdometry.resetPosition(Rotation2d.fromDegrees(0), getModulePositions(), pose);
+        swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
+        gyro.setYaw(pose.getRotation().getDegrees());
     }
 
     public SwerveModuleState[] getModuleStates() {
@@ -124,6 +124,10 @@ public class Swerve extends SubsystemBase {
         return Rotation2d.fromDegrees(normalize(gyro.getYaw()));
     }
 
+    public double getPitch() {
+        return gyro.getRoll();
+    }
+
     public static double normalize(double deg) {
         double angle = deg % 360;
         if (angle < -180) {
@@ -142,6 +146,7 @@ public class Swerve extends SubsystemBase {
     public void periodic() {
         swerveOdometry.update(getYaw(), getModulePositions());
 
+        SmartDashboard.putNumber("gyro-pitch", getPitch());
         SmartDashboard.putNumber("gyro-rot", getYaw().getDegrees());
         SmartDashboard.putNumber("odo-rot", getPose().getRotation().getDegrees());
         SmartDashboard.putNumber("x-pos", getPose().getX());

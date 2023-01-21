@@ -33,11 +33,11 @@ public class RobotContainer {
 
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kBack.value);
-    // private final JoystickButton robotCentric = new JoystickButton(driver,
-    // XboxController.Button.kLeftBumper.value);
     private final JoystickButton auto = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton smartPathing = new JoystickButton(driver, XboxController.Button.kB.value);
     private final JoystickButton smartOdo = new JoystickButton(driver, XboxController.Button.kX.value);
+    private final JoystickButton autoBalance = new JoystickButton(driver, XboxController.Button.kY.value);
+    private final JoystickButton cancelAutoBalance = new JoystickButton(driver, XboxController.Button.kStart.value);
 
     /* Subsystems */
     private final Swerve s_Swerve = Swerve.getInstance();
@@ -50,6 +50,7 @@ public class RobotContainer {
      */
     public RobotContainer() {
         s_Swerve.resetOdometry(new Pose2d());
+        s_Swerve.zeroGyro();
         s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
                         s_Swerve,
@@ -73,38 +74,18 @@ public class RobotContainer {
     private void configureButtonBindings() {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
         auto.onTrue(AutoCommandFactory.getSelectedAuto()); // change based on which auto needs to be tested
-        // smartPathing.onTrue(new SequentialCommandGroup(
-        // // new SmartResetOdometry(),
-        // new OnTheFlyGeneration(
-        // s_Swerve.getPose(),
-        // Constants.Limelight.gameAprilTags2d[s_Limelight.getBestTarget().getFiducialId()-1])
-        // ));
-        // smartPathing.onTrue(new OnTheFlyGeneration(
-        // s_Swerve.getPose(),
-        // s_Swerve.getPose().plus(new Transform2d(new Translation2d(-0.5, 0), new
-        // Rotation2d()))));
-        // CommandScheduler.getInstance().
-        // smartPathing.onTrue(new OnTheFlyGeneration(
-        //         0, true));
         smartPathing.onTrue(new ConditionalCommand(
                 // new InstantCommand(() -> s_Swerve.getCurrentCommand().cancel()),
                 new InstantCommand(() -> AutoCommandFactory.cancelLastCommand()),
                 new InstantCommand(() -> CommandScheduler.getInstance().schedule(new OnTheFlyGeneration(0, true))),
                 s_Swerve.isPathRunningSupplier));
         smartOdo.onTrue(new SmartResetOdometry());
+        autoBalance.onTrue(new AutoBalance());
+        cancelAutoBalance.onTrue(new InstantCommand(() -> s_Swerve.getCurrentCommand().cancel()));
     }
 
     public void onRobotDisabled() {
         // reset mechanisms so it does not have to be done manually
     }
 
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
-     * @return the command to run in autonomous
-     */
-    // public Command getAutonomousCommand(String auto) {
-    // // An ExampleCommand will run in autonomous
-    // return AutoCommandFactory.getAutoCommand(auto);
-    // }
 }
