@@ -55,7 +55,11 @@ public final class Constants {
             new Pose2d(1.03, 4.42, new Rotation2d(0)),
             new Pose2d(1.03, 2.74, new Rotation2d(0)),
             new Pose2d(1.03, 1.07, new Rotation2d(0))
-    };
+        };
+    }
+
+    public static final class Arm {
+        public static final int extensionMotorID = 20;
     }
 
     public static final class Swerve {
