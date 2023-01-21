@@ -31,6 +31,9 @@ public class ExtensionSubsystem {
     public void setExtensionPosition(ExtensionControl position) {
         extensionMotor.set(ControlMode.Position, position.value);
     }
+    public void setExtensionVelocity(double velocity) {
+        extensionMotor.set(ControlMode.Velocity, velocity);
+    }
     public enum ExtensionControl {
         GROUND(9000),
         SUBSTATION(6000),
