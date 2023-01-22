@@ -27,7 +27,7 @@ public class Extension extends SubsystemBase {
         ZERO(0.0),
         GROUND(0.0),
         SUBSTATION(0.0),
-        L1(0.0),
+        L1(5.0), //testing purposes
         L2(0.0),
         L3(0.0);
 
@@ -41,6 +41,7 @@ public class Extension extends SubsystemBase {
     public Extension() {
         mExtensionMotor = new TalonFX(Constants.HardwarePorts.extensionMotor);
         configureMotor(mExtensionMotor, false); // check inversion
+        setExtensionPosition(ExtensionStates.GROUND); // arbitrary, using it for testing
     }
 
     private void configureMotor(TalonFX talon, boolean b){
@@ -61,6 +62,7 @@ public class Extension extends SubsystemBase {
 
     public void setExtensionPosition(ExtensionStates extensionState) {
         this.extensionState = extensionState;
+        position = this.extensionState.statePosition;
         mExtensionMotor.set(ControlMode.Position, position);
     }
 

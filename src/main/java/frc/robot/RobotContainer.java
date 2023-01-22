@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
 import frc.robot.factories.AutoCommandFactory;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.Extension.ExtensionStates;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -26,6 +27,7 @@ import frc.robot.subsystems.*;
 public class RobotContainer {
     /* Controllers */
     private final Joystick driver = new Joystick(0);
+    private final Joystick operator = new Joystick(1);
 
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -39,6 +41,9 @@ public class RobotContainer {
     private final JoystickButton smartOdo = new JoystickButton(driver, XboxController.Button.kX.value);
     private final JoystickButton autoBalance = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton setArm = new JoystickButton(driver, XboxController.Button.kStart.value);
+
+    /* Operator Buttons, currently just used for testing */
+    private final JoystickButton setExtension = new JoystickButton(operator, XboxController.Button.kA.value);
 
     /* Subsystems */
     private final Swerve s_Swerve = Swerve.getInstance();
@@ -89,6 +94,7 @@ public class RobotContainer {
                 new InstantCommand(() -> autoBalanceCommand.cancel()),
                 s_Swerve.isPathRunningSupplier));
         setArm.onTrue(new SetArm(Extension.ExtensionStates.ZERO, Pivot.PivotStates.ZERO));
+        setExtension.onTrue(new InstantCommand(() -> s_Extension.setExtensionPosition(ExtensionStates.L1)));
     }
 
     public void onRobotDisabled() {

@@ -40,9 +40,9 @@ public class Intake extends SubsystemBase {
         compressor = new Compressor(PneumaticsModuleType.REVPH);
         compressor.enableDigital();
         current = compressor.getPressure();
-        solenoid.set(Value.kOff);
         mIntakemotor = new TalonFX(Constants.HardwarePorts.intakeMotor);
         configureMotor(mIntakemotor, false); // figure out inversion
+        setState(IntakeState.OFF);
     }
 
     private void configureMotor(TalonFX talon, boolean b){
@@ -57,6 +57,7 @@ public class Intake extends SubsystemBase {
     }
 
     public enum IntakeState {
+        OFF(Value.kOff, 0),
         OFF_RETRACTED(Value.kReverse, 0),
         ON_RETRACTED(Value.kReverse, 1),
         REV_RETRACTED(Value.kReverse, -1),
