@@ -46,11 +46,11 @@ public class RobotContainer {
     private final JoystickButton setExtension = new JoystickButton(operator, XboxController.Button.kA.value);
 
     /* Subsystems */
-    private final Swerve s_Swerve = Swerve.getInstance();
-    private final Limelight s_Limelight = Limelight.getInstance();
-    private final Extension s_Extension = Extension.getInstance();
-    private final Pivot s_Pivot = Pivot.getInstance();
-    private final Intake s_Intake = Intake.getInstance();
+    private final Swerve s_Swerve ;
+    private final Limelight s_Limelight ;
+    private final Extension s_Extension ;
+    private final Pivot s_Pivot ;
+    private final Intake s_Intake ;
 
     /* Commands */
 
@@ -58,6 +58,14 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
+        //initialize subsystems
+        s_Swerve = Swerve.getInstance();
+        s_Limelight = Limelight.getInstance();
+        s_Extension = Extension.getInstance();
+        s_Pivot = Pivot.getInstance();
+        s_Intake = Intake.getInstance();
+
+        s_Swerve.resetOdometry(new Pose2d());
         s_Swerve.resetOdometry(new Pose2d());
         s_Swerve.zeroGyro();
         s_Swerve.setDefaultCommand(

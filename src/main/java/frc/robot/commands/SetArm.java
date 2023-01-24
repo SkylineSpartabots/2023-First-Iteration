@@ -5,12 +5,15 @@ import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Pivot;
 
 public class SetArm extends CommandBase {
-	Extension s_Extension = Extension.getInstance();
-	Pivot s_Pivot = Pivot.getInstance();
+	Extension s_Extension;
+	Pivot s_Pivot;
 	Extension.ExtensionStates extensionState;
 	Pivot.PivotStates pivotState;
 
 	public SetArm(Extension.ExtensionStates extensionState, Pivot.PivotStates pivotState) {
+		s_Pivot = Pivot.getInstance();
+		s_Extension = Extension.getInstance();
+		addRequirements(s_Pivot, s_Extension);
 		this.extensionState = extensionState;
 		this.pivotState = pivotState;
 	}
