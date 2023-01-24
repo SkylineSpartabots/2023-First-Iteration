@@ -60,7 +60,7 @@ public class Extension extends SubsystemBase {
         mPIDController.setI(0);
         mPIDController.setP(0);
         mPIDController.setFF(0.000015);
-        // mEncoder.setInverted(false);
+        // // mEncoder.setInverted(false);
     }
     
     public void setExtensionVelocity(double velocity) {
