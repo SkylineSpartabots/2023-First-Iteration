@@ -40,7 +40,7 @@ public class Intake extends SubsystemBase {
         compressor = new Compressor(PneumaticsModuleType.REVPH);
         compressor.enableDigital();
         current = compressor.getPressure();
-        mIntakemotor = new TalonFX(Constants.HardwarePorts.intakeMotor);
+        mIntakemotor = new TalonFX(Constants.HardwarePorts.intakeMotor, "2976 CANivore");
         configureMotor(mIntakemotor, false); // figure out inversion
         setState(IntakeState.OFF);
     }

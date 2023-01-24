@@ -46,7 +46,7 @@ public class Extension extends SubsystemBase {
     }
 
     public Extension() {
-        mExtensionMotor = new CANSparkMax(20, MotorType.kBrushless);
+        mExtensionMotor = new CANSparkMax(21, MotorType.kBrushless);
         mExtensionMotor.restoreFactoryDefaults();
         mPIDController = mExtensionMotor.getPIDController();
         mEncoder = mExtensionMotor.getEncoder();
@@ -60,7 +60,7 @@ public class Extension extends SubsystemBase {
         mPIDController.setI(0);
         mPIDController.setP(0);
         mPIDController.setFF(0.000015);
-        mEncoder.setInverted(false);
+        // mEncoder.setInverted(false);
     }
     
     public void setExtensionVelocity(double velocity) {
