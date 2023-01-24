@@ -41,7 +41,7 @@ public class Pivot extends SubsystemBase {
 	public Pivot() {
 		mMasterPivotMotor = new TalonFX(Constants.HardwarePorts.pivotMasterMotor);
 		configureMotor(mMasterPivotMotor, false);
-		mFollowerPivotMotor = new TalonFX(Constants.HardwarePorts.pivotFollowerMotor);
+		mFollowerPivotMotor = new TalonFX(Constants.HardwarePorts.pivotFollowerMotor, "2976 CANivore");
 		configureMotor(mFollowerPivotMotor, false); // check inversions
 		mFollowerPivotMotor.set(ControlMode.Follower, Constants.HardwarePorts.pivotMasterMotor);
 	}
