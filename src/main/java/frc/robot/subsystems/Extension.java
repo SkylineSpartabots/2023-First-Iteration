@@ -1,9 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -28,15 +24,15 @@ public class Extension extends SubsystemBase {
     private RelativeEncoder mEncoder;
     private double velocity;
     private ExtensionStates extensionState = ExtensionStates.ZERO;
-    private double position = extensionState.statePosition;
     
     public enum ExtensionStates {
         ZERO(0.0),
         GROUND(0.0),
         SUBSTATION(0.0),
-        L1(5.0), //testing purposes
+        L1(0.0), 
         L2(0.0),
-        L3(0.0);
+        L3(0.0),
+        TEST(1.0); // for testing
 
         double statePosition = 0.0;
 
@@ -51,27 +47,25 @@ public class Extension extends SubsystemBase {
         mPIDController = mExtensionMotor.getPIDController();
         mEncoder = mExtensionMotor.getEncoder();
 
-        configureMotor(); // check inversion
-        setExtensionPosition(ExtensionStates.GROUND); // arbitrary, using it for testing
+        configureMotor(); 
     }
 
     private void configureMotor(){
-        mPIDController.setD(6e-5);
+        mPIDController.setD(0);
         mPIDController.setI(0);
-        mPIDController.setP(0);
-        mPIDController.setFF(0.000015);
+        mPIDController.setP(0.1);
+        mPIDController.setFF(1);
         // // mEncoder.setInverted(false);
     }
     
-    public void setExtensionVelocity(double velocity) {
+    public void setVelocity(double velocity) {
         this.velocity = velocity;
         mPIDController.setReference(velocity, CANSparkMax.ControlType.kVelocity);
     }
 
-    public void setExtensionPosition(ExtensionStates extensionState) {
-        this.extensionState = extensionState;
-        position = this.extensionState.statePosition;
-        mPIDController.setReference(position, CANSparkMax.ControlType.kPosition);
+    public void setPosition(ExtensionStates state) {
+        extensionState = state;
+        mPIDController.setReference(extensionState.statePosition, CANSparkMax.ControlType.kPosition);
     }
 
     public double getVelocitySetpoint () {
@@ -79,7 +73,7 @@ public class Extension extends SubsystemBase {
 	}
 
 	public double getPositionSetpoint () {
-		return position;
+		return extensionState.statePosition;
 	}
 
 	public double getMeasuredPosition () {

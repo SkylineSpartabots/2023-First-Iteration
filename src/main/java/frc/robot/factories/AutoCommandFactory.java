@@ -21,8 +21,11 @@ public class AutoCommandFactory {
     private static Command lastCommand;
     private static Command selectedAuto;
 
-    public static Command getAutoCommand(String auto) {
+    public AutoCommandFactory() {
         s_Swerve = Swerve.getInstance();
+    }
+
+    public static Command getAutoCommand(String auto) {
         if (auto.equals("straightAuto"))
             return selectedAuto = straight();
         else if (auto.equals("rightAuto"))

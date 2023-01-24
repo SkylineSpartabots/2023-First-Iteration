@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
 import frc.robot.factories.AutoCommandFactory;
 import frc.robot.subsystems.*;
-import frc.robot.subsystems.Extension.ExtensionStates;
+import frc.robot.subsystems.Intake.IntakeStates;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -40,10 +40,11 @@ public class RobotContainer {
     private final JoystickButton smartPathing = new JoystickButton(driver, XboxController.Button.kB.value);
     private final JoystickButton smartOdo = new JoystickButton(driver, XboxController.Button.kX.value);
     private final JoystickButton autoBalance = new JoystickButton(driver, XboxController.Button.kY.value);
-    private final JoystickButton setArm = new JoystickButton(driver, XboxController.Button.kStart.value);
 
     /* Operator Buttons, currently just used for testing */
     private final JoystickButton setExtension = new JoystickButton(operator, XboxController.Button.kA.value);
+    private final JoystickButton setPivot = new JoystickButton(operator, XboxController.Button.kB.value);
+    private final JoystickButton setIntake = new JoystickButton(operator, XboxController.Button.kX.value);
 
     /* Subsystems */
     private final Swerve s_Swerve ;
@@ -101,8 +102,10 @@ public class RobotContainer {
                 autoBalanceCommand,
                 new InstantCommand(() -> autoBalanceCommand.cancel()),
                 s_Swerve.isPathRunningSupplier));
-        setArm.onTrue(new SetArm(Extension.ExtensionStates.ZERO, Pivot.PivotStates.ZERO));
-        setExtension.onTrue(new InstantCommand(() -> s_Extension.setExtensionPosition(ExtensionStates.L1)));
+        // setArm.onTrue(new SetArm(Extension.ExtensionStates.ZERO, Pivot.PivotStates.ZERO));
+        setExtension.onTrue(new InstantCommand(() -> s_Extension.setVelocity(-0.1)));
+        setPivot.onTrue(new InstantCommand(() -> s_Pivot.setVelocity(-0.1)));
+        setIntake.onTrue(new InstantCommand(() -> s_Intake.setState(IntakeStates.ON_DEPLOYED)));
     }
 
     public void onRobotDisabled() {

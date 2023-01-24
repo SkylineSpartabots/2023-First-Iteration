@@ -20,8 +20,8 @@ public class SetArm extends CommandBase {
 
 	@Override
 	public void initialize() {
-		s_Extension.setExtensionPosition(extensionState);
-		s_Pivot.setPivotPosition(pivotState);
+		s_Extension.setPosition(extensionState);
+		s_Pivot.setPosition(pivotState);
 	}
 
 	@Override
