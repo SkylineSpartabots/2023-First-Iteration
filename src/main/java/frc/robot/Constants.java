@@ -74,10 +74,6 @@ public final class Constants {
         };
     }
 
-    public static final class Arm {
-        public static final int extensionMotorID = 20;
-    }
-
     public static final double FIELD_WIDTH_METERS = 8.02;
 
     public static final class Swerve {

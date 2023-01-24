@@ -8,6 +8,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 public class Extension extends SubsystemBase {
     static Extension instance;
 
@@ -18,7 +23,9 @@ public class Extension extends SubsystemBase {
         return instance;
     }
      
-    private TalonFX mExtensionMotor;
+    private CANSparkMax mExtensionMotor; 
+    private SparkMaxPIDController mPIDController;
+    private RelativeEncoder mEncoder;
     private double velocity;
     private ExtensionStates extensionState = ExtensionStates.ZERO;
     private double position = extensionState.statePosition;
@@ -39,31 +46,32 @@ public class Extension extends SubsystemBase {
     }
 
     public Extension() {
-        mExtensionMotor = new TalonFX(Constants.HardwarePorts.extensionMotor);
-        configureMotor(mExtensionMotor, false); // check inversion
+        mExtensionMotor = new CANSparkMax(20, MotorType.kBrushless);
+        mExtensionMotor.restoreFactoryDefaults();
+        mPIDController = mExtensionMotor.getPIDController();
+        mEncoder = mExtensionMotor.getEncoder();
+
+        configureMotor(); // check inversion
         setExtensionPosition(ExtensionStates.GROUND); // arbitrary, using it for testing
     }
 
-    private void configureMotor(TalonFX talon, boolean b){
-        talon.setInverted(b);
-        talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
-        talon.enableVoltageCompensation(true);
-        talon.setNeutralMode(NeutralMode.Brake);
-        talon.config_kF(0, 0.05, Constants.timeOutMs);
-        talon.config_kP(0, 0.12, Constants.timeOutMs);
-        talon.config_kI(0, 0, Constants.timeOutMs);
-        talon.config_kD(0, 0, Constants.timeOutMs);
+    private void configureMotor(){
+        mPIDController.setD(6e-5);
+        mPIDController.setI(0);
+        mPIDController.setP(0);
+        mPIDController.setFF(0.000015);
+        mEncoder.setInverted(false);
     }
     
     public void setExtensionVelocity(double velocity) {
         this.velocity = velocity;
-        mExtensionMotor.set(ControlMode.Velocity, velocity);
+        mPIDController.setReference(velocity, CANSparkMax.ControlType.kVelocity);
     }
 
     public void setExtensionPosition(ExtensionStates extensionState) {
         this.extensionState = extensionState;
         position = this.extensionState.statePosition;
-        mExtensionMotor.set(ControlMode.Position, position);
+        mPIDController.setReference(position, CANSparkMax.ControlType.kPosition);
     }
 
     public double getVelocitySetpoint () {
@@ -75,11 +83,11 @@ public class Extension extends SubsystemBase {
 	}
 
 	public double getMeasuredPosition () {
-		return mExtensionMotor.getSelectedSensorPosition();
+		return mEncoder.getPosition();
 	}
 
     public void setEncoderPosition (double position) {
-		mExtensionMotor.setSelectedSensorPosition(position);
+        mPIDController.setReference(position, CANSparkMax.ControlType.kPosition);
 	}
     
     @Override
