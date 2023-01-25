@@ -14,6 +14,7 @@ import frc.robot.commands.*;
 import frc.robot.factories.AutoCommandFactory;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Extension.ExtensionStates;
+import frc.robot.commands.SetArm;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
