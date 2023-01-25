@@ -21,7 +21,6 @@ public class Pivot extends SubsystemBase {
 	private TalonFX mMasterPivotMotor, mFollowerPivotMotor;
 	private double velocity;
 	private PivotStates pivotState = PivotStates.ZERO;
-	private double position = pivotState.statePosition;
 	
 	public enum PivotStates {
 		ZERO(0.0),
@@ -29,7 +28,8 @@ public class Pivot extends SubsystemBase {
 		SUBSTATION(0.0),
 		L1(0.0),
 		L2(0.0),
-		L3(0.0);
+		L3(0.0),
+		TEST(1.0); // for testing
 
 		double statePosition = 0.0;
 
@@ -42,7 +42,7 @@ public class Pivot extends SubsystemBase {
 		mMasterPivotMotor = new TalonFX(Constants.HardwarePorts.pivotMasterMotor);
 		configureMotor(mMasterPivotMotor, false);
 		mFollowerPivotMotor = new TalonFX(Constants.HardwarePorts.pivotFollowerMotor, "2976 CANivore");
-		configureMotor(mFollowerPivotMotor, false); // check inversions
+		configureMotor(mFollowerPivotMotor, false); // check inversions for motors
 		mFollowerPivotMotor.set(ControlMode.Follower, Constants.HardwarePorts.pivotMasterMotor);
 	}
 
@@ -57,14 +57,14 @@ public class Pivot extends SubsystemBase {
         talon.config_kD(0, 0, Constants.timeOutMs);
     }
 
-	public void setPivotVelocity (double velocity) {
+	public void setVelocity (double velocity) {
 		this.velocity = velocity;
 		mMasterPivotMotor.set(ControlMode.Velocity, velocity);
 	}
 
-	public void setPivotPosition (PivotStates pivotState) {
-		this.pivotState = pivotState;
-		mMasterPivotMotor.set(ControlMode.Position, position);
+	public void setPosition (PivotStates state) {
+		pivotState = state;
+		mMasterPivotMotor.set(ControlMode.Position, pivotState.statePosition);
 	}
 
 	public double getVelocitySetpoint () {
@@ -72,7 +72,7 @@ public class Pivot extends SubsystemBase {
 	}
 
 	public double getPositionSetpoint () {
-		return position;
+		return pivotState.statePosition;
 	}
 
 	public double getMeasuredPosition () {

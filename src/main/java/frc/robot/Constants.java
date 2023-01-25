@@ -20,7 +20,7 @@ public final class Constants {
     public static final class HardwarePorts {
         public static final int pivotMasterMotor = 20; //i set master and follower arbitrarily
         public static final int pivotFollowerMotor = 45; //arbitrary
-        public static final int extensionMotor = 20; //this one is a neo someone needs to get out the neo hardware tuning thing
+        public static final int extensionMotor = 21; //this one is a neo someone needs to get out the neo hardware tuning thing
         public static final int intakeMotor = 32; //correct
         public static final int intakeSolenoidForwardChannel = 0;
         public static final int intakeSolenoidReverseChannel = 0;
