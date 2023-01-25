@@ -48,6 +48,8 @@ public class Extension extends SubsystemBase {
         mEncoder = mExtensionMotor.getEncoder();
 
         configureMotor(); 
+        setEncoderPosition(0.0); // for testing
+
     }
 
     private void configureMotor(){
@@ -68,6 +70,12 @@ public class Extension extends SubsystemBase {
         mPIDController.setReference(extensionState.statePosition, CANSparkMax.ControlType.kPosition);
     }
 
+    private double position = 0;
+    public void testPosition(boolean forward){
+        position += forward ? -0.1 : 0.1;
+        mPIDController.setReference(position, CANSparkMax.ControlType.kPosition);
+    }
+
     public double getVelocitySetpoint () {
 		return velocity;
 	}
@@ -86,6 +94,7 @@ public class Extension extends SubsystemBase {
     
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("exten pos testpoint", position);
         SmartDashboard.putNumber("exten pos setpoint", getPositionSetpoint());
 		SmartDashboard.putNumber("exten pos measured", getMeasuredPosition());
 		SmartDashboard.putNumber("exten set velo", getVelocitySetpoint());
