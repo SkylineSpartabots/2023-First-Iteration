@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.led.CANdleStatusFrame;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -56,10 +57,10 @@ public class Extension extends SubsystemBase {
     }
 
     private void configureMotor(){
-        mPIDController.setD(6e-5);
+        mPIDController.setD(0);
         mPIDController.setI(0);
-        mPIDController.setP(0);
-        mPIDController.setFF(0.000015);
+        mPIDController.setD(0);
+        mPIDController.setFF(1);
         // mEncoder.setInverted(false);
     }
     
@@ -69,9 +70,10 @@ public class Extension extends SubsystemBase {
     }
 
     public void setExtensionPosition(ExtensionStates extensionState) {
-        this.extensionState = extensionState;
-        position = this.extensionState.statePosition;
-        mPIDController.setReference(position, CANSparkMax.ControlType.kPosition);
+        // this.extensionState = extensionState;
+        // position = this.extensionState.statePosition;
+        // mPIDController.setReference(position, CANSparkMax.ControlType.kPosition);
+        mPIDController.setReference(-1, CANSparkMax.ControlType.kVelocity);
     }
 
     public double getVelocitySetpoint () {
