@@ -4,14 +4,16 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 
 public class SetIntake extends CommandBase {
-    Intake.IntakeState state;
+    Intake s_Intake;
+    Intake.IntakeStates state;
 
-    SetIntake(Intake.IntakeState state) {
+    SetIntake(Intake.IntakeStates state) {
+        s_Intake = Intake.getInstance();        
         this.state = state;
     }
 
     public void initialize() {
-        Intake.getInstance().setState(state);
+        s_Intake.setState(state);
     }    
 
     public void execute() {

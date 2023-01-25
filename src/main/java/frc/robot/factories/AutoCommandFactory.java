@@ -17,11 +17,15 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class AutoCommandFactory {
     
-    private static final Swerve s_Swerve = Swerve.getInstance();
+    private static Swerve s_Swerve;
     private static Command lastCommand;
     private static Command selectedAuto;
 
-    public static Command getAutoCommand(String auto) { 
+    public AutoCommandFactory() {
+        s_Swerve = Swerve.getInstance();
+    }
+
+    public static Command getAutoCommand(String auto) {
         if (auto.equals("straightAuto"))
             return selectedAuto = straight();
         else if (auto.equals("rightAuto"))

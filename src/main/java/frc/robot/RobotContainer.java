@@ -13,8 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
 import frc.robot.factories.AutoCommandFactory;
 import frc.robot.subsystems.*;
-import frc.robot.subsystems.Extension.ExtensionStates;
-import frc.robot.commands.SetArm;
+import frc.robot.subsystems.Intake.IntakeStates;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -41,17 +40,18 @@ public class RobotContainer {
     private final JoystickButton smartPathing = new JoystickButton(driver, XboxController.Button.kB.value);
     private final JoystickButton smartOdo = new JoystickButton(driver, XboxController.Button.kX.value);
     private final JoystickButton autoBalance = new JoystickButton(driver, XboxController.Button.kY.value);
-    private final JoystickButton setArm = new JoystickButton(driver, XboxController.Button.kStart.value);
 
     /* Operator Buttons, currently just used for testing */
     private final JoystickButton setExtension = new JoystickButton(operator, XboxController.Button.kA.value);
+    private final JoystickButton setPivot = new JoystickButton(operator, XboxController.Button.kB.value);
+    private final JoystickButton setIntake = new JoystickButton(operator, XboxController.Button.kX.value);
 
     /* Subsystems */
-    private final Swerve s_Swerve = Swerve.getInstance();
-    private final Limelight s_Limelight = Limelight.getInstance();
-    private final Extension s_Extension = Extension.getInstance();
-    private final Pivot s_Pivot = Pivot.getInstance();
-    private final Intake s_Intake = Intake.getInstance();
+    private final Swerve s_Swerve ;
+    private final Limelight s_Limelight ;
+    private final Extension s_Extension ;
+    private final Pivot s_Pivot ;
+    private final Intake s_Intake ;
 
     /* Commands */
 
@@ -59,6 +59,14 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
+        //initialize subsystems
+        s_Swerve = Swerve.getInstance();
+        s_Limelight = Limelight.getInstance();
+        s_Extension = Extension.getInstance();
+        s_Pivot = Pivot.getInstance();
+        s_Intake = Intake.getInstance();
+
+        s_Swerve.resetOdometry(new Pose2d());
         s_Swerve.resetOdometry(new Pose2d());
         s_Swerve.zeroGyro();
         s_Swerve.setDefaultCommand(
@@ -94,8 +102,10 @@ public class RobotContainer {
                 autoBalanceCommand,
                 new InstantCommand(() -> autoBalanceCommand.cancel()),
                 s_Swerve.isPathRunningSupplier));
-        setArm.onTrue(new SetArm(Extension.ExtensionStates.ZERO, Pivot.PivotStates.ZERO));
-        setExtension.onTrue(new InstantCommand(() -> s_Extension.setExtensionPosition(ExtensionStates.L1)));
+        // setArm.onTrue(new SetArm(Extension.ExtensionStates.ZERO, Pivot.PivotStates.ZERO));
+        setExtension.onTrue(new InstantCommand(() -> s_Extension.setVelocity(-0.1)));
+        setPivot.onTrue(new InstantCommand(() -> s_Pivot.setVelocity(-0.1)));
+        setIntake.onTrue(new InstantCommand(() -> s_Intake.setState(IntakeStates.ON_DEPLOYED)));
     }
 
     public void onRobotDisabled() {

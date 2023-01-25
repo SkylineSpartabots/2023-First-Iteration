@@ -8,12 +8,13 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
 
 public class AutoBalance extends CommandBase {
-    Swerve s_Swerve = Swerve.getInstance();
+    Swerve s_Swerve;
     double robotPitch;
     double driveSpeed;
     PIDController driveController = new PIDController(-0.015, 0, 0);  // tune PID
 
     public AutoBalance() {
+        s_Swerve = Swerve.getInstance();
         addRequirements(s_Swerve);
     }
 

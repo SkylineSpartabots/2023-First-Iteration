@@ -21,9 +21,10 @@ public class OnTheFlyGeneration extends CommandBase {
     Pose2d currentPos;
     Pose2d targetPos;
     boolean swervePose;
-    private Swerve s_Swerve = Swerve.getInstance();
+    private Swerve s_Swerve;
 
     public OnTheFlyGeneration(Pose2d currentPos, Pose2d targetPos, boolean swervePose) {
+        s_Swerve = Swerve.getInstance();
         this.targetPos = targetPos;
         this.currentPos = currentPos;
         this.swervePose = swervePose;
@@ -31,6 +32,7 @@ public class OnTheFlyGeneration extends CommandBase {
     }
     
     public OnTheFlyGeneration(Pose2d currentPos, int targetID, boolean swervePose) {
+        s_Swerve = Swerve.getInstance();
         this.currentPos = currentPos;
         this.targetPos = Constants.Limelight.gameAprilTags2d[targetID].plus(new Transform2d(new Translation2d(-0.5, 0), new Rotation2d()));
         this.swervePose = swervePose;
@@ -38,6 +40,7 @@ public class OnTheFlyGeneration extends CommandBase {
     }
     
     public OnTheFlyGeneration(int targetID, boolean swervePose) {
+        s_Swerve = Swerve.getInstance();
         this.targetPos = Constants.Limelight.gameAprilTags2d[targetID].plus(new Transform2d(new Translation2d(-0.5, 0), new Rotation2d()));
         this.swervePose = swervePose;
         addRequirements(s_Swerve);
