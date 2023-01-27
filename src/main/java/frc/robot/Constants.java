@@ -16,6 +16,12 @@ import frc.lib.util.SwerveModuleConstants;
 public final class Constants {
     public static final int timeOutMs = 10;
     public static final double stickDeadband = 0.1;
+    
+    public static final class ExtensionConstants {
+        public static final int extensionMotor = 21;
+        public static final double backEndPosition = 110000; // in encoder units
+        public static final double frontEndPosition = 0; //falcon encoder units
+    }
 
     public static final class HardwarePorts {
         public static final int pivotMasterMotor = 20; //i set master and follower arbitrarily

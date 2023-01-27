@@ -24,6 +24,7 @@ public class Extension extends SubsystemBase {
     private RelativeEncoder mEncoder;
     private double velocity;
     private ExtensionStates extensionState = ExtensionStates.ZERO;
+    private boolean executablePosition;
     
     public enum ExtensionStates {
         ZERO(0.0),
@@ -48,14 +49,15 @@ public class Extension extends SubsystemBase {
         mEncoder = mExtensionMotor.getEncoder();
 
         configureMotor(); 
-        setEncoderPosition(0.0); // for testing
+        setEncoderPosition(-0.5); // for testing
+        executablePosition = true;
 
     }
 
     private void configureMotor(){
         mPIDController.setD(0);
         mPIDController.setI(0);
-        mPIDController.setP(0.1);
+        mPIDController.setP(0);
         mPIDController.setFF(1);
         // // mEncoder.setInverted(false);
     }
@@ -89,11 +91,20 @@ public class Extension extends SubsystemBase {
 	}
 
     public void setEncoderPosition (double position) {
+        if(position > Constants.ExtensionConstants.backEndPosition || position < Constants.ExtensionConstants.frontEndPosition){
+            executablePosition = false;
+            return;
+        }
         mPIDController.setReference(position, CANSparkMax.ControlType.kPosition);
 	}
+
+    public void resetEncoder(){
+        // mExtensionMotor.resetEncoder();
+    }
     
     @Override
     public void periodic() {
+        SmartDashboard.putBoolean("Valid Extension Position", executablePosition);
         SmartDashboard.putNumber("exten pos testpoint", position);
         SmartDashboard.putNumber("exten pos setpoint", getPositionSetpoint());
 		SmartDashboard.putNumber("exten pos measured", getMeasuredPosition());
