@@ -48,6 +48,7 @@ public class Extension extends SubsystemBase {
         mExtensionMotor = new TalonFX(23);
         configureMotor(mExtensionMotor, false);
         position = getMeasuredPosition();
+        // setEncoderPosition(-35000);
     }
 
     private void configureMotor(TalonFX talon, boolean b){
@@ -55,10 +56,10 @@ public class Extension extends SubsystemBase {
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(true);
         talon.setNeutralMode(NeutralMode.Coast);
-        talon.config_kF(0, 0.05, Constants.timeOutMs);
-        talon.config_kP(0, 0.12, Constants.timeOutMs);
+        talon.config_kF(0, 0, Constants.timeOutMs);
+        talon.config_kP(0, 0.1, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);
-        talon.config_kD(0, 0, Constants.timeOutMs);
+        talon.config_kD(0, 0.001, Constants.timeOutMs);
     }
     
     public void setVelocity(double velocity) {
@@ -74,7 +75,7 @@ public class Extension extends SubsystemBase {
 
     private double position = 0;
     public void testPosition(boolean forward){
-        position += forward ? -10 : 10;
+        position += forward ? -5000 : 5000;
         mExtensionMotor.set(ControlMode.Position, position);
     }
 
@@ -91,6 +92,7 @@ public class Extension extends SubsystemBase {
 	}
 
     public void setEncoderPosition (double position) {
+        this.position = position;
         mExtensionMotor.set(ControlMode.Position, position);
 	}
     

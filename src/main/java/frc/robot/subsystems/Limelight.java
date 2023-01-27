@@ -84,6 +84,7 @@ public class Limelight extends SubsystemBase {
 	@Override
 	public void periodic() {
 		result = camera.getLatestResult();
+		getBestTarget();
 		SmartDashboard.putBoolean("cam has target", hasTarget());
 		SmartDashboard.putNumber("cam last yaw", getYaw());
 		SmartDashboard.putNumber("cam last pitch", getPitch());
