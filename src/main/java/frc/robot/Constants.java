@@ -18,7 +18,7 @@ public final class Constants {
     public static final double stickDeadband = 0.1;
 
     public static final class HardwarePorts {
-        public static final int pivotMasterMotor = 20; //i set master and follower arbitrarily
+        public static final int pivotLeaderMotor = 20; //i set master and follower arbitrarily
         public static final int pivotFollowerMotor = 45; //arbitrary
         public static final int extensionMotor = 21; //this one is a neo someone needs to get out the neo hardware tuning thing
         public static final int intakeMotor = 32; //correct
