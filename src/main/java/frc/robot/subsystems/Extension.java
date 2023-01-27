@@ -6,6 +6,9 @@ import frc.robot.Constants;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -19,13 +22,13 @@ public class Extension extends SubsystemBase {
         return instance;
     }
      
-    private CANSparkMax mExtensionMotor; 
-    private SparkMaxPIDController mPIDController;
-    private RelativeEncoder mEncoder;
+    private TalonFX mExtensionMotor; 
     private double velocity;
     private ExtensionStates extensionState = ExtensionStates.ZERO;
+   
+    final double extend = -110946;
     private boolean executablePosition;
-    
+
     public enum ExtensionStates {
         ZERO(0.0),
         GROUND(0.0),
@@ -49,33 +52,33 @@ public class Extension extends SubsystemBase {
         mEncoder = mExtensionMotor.getEncoder();
 
         configureMotor(); 
-        setEncoderPosition(-0.5); // for testing
-        executablePosition = true;
+        setEncoderPosition(0.0); // for testing
 
     }
 
     private void configureMotor(){
         mPIDController.setD(0);
         mPIDController.setI(0);
-        mPIDController.setP(0);
+        mPIDController.setP(0.1);
         mPIDController.setFF(1);
         // // mEncoder.setInverted(false);
     }
     
     public void setVelocity(double velocity) {
         this.velocity = velocity;
-        mPIDController.setReference(velocity, CANSparkMax.ControlType.kVelocity);
+        mExtensionMotor.set(ControlMode.Velocity, velocity);
     }
 
     public void setPosition(ExtensionStates state) {
         extensionState = state;
-        mPIDController.setReference(extensionState.statePosition, CANSparkMax.ControlType.kPosition);
+        // mExtensionMotor.set(ControlMode.Position, state.statePosition);
+        
     }
 
     private double position = 0;
     public void testPosition(boolean forward){
-        position += forward ? -0.1 : 0.1;
-        mPIDController.setReference(position, CANSparkMax.ControlType.kPosition);
+        position += forward ? -5000 : 5000;
+        mExtensionMotor.set(ControlMode.Position, position);
     }
 
     public double getVelocitySetpoint () {
@@ -87,14 +90,10 @@ public class Extension extends SubsystemBase {
 	}
 
 	public double getMeasuredPosition () {
-		return mEncoder.getPosition();
+		return mExtensionMotor.getSelectedSensorPosition();
 	}
 
     public void setEncoderPosition (double position) {
-        if(position > Constants.ExtensionConstants.backEndPosition || position < Constants.ExtensionConstants.frontEndPosition){
-            executablePosition = false;
-            return;
-        }
         mPIDController.setReference(position, CANSparkMax.ControlType.kPosition);
 	}
 
