@@ -75,6 +75,10 @@ public class Intake extends SubsystemBase {
         final int offset = 8000;
         mIntakemotor.set(TalonFXControlMode.Velocity, offset * intakeState.direction);
     }
+    
+    public void testVelo(int direction) {
+        mIntakemotor.set(TalonFXControlMode.Velocity, 8000 * direction);
+    }
 
     public int getVelocityDirection() {
         return intakeState.direction;

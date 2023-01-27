@@ -46,14 +46,11 @@ public class Extension extends SubsystemBase {
     }
 
     public Extension() {
-        mExtensionMotor = new CANSparkMax(Constants.HardwarePorts.extensionMotor, MotorType.kBrushless);
-        mExtensionMotor.restoreFactoryDefaults();
-        mPIDController = mExtensionMotor.getPIDController();
-        mEncoder = mExtensionMotor.getEncoder();
-
-        configureMotor(); 
-        setEncoderPosition(0.0); // for testing
-
+        mExtensionMotor = new TalonFX(23);
+        configureMotor(mExtensionMotor, true);
+        setEncoderPosition(0);
+        position = getMeasuredPosition();
+        // setEncoderPosition(-35000);
     }
 
     private void configureMotor(){
@@ -71,13 +68,17 @@ public class Extension extends SubsystemBase {
 
     public void setPosition(ExtensionStates state) {
         extensionState = state;
-        // mExtensionMotor.set(ControlMode.Position, state.statePosition);
+        mExtensionMotor.set(ControlMode.Position, state.statePosition);
         
     }
 
     private double position = 0;
     public void testPosition(boolean forward){
-        position += forward ? -5000 : 5000;
+        position += forward ? 5000 : -5000;
+        mExtensionMotor.set(ControlMode.Position, position);
+    }
+    public void testPosition(double pos){
+        position = pos;
         mExtensionMotor.set(ControlMode.Position, position);
     }
 
@@ -94,7 +95,7 @@ public class Extension extends SubsystemBase {
 	}
 
     public void setEncoderPosition (double position) {
-        mPIDController.setReference(position, CANSparkMax.ControlType.kPosition);
+       mExtensionMotor.setSelectedSensorPosition(position);
 	}
 
     public void resetEncoder(){
