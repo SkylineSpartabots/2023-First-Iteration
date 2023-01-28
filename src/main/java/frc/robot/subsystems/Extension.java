@@ -50,15 +50,18 @@ public class Extension extends SubsystemBase {
         configureMotor(mExtensionMotor, true);
         setEncoderPosition(0);
         position = getMeasuredPosition();
-        // setEncoderPosition(-35000);
+        setEncoderPosition(0);
     }
 
-    private void configureMotor(){
-        mPIDController.setD(0);
-        mPIDController.setI(0);
-        mPIDController.setP(0.1);
-        mPIDController.setFF(1);
-        // // mEncoder.setInverted(false);
+    private void configureMotor(TalonFX talon, boolean b) {
+        talon.setInverted(b);
+        talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
+        talon.enableVoltageCompensation(true);
+        talon.setNeutralMode(NeutralMode.Coast);
+        talon.config_kF(0, 0, Constants.timeOutMs);
+        talon.config_kP(0, 0.1, Constants.timeOutMs);
+        talon.config_kI(0, 0, Constants.timeOutMs);
+        talon.config_kD(0, 0.001, Constants.timeOutMs);
     }
     
     public void setVelocity(double velocity) {
