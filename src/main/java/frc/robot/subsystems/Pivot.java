@@ -18,7 +18,7 @@ public class Pivot extends SubsystemBase {
 		return instance;
 	}
 
-	private TalonFX mMasterPivotMotor, mFollowerPivotMotor;
+	private TalonFX mLeaderPivotMotor, mFollowerPivotMotor;
 	private double velocity;
 	private PivotStates pivotState = PivotStates.ZERO;
 	
@@ -39,11 +39,12 @@ public class Pivot extends SubsystemBase {
 	}
 
 	public Pivot() {
-		mMasterPivotMotor = new TalonFX(Constants.HardwarePorts.pivotLeaderMotor);
-		configureMotor(mMasterPivotMotor, false);
+		mLeaderPivotMotor = new TalonFX(Constants.HardwarePorts.pivotLeaderMotor);
+		configureMotor(mLeaderPivotMotor, false);
 		mFollowerPivotMotor = new TalonFX(Constants.HardwarePorts.pivotFollowerMotor);
 		configureMotor(mFollowerPivotMotor, false); // check inversions for motors
 		mFollowerPivotMotor.set(ControlMode.Follower, Constants.HardwarePorts.pivotLeaderMotor);
+		setEncoderPosition(0);
 	}
 
 	private void configureMotor(TalonFX talon, boolean b){
@@ -59,13 +60,23 @@ public class Pivot extends SubsystemBase {
 
 	public void setVelocity (double velocity) {
 		this.velocity = velocity;
-		mMasterPivotMotor.set(ControlMode.Velocity, velocity);
+		mLeaderPivotMotor.set(ControlMode.Velocity, velocity);
 	}
 
 	public void setPosition (PivotStates state) {
 		pivotState = state;
-		mMasterPivotMotor.set(ControlMode.Position, pivotState.statePosition);
+		mLeaderPivotMotor.set(ControlMode.Position, pivotState.statePosition);
 	}
+
+	private double position = 0;
+    public void testPosition(boolean forward){
+        position += forward ? 5000 : -5000;
+        mLeaderPivotMotor.set(ControlMode.Position, position);
+    }
+    public void testPosition(double pos){
+        position = pos;
+        mLeaderPivotMotor.set(ControlMode.Position, position);
+    }
 
 	public double getVelocitySetpoint () {
 		return velocity;
@@ -76,17 +87,19 @@ public class Pivot extends SubsystemBase {
 	}
 
 	public double getMeasuredPosition () {
-		return mMasterPivotMotor.getSelectedSensorPosition();
+		return mLeaderPivotMotor.getSelectedSensorPosition();
 	}
 
 	public void setEncoderPosition (double position) {
-		mMasterPivotMotor.setSelectedSensorPosition(position);
+		mLeaderPivotMotor.setSelectedSensorPosition(position);
 	}
 
 	@Override
 	public void periodic() {
-		SmartDashboard.putNumber("pivot pos setpoint", getPositionSetpoint());
-		SmartDashboard.putNumber("pivot pos measured", getMeasuredPosition());
-		SmartDashboard.putNumber("pivot set velo", getVelocitySetpoint());
+		// SmartDashboard.putNumber("pivot pos setpoint", getPositionSetpoint());
+		// SmartDashboard.putNumber("pivot pos measured", getMeasuredPosition());
+		// SmartDashboard.putNumber("pivot set velo", getVelocitySetpoint());
+		SmartDashboard.putNumber("leader pos", mLeaderPivotMotor.getSelectedSensorPosition());
+		SmartDashboard.putNumber("follower pos", mFollowerPivotMotor.getSelectedSensorPosition());
 	}
 }

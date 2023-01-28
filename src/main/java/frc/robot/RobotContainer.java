@@ -43,11 +43,11 @@ public class RobotContainer {
     private final JoystickButton autoBalance = new JoystickButton(driver, XboxController.Button.kY.value);
 
     /* Operator Buttons, currently just used for testing */
-    private final JoystickButton forwardExtension = new JoystickButton(operator, XboxController.Button.kA.value);
-    private final JoystickButton backExtension = new JoystickButton(operator, XboxController.Button.kY.value);
-    private final JoystickButton setIntakeNegative = new JoystickButton(operator, XboxController.Button.kB.value);
-    private final JoystickButton setIntakePositive = new JoystickButton(operator, XboxController.Button.kX.value);
-    private final JoystickButton setIntakeZero = new JoystickButton(operator, XboxController.Button.kStart.value);
+    private final JoystickButton operatorA = new JoystickButton(operator, XboxController.Button.kA.value);
+    private final JoystickButton operatorY = new JoystickButton(operator, XboxController.Button.kY.value);
+    private final JoystickButton operatorB = new JoystickButton(operator, XboxController.Button.kB.value);
+    private final JoystickButton operatorX = new JoystickButton(operator, XboxController.Button.kX.value);
+    private final JoystickButton operatorStart = new JoystickButton(operator, XboxController.Button.kStart.value);
 
     /* Subsystems */
     private final Swerve s_Swerve = Swerve.getInstance() ;
@@ -105,13 +105,22 @@ public class RobotContainer {
                 autoBalanceCommand,
                 new InstantCommand(() -> autoBalanceCommand.cancel()),
                 s_Swerve.isPathRunningSupplier));
+
         // setArm.onTrue(new SetArm(Extension.ExtensionStates.ZERO, Pivot.PivotStates.ZERO));
-        forwardExtension.onTrue(new InstantCommand(() -> s_Extension.testPosition(80000)));
-        backExtension.onTrue(new InstantCommand(() -> s_Extension.testPosition(false)));
+        // forwardExtension.onTrue(new InstantCommand(() -> s_Extension.testPosition(80000)));
+        // backExtension.onTrue(new InstantCommand(() -> s_Extension.testPosition(false)));
         // setPivot.onTrue(new InstantCommand(() -> s_Pivot.setVelocity(-0.1)));
-        setIntakePositive.onTrue(new InstantCommand(() -> s_Intake.testVelo(1)));
-        setIntakeNegative.onTrue(new InstantCommand(() -> s_Intake.testVelo(-1)));
-        setIntakeZero.onTrue(new InstantCommand(() -> s_Intake.testVelo(0)));
+        // setIntakePositive.onTrue(new InstantCommand(() -> s_Intake.testVelo(1)));
+        // setIntakeNegative.onTrue(new InstantCommand(() -> s_Intake.testVelo(-1)));
+        // setIntakeZero.onTrue(new InstantCommand(() -> s_Intake.testVelo(0)));
+        // operatorA.onTrue(new InstantCommand(() -> s_Intake.setState(IntakeStates.OFF_DEPLOYED)));
+        // operatorX.onTrue(new InstantCommand(() -> s_Intake.setState(IntakeStates.OFF_RETRACTED)));
+        // operatorB.onTrue(new InstantCommand(() -> s_Intake.setState(IntakeStates.OFF)));
+        operatorA.onTrue(new InstantCommand(() -> s_Intake.testSolenoid(false)));
+        operatorB.onTrue(new InstantCommand(() -> s_Intake.testSolenoid(true)));
+        operatorX.onTrue(new InstantCommand(() -> s_Intake.testVelo(1)));
+        operatorY.onTrue(new InstantCommand(() -> s_Intake.testVelo(0)));
+        operatorStart.onTrue(new InstantCommand(() -> s_Extension.testPosition(false)));
     }
 
     public void onRobotDisabled() {

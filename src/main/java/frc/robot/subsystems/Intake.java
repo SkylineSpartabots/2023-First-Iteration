@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,22 +23,22 @@ public class Intake extends SubsystemBase {
     } 
 
     // change IDs
-    private DoubleSolenoid solenoid;
+    private Solenoid intakeSolenoid;
     private Compressor compressor;
     private IntakeStates intakeState;
-    private TalonFX mIntakemotor;
+    private TalonFX mIntakeMotor;
 
     private Intake() {
-        solenoid = new DoubleSolenoid(
+        intakeSolenoid = new Solenoid(
+            16,
             PneumaticsModuleType.REVPH, 
-            Constants.HardwarePorts.intakeSolenoidForwardChannel, 
-            Constants.HardwarePorts.intakeSolenoidReverseChannel
+            0
         );
-        compressor = new Compressor(PneumaticsModuleType.REVPH);
+        compressor = new Compressor(16, PneumaticsModuleType.REVPH);
         compressor.enableDigital();
-        mIntakemotor = new TalonFX(Constants.HardwarePorts.intakeMotor, "2976 CANivore");
-        configureMotor(mIntakemotor, false); // figure out inversion
-        setState(IntakeStates.OFF);
+        mIntakeMotor = new TalonFX(Constants.HardwarePorts.intakeMotor, "2976 CANivore");
+        configureMotor(mIntakeMotor, false); // figure out inversion
+        // setState(IntakeStates.OFF_RETRACTED);
     }
 
     private void configureMotor(TalonFX talon, boolean b){
@@ -69,28 +70,32 @@ public class Intake extends SubsystemBase {
         }
     }    
 
-    public void setState(IntakeStates state) {
-        this.intakeState = state;
-        solenoid.set(intakeState.value);
-        final int offset = 8000;
-        mIntakemotor.set(TalonFXControlMode.Velocity, offset * intakeState.direction);
-    }
+    // public void setState(IntakeStates state) {
+    //     this.intakeState = state;
+    //     intakeSolenoid.set(intakeState.value);
+    //     final int offset = 8000;
+    //     mIntakeMotor.set(TalonFXControlMode.Velocity, offset * intakeState.direction);
+    // }
     
     public void testVelo(int direction) {
-        mIntakemotor.set(TalonFXControlMode.Velocity, 8000 * direction);
+        mIntakeMotor.set(TalonFXControlMode.Velocity, 8000 * direction);
     }
 
-    public int getVelocityDirection() {
-        return intakeState.direction;
+    public void testSolenoid(boolean b) {
+        intakeSolenoid.set(b);
     }
 
-    public boolean getIntakeDeployed() {
-        return intakeState.value == Value.kForward ? true : false;
-    }
+    // public int getVelocityDirection() {
+    //     return intakeState.direction;
+    // }
+
+    // public boolean getIntakeDeployed() {
+    //     return intakeState.value == Value.kForward ? true : false;
+    // }
 
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("intake motor deployed", getIntakeDeployed());
-        SmartDashboard.putNumber("intake motor direction", getVelocityDirection());
+        // SmartDashboard.putBoolean("intake motor deployed", getIntakeDeployed());
+        // SmartDashboard.putNumber("intake motor direction", getVelocityDirection());
     }
 }

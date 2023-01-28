@@ -50,7 +50,6 @@ public class Extension extends SubsystemBase {
         configureMotor(mExtensionMotor, true);
         setEncoderPosition(0);
         position = getMeasuredPosition();
-        setEncoderPosition(0);
     }
 
     private void configureMotor(TalonFX talon, boolean b) {
