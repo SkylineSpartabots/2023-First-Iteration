@@ -46,7 +46,7 @@ public class Extension extends SubsystemBase {
     }
 
     public Extension() {
-        mExtensionMotor = new TalonFX(23);
+        mExtensionMotor = new TalonFX(Constants.HardwarePorts.extensionMotor);
         configureMotor(mExtensionMotor, true);
         setEncoderPosition(0);
         position = getMeasuredPosition();
