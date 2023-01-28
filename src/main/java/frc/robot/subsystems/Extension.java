@@ -53,6 +53,7 @@ public class Extension extends SubsystemBase {
 
         configureMotor(); 
         setEncoderPosition(0.0); // for testing
+        executablePosition = true;
 
     }
 
@@ -70,14 +71,24 @@ public class Extension extends SubsystemBase {
     }
 
     public void setPosition(ExtensionStates state) {
-        extensionState = state;
+        if(!invalidPosition(state.statePosition)){
+            extensionState = state;
+            position = state.statePosition;            
+        }
         // mExtensionMotor.set(ControlMode.Position, state.statePosition);
-        
+    }
+
+    private boolean invalidPosition(double pos){
+        executablePosition = !(pos > Constants.ExtensionConstants.backEndPosition || pos < Constants.ExtensionConstants.frontEndPosition);
+        return !executablePosition; //boolean junk
     }
 
     private double position = 0;
     public void testPosition(boolean forward){
         position += forward ? -5000 : 5000;
+        if(invalidPosition(position)){
+            return;
+        }
         mExtensionMotor.set(ControlMode.Position, position);
     }
 
