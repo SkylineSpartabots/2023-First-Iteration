@@ -17,11 +17,11 @@ public class Extension extends SubsystemBase {
         }
         return instance;
     }
-     
-    private TalonFX mExtensionMotor; 
+
+    private TalonFX mExtensionMotor;
     private double velocity;
     private ExtensionStates extensionState = ExtensionStates.ZERO;
-   
+
     final double extend = -110946;
     private boolean executablePosition;
 
@@ -29,7 +29,7 @@ public class Extension extends SubsystemBase {
         ZERO(0.0),
         GROUND(0.0),
         SUBSTATION(0.0),
-        L1(0.0), 
+        L1(0.0),
         L2(0.0),
         L3(0.0),
         TEST(1.0); // for testing
@@ -52,13 +52,13 @@ public class Extension extends SubsystemBase {
         talon.setInverted(b);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(true);
-        talon.setNeutralMode(NeutralMode.Coast);
+        talon.setNeutralMode(NeutralMode.Brake);
         talon.config_kF(0, 0, Constants.timeOutMs);
         talon.config_kP(0, 0.1, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);
         talon.config_kD(0, 0.001, Constants.timeOutMs);
     }
-    
+
     public void setVelocity(double velocity) {
         this.velocity = velocity;
         mExtensionMotor.set(ControlMode.Velocity, velocity);
@@ -67,50 +67,53 @@ public class Extension extends SubsystemBase {
     public void setPosition(ExtensionStates state) {
         extensionState = state;
         mExtensionMotor.set(ControlMode.Position, state.statePosition);
-        
+
     }
 
-    private boolean invalidPosition(double pos){
-        executablePosition = !(pos > Constants.ExtensionConstants.backEndPosition || pos < Constants.ExtensionConstants.frontEndPosition);
-        return !executablePosition; //boolean junk
+    private boolean invalidPosition(double pos) {
+        executablePosition = !(pos > Constants.ExtensionConstants.backEndPosition
+                || pos < Constants.ExtensionConstants.frontEndPosition);
+        return !executablePosition; // boolean junk
     }
 
     private double position = 0;
-    public void testPosition(boolean forward){
+
+    public void testPosition(boolean forward) {
         position += forward ? 5000 : -5000;
         mExtensionMotor.set(ControlMode.Position, position);
     }
-    public void testPosition(double pos){
+
+    public void testPosition(double pos) {
         position = pos;
         mExtensionMotor.set(ControlMode.Position, position);
     }
 
-    public double getVelocitySetpoint () {
-		return velocity;
-	}
+    public double getVelocitySetpoint() {
+        return velocity;
+    }
 
-	public double getPositionSetpoint () {
-		return extensionState.statePosition;
-	}
+    public double getPositionSetpoint() {
+        return extensionState.statePosition;
+    }
 
-	public double getMeasuredPosition () {
-		return mExtensionMotor.getSelectedSensorPosition();
-	}
+    public double getMeasuredPosition() {
+        return mExtensionMotor.getSelectedSensorPosition();
+    }
 
-    public void setEncoderPosition (double position) {
-       mExtensionMotor.setSelectedSensorPosition(position);
-	}
+    public void setEncoderPosition(double position) {
+        mExtensionMotor.setSelectedSensorPosition(position);
+    }
 
-    public void resetEncoder(){
+    public void resetEncoder() {
         // mExtensionMotor.resetEncoder();
     }
-    
+
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("Valid Extension Position", executablePosition);
         SmartDashboard.putNumber("exten pos testpoint", position);
         SmartDashboard.putNumber("exten pos setpoint", getPositionSetpoint());
-		SmartDashboard.putNumber("exten pos measured", getMeasuredPosition());
-		SmartDashboard.putNumber("exten set velo", getVelocitySetpoint());
+        SmartDashboard.putNumber("exten pos measured", getMeasuredPosition());
+        SmartDashboard.putNumber("exten set velo", getVelocitySetpoint());
     }
 }
