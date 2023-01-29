@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.Compressor;
@@ -23,7 +23,7 @@ public class Intake extends SubsystemBase {
     // change IDs
     private Solenoid intakeSolenoid;
     private Compressor compressor;
-    private IntakeStates intakeState;
+    private IntakeStates intakeState = IntakeStates.OFF_DEPLOYED;
     private TalonFX mIntakeMotor;
 
     private Intake() {
@@ -35,7 +35,7 @@ public class Intake extends SubsystemBase {
         compressor.enableDigital();
         mIntakeMotor = new TalonFX(Constants.HardwarePorts.intakeMotor, "2976 CANivore");
         configureMotor(mIntakeMotor, false); // figure out inversion
-        // setState(IntakeStates.OFF_RETRACTED);
+        setState(IntakeStates.OFF_RETRACTED);
     }
 
     private void configureMotor(TalonFX talon, boolean b) {
@@ -70,11 +70,11 @@ public class Intake extends SubsystemBase {
         this.intakeState = state;
         intakeSolenoid.set(intakeState.value);
         final int offset = 8000;
-        mIntakeMotor.set(TalonFXControlMode.Velocity, offset * intakeState.direction);
+        mIntakeMotor.set(ControlMode.Velocity, offset * intakeState.direction);
     }
 
     public void testVelo(int direction) {
-        mIntakeMotor.set(TalonFXControlMode.Velocity, 8000 * direction);
+        mIntakeMotor.set(ControlMode.Velocity, 8000 * direction);
     }
 
     public void testSolenoid(boolean b) {
