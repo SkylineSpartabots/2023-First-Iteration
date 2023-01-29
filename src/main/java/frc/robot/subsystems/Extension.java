@@ -56,7 +56,7 @@ public class Extension extends SubsystemBase {
         talon.setInverted(b);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(true);
-        talon.setNeutralMode(NeutralMode.Coast);
+        talon.setNeutralMode(NeutralMode.Brake);
         talon.config_kF(0, 0, Constants.timeOutMs);
         talon.config_kP(0, 0.1, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);

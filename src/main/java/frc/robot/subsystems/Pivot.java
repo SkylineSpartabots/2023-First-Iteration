@@ -42,7 +42,7 @@ public class Pivot extends SubsystemBase {
 		mLeaderPivotMotor = new TalonFX(Constants.HardwarePorts.pivotLeaderMotor);
 		configureMotor(mLeaderPivotMotor, false);
 		mFollowerPivotMotor = new TalonFX(Constants.HardwarePorts.pivotFollowerMotor);
-		configureMotor(mFollowerPivotMotor, false); // check inversions for motors
+		configureMotor(mFollowerPivotMotor, true); 
 		mFollowerPivotMotor.set(ControlMode.Follower, Constants.HardwarePorts.pivotLeaderMotor);
 		setEncoderPosition(0);
 	}
@@ -51,7 +51,7 @@ public class Pivot extends SubsystemBase {
         talon.setInverted(b);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(true);
-        talon.setNeutralMode(NeutralMode.Brake);
+        talon.setNeutralMode(NeutralMode.Coast);
         talon.config_kF(0, 0.05, Constants.timeOutMs);
         talon.config_kP(0, 0.12, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);
@@ -70,8 +70,8 @@ public class Pivot extends SubsystemBase {
 
 	private double position = 0;
     public void testPosition(boolean forward){
-        position += forward ? 5000 : -5000;
-        mLeaderPivotMotor.set(ControlMode.Position, position);
+        position += forward ? 1000 : -1000;
+        // mLeaderPivotMotor.set(ControlMode.Position, position);
     }
     public void testPosition(double pos){
         position = pos;
@@ -92,6 +92,7 @@ public class Pivot extends SubsystemBase {
 
 	public void setEncoderPosition (double position) {
 		mLeaderPivotMotor.setSelectedSensorPosition(position);
+		mFollowerPivotMotor.setSelectedSensorPosition(position);
 	}
 
 	@Override
@@ -101,5 +102,6 @@ public class Pivot extends SubsystemBase {
 		// SmartDashboard.putNumber("pivot set velo", getVelocitySetpoint());
 		SmartDashboard.putNumber("leader pos", mLeaderPivotMotor.getSelectedSensorPosition());
 		SmartDashboard.putNumber("follower pos", mFollowerPivotMotor.getSelectedSensorPosition());
+		SmartDashboard.putNumber("piv pos setpoint", position);
 	}
 }
