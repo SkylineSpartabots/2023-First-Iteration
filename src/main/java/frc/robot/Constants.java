@@ -19,8 +19,8 @@ public final class Constants {
     
     public static final class ExtensionConstants {
         public static final int extensionMotor = 21;
-        public static final double backEndPosition = 110000; // in encoder units
-        public static final double frontEndPosition = 0; //falcon encoder units
+        public static final double backEndPosition = 105000; // in encoder units
+        public static final double frontEndPosition = 5000; //falcon encoder units
     }
 
     public static final class HardwarePorts {
@@ -28,8 +28,8 @@ public final class Constants {
         public static final int pivotFollowerMotor = 45; //arbitrary
         public static final int extensionMotor = 23; //this one is a neo someone needs to get out the neo hardware tuning thing
         public static final int intakeMotor = 32; //correct
-        public static final int intakeSolenoidForwardChannel = 0;
-        public static final int intakeSolenoidReverseChannel = 0;
+        public static final int moduleID = 16;
+        public static final int intakeChannel = 0;
     }
 
     // ALL OF THESE ARE ONLY TRUE ON BLUE ALLIANCE

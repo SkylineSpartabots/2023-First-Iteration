@@ -36,11 +36,11 @@ public class RobotContainer {
     private final int rotationAxis = XboxController.Axis.kRightX.value;
 
     /* Driver Buttons */
-    private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kBack.value);
-    private final JoystickButton auto = new JoystickButton(driver, XboxController.Button.kA.value);
-    private final JoystickButton smartPathing = new JoystickButton(driver, XboxController.Button.kB.value);
-    private final JoystickButton smartOdo = new JoystickButton(driver, XboxController.Button.kX.value);
-    private final JoystickButton autoBalance = new JoystickButton(driver, XboxController.Button.kY.value);
+    private final JoystickButton driverBack = new JoystickButton(driver, XboxController.Button.kBack.value);
+    private final JoystickButton driverA = new JoystickButton(driver, XboxController.Button.kA.value);
+    private final JoystickButton driverB = new JoystickButton(driver, XboxController.Button.kB.value);
+    private final JoystickButton driverX = new JoystickButton(driver, XboxController.Button.kX.value);
+    private final JoystickButton driverY = new JoystickButton(driver, XboxController.Button.kY.value);
 
     /* Operator Buttons, currently just used for testing */
     private final JoystickButton operatorA = new JoystickButton(operator, XboxController.Button.kA.value);
@@ -93,15 +93,15 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
-        auto.onTrue(AutoCommandFactory.getSelectedAuto()); // change based on which auto needs to be tested
-        smartPathing.onTrue(new ConditionalCommand(
+        driverBack.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
+        driverA.onTrue(AutoCommandFactory.getSelectedAuto()); // change based on which auto needs to be tested
+        driverB.onTrue(new ConditionalCommand(
                 new InstantCommand(() -> AutoCommandFactory.cancelLastCommand()),
                 new InstantCommand(() -> CommandScheduler.getInstance().schedule(new OnTheFlyGeneration(0, true))),
                 s_Swerve.isPathRunningSupplier));
-        smartOdo.onTrue(new SmartResetOdometry());
+        driverX.onTrue(new SmartResetOdometry());
         Command autoBalanceCommand = new AutoBalance();
-        autoBalance.onTrue(new ConditionalCommand(
+        driverY.onTrue(new ConditionalCommand(
                 autoBalanceCommand,
                 new InstantCommand(() -> autoBalanceCommand.cancel()),
                 s_Swerve.isPathRunningSupplier));
