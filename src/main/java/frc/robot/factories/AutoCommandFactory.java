@@ -21,16 +21,21 @@ public class AutoCommandFactory {
     private static Command lastCommand;
     private static Command selectedAuto;
 
-    public static Command getAutoCommand(String auto) {
-        if (auto.equals("straightAuto"))
-            return selectedAuto = straight();
-        else if (auto.equals("rightAuto"))
-            return selectedAuto = forwardAndRightCommand();
-        else if (auto.equals("waitAuto"))
-            return selectedAuto = pathWithWait();
-        else if (auto.equals("test"))
-            return selectedAuto = test();
+    public static Command getAutoCommand(AutoType auto) {
+        switch (auto) {
+            case Straight: straight();
+            case Right: forwardAndRightCommand();
+            case Wait: pathWithWait();
+            case Test: test();
+        }
         return null;
+    }
+
+    public enum AutoType {
+        Straight,
+        Right,
+        Wait,
+        Test,
     }
 
     public static Command getSelectedAuto() {
