@@ -22,13 +22,14 @@ public class AutoCommandFactory {
     private static Command selectedAuto;
 
     public static Command getAutoCommand(AutoType auto) {
+        Command c = null;
         switch (auto) {
-            case Straight: straight();
-            case Right: forwardAndRightCommand();
-            case Wait: pathWithWait();
-            case Test: test();
+            case Straight: c = straight();
+            case Right: c = forwardAndRightCommand();
+            case Wait: c = pathWithWait();
+            case Test: c = test();
         }
-        return null;
+        return c;
     }
 
     public enum AutoType {
