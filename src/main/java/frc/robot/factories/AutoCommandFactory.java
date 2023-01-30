@@ -22,14 +22,17 @@ public class AutoCommandFactory {
     private static Command selectedAuto;
 
     public static Command getAutoCommand(AutoType auto) {
-        Command c = null;
         switch (auto) {
-            case Straight: c = straight();
-            case Right: c = forwardAndRightCommand();
-            case Wait: c = pathWithWait();
-            case Test: c = test();
+            case Straight:
+                return straight();
+            case Right:
+                return forwardAndRightCommand();
+            case Wait:
+                return pathWithWait();
+            case Test:
+                return test();
         }
-        return c;
+        return null;
     }
 
     public enum AutoType {
@@ -54,19 +57,19 @@ public class AutoCommandFactory {
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
         lastCommand = new SequentialCommandGroup(
-            new InstantCommand(() -> {
-            if(isFirstPath){
-                s_Swerve.resetOdometry(new Pose2d());
-            }
-            }),
-            new PPSwerveControllerCommand(
-                path,
-                s_Swerve.poseSupplier,
-                xController,
-                yController,
-                thetaController,
-                s_Swerve.chassisConsumer,
-                s_Swerve));
+                new InstantCommand(() -> {
+                    if (isFirstPath) {
+                        s_Swerve.resetOdometry(new Pose2d());
+                    }
+                }),
+                new PPSwerveControllerCommand(
+                        path,
+                        s_Swerve.poseSupplier,
+                        xController,
+                        yController,
+                        thetaController,
+                        s_Swerve.chassisConsumer,
+                        s_Swerve));
         return lastCommand;
     }
 
@@ -82,20 +85,20 @@ public class AutoCommandFactory {
 
     private static Command pathWithWait() {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("path with wait event",
-            new PathConstraints(3.5, 2));
+                new PathConstraints(3.5, 2));
         return new SequentialCommandGroup(
-            followPathCommand(pathGroup.get(0), true),
-            new WaitCommand(2),
-            followPathCommand(pathGroup.get(1), false));
+                followPathCommand(pathGroup.get(0), true),
+                new WaitCommand(2),
+                followPathCommand(pathGroup.get(1), false));
     }
+
     private static Command test() {
-        List<PathPlannerTrajectory> pathGroup= PathPlanner.loadPathGroup("test",
+        List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("test",
                 new PathConstraints(4, 3));
         return new SequentialCommandGroup(
-            new WaitCommand(2),
-            followPathCommand(pathGroup.get(0), true),
-            new WaitCommand(2),
-            followPathCommand(pathGroup.get(1), false)
-        );
+                new WaitCommand(2),
+                followPathCommand(pathGroup.get(0), true),
+                new WaitCommand(2),
+                followPathCommand(pathGroup.get(1), false));
     }
 }
