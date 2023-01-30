@@ -28,6 +28,7 @@ public class Robot extends TimedRobot {
     private static final String auto1 = "straightAuto";
     private static final String auto2 = "rightAuto";
     private static final String auto3 = "waitAuto";
+    private static final String auto4 = "test";
     private final SendableChooser<String> m_chooser = new SendableChooser<>();
     private RobotContainer m_robotContainer;
 
@@ -42,6 +43,7 @@ public class Robot extends TimedRobot {
         m_chooser.setDefaultOption("straightAuto", auto1);
         m_chooser.addOption("rightAuto", auto2);
         m_chooser.addOption("waitAuto", auto3);
+        m_chooser.addOption("waitAuto", auto4);
         DriverStation.Alliance a = DriverStation.getAlliance();
         SmartDashboard.putString("Alliance",
                 a == DriverStation.Alliance.Blue ? "Blue" : a == DriverStation.Alliance.Red ? "Red" : "Other");

@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class AutoCommandFactory {
-    
+
     private static Swerve s_Swerve = Swerve.getInstance();
     private static Command lastCommand;
     private static Command selectedAuto;
@@ -28,9 +28,11 @@ public class AutoCommandFactory {
             return selectedAuto = forwardAndRightCommand();
         else if (auto.equals("waitAuto"))
             return selectedAuto = pathWithWait();
+        else if (auto.equals("test"))
+            return selectedAuto = test();
         return null;
-    } 
-    
+    }
+
     public static Command getSelectedAuto() {
         return selectedAuto;
     }
@@ -52,11 +54,11 @@ public class AutoCommandFactory {
             }
             }),
             new PPSwerveControllerCommand(
-                path, 
+                path,
                 s_Swerve.poseSupplier,
-                xController, 
-                yController, 
-                thetaController, 
+                xController,
+                yController,
+                thetaController,
                 s_Swerve.chassisConsumer,
                 s_Swerve));
         return lastCommand;
@@ -76,9 +78,18 @@ public class AutoCommandFactory {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("path with wait event",
             new PathConstraints(3.5, 2));
         return new SequentialCommandGroup(
-            followPathCommand(pathGroup.get(0), true), 
-            new WaitCommand(2), 
+            followPathCommand(pathGroup.get(0), true),
+            new WaitCommand(2),
             followPathCommand(pathGroup.get(1), false));
     }
-
+    private static Command test() {
+        List<PathPlannerTrajectory> pathGroup= PathPlanner.loadPathGroup("test",
+                new PathConstraints(4, 3));
+        return new SequentialCommandGroup(
+            new WaitCommand(2),
+            followPathCommand(pathGroup.get(0), true),
+            new WaitCommand(2),
+            followPathCommand(pathGroup.get(1), false)
+        );
+    }
 }
