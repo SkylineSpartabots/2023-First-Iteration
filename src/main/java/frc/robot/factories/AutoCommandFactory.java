@@ -16,21 +16,32 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class AutoCommandFactory {
-    
-    private static final Swerve s_Swerve = Swerve.getInstance();
+
+    private static Swerve s_Swerve = Swerve.getInstance();
     private static Command lastCommand;
     private static Command selectedAuto;
 
-    public static Command getAutoCommand(String auto) { 
-        if (auto.equals("straightAuto"))
-            return selectedAuto = straight();
-        else if (auto.equals("rightAuto"))
-            return selectedAuto = forwardAndRightCommand();
-        else if (auto.equals("waitAuto"))
-            return selectedAuto = pathWithWait();
+    public static Command getAutoCommand(AutoType auto) {
+        switch (auto) {
+            case Straight:
+                return straight();
+            case Right:
+                return forwardAndRightCommand();
+            case Wait:
+                return pathWithWait();
+            case Test:
+                return test();
+        }
         return null;
-    } 
-    
+    }
+
+    public enum AutoType {
+        Straight,
+        Right,
+        Wait,
+        Test,
+    }
+
     public static Command getSelectedAuto() {
         return selectedAuto;
     }
@@ -46,19 +57,19 @@ public class AutoCommandFactory {
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
         lastCommand = new SequentialCommandGroup(
-            new InstantCommand(() -> {
-            if(isFirstPath){
-                s_Swerve.resetOdometry(new Pose2d());
-            }
-            }),
-            new PPSwerveControllerCommand(
-                path, 
-                s_Swerve.poseSupplier,
-                xController, 
-                yController, 
-                thetaController, 
-                s_Swerve.chassisConsumer,
-                s_Swerve));
+                new InstantCommand(() -> {
+                    if (isFirstPath) {
+                        s_Swerve.resetOdometry(new Pose2d());
+                    }
+                }),
+                new PPSwerveControllerCommand(
+                        path,
+                        s_Swerve.poseSupplier,
+                        xController,
+                        yController,
+                        thetaController,
+                        s_Swerve.chassisConsumer,
+                        s_Swerve));
         return lastCommand;
     }
 
@@ -74,11 +85,20 @@ public class AutoCommandFactory {
 
     private static Command pathWithWait() {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("path with wait event",
-            new PathConstraints(3.5, 2));
+                new PathConstraints(3.5, 2));
         return new SequentialCommandGroup(
-            followPathCommand(pathGroup.get(0), true), 
-            new WaitCommand(2), 
-            followPathCommand(pathGroup.get(1), false));
+                followPathCommand(pathGroup.get(0), true),
+                new WaitCommand(2),
+                followPathCommand(pathGroup.get(1), false));
     }
 
+    private static Command test() {
+        List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("test",
+                new PathConstraints(4, 3));
+        return new SequentialCommandGroup(
+                new WaitCommand(2),
+                followPathCommand(pathGroup.get(0), true),
+                new WaitCommand(2),
+                followPathCommand(pathGroup.get(1), false));
+    }
 }

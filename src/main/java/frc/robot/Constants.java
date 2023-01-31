@@ -14,26 +14,53 @@ import frc.lib.util.COTSFalconSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
-    public static Pose2d targetPosition;
-
+    public static final int timeOutMs = 10;
     public static final double stickDeadband = 0.1;
+    
+    public static final class ExtensionConstants {
+        public static final int extensionMotor = 21;
+        public static final double backEndPosition = 105000; // in encoder units
+        public static final double frontEndPosition = 5000; //falcon encoder units
+    }
+
+    public static final class HardwarePorts {
+        public static final int pivotLeaderMotor = 20; //i set master and follower arbitrarily
+        public static final int pivotFollowerMotor = 45; //arbitrary
+        public static final int extensionMotor = 23; //this one is a neo someone needs to get out the neo hardware tuning thing
+        public static final int intakeMotor = 32; //correct
+        public static final int moduleID = 16;
+        public static final int intakeChannel = 0;
+    }
+
+    // ALL OF THESE ARE ONLY TRUE ON BLUE ALLIANCE
+    public static final Translation2d TOP_LEFT_CHARGE = new Translation2d(2.52, 4.35);
+    public static final Translation2d TOP_RIGHT_CHARGE = new Translation2d(5.25, 4.35);
+    public static final Translation2d BOTTOM_LEFT_CHARGE = new Translation2d(2.52, 1.14);
+    public static final Translation2d BOTTOM_RIGHT_CHARGE = new Translation2d(5.25, 1.14);
+
+    public static final Translation2d[] cornersBlue = {
+            Constants.BOTTOM_LEFT_CHARGE,
+            Constants.BOTTOM_RIGHT_CHARGE,
+            Constants.TOP_LEFT_CHARGE,
+            Constants.TOP_RIGHT_CHARGE };
 
     public static final class Limelight {
         public static final String photonCamName = "OV5647";
         public static final Translation3d cameraOffsets = new Translation3d(
-            Units.inchesToMeters(14.5), // x (front-back) offset
+            Units.inchesToMeters(-14.5), // x (front-back) offset
             Units.inchesToMeters(0), // y (right-left) offset
-            Units.inchesToMeters(34) // z (up-down)
+            Units.inchesToMeters(-34) // z (up-down)
         );
         public static final Rotation3d cameraAngleOffsets = new Rotation3d(
-            Units.degreesToRadians(0), // x (roll)
-            Units.degreesToRadians(0), // y (pitch)
-            Units.degreesToRadians(0) // z (yaw)
+                Units.degreesToRadians(0), // x (roll)
+                Units.degreesToRadians(0), // y (pitch)
+                Units.degreesToRadians(0) // z (yaw)
         );
         public static final Pose3d[] gameAprilTags = {
                 new Pose3d(15.51, 1.07, 0.46, new Rotation3d(0, 0, Math.PI)),
                 new Pose3d(15.51, 2.74, 0.46, new Rotation3d(0, 0, Math.PI)),
-                new Pose3d(15.51, 4.42, 0.46, new Rotation3d(0, 0, Math.PI)),
+                // new Pose3d(15.51, 4.42, 0.46, new Rotation3d(0, 0, Math.PI)),
+                new Pose3d(0, 0, 0.46, new Rotation3d(0, 0, 0)),
                 new Pose3d(16.18, 6.75, 0.69, new Rotation3d(0, 0, Math.PI)),
                 new Pose3d(0.36, 6.75, 0.69, new Rotation3d(0, 0, 0)),
                 new Pose3d(1.03, 4.42, 0.46, new Rotation3d(0, 0, 0)),
@@ -50,8 +77,10 @@ public final class Constants {
             new Pose2d(1.03, 4.42, new Rotation2d(0)),
             new Pose2d(1.03, 2.74, new Rotation2d(0)),
             new Pose2d(1.03, 1.07, new Rotation2d(0))
-    };
+        };
     }
+
+    public static final double FIELD_WIDTH_METERS = 8.02;
 
     public static final class Swerve {
 
@@ -64,7 +93,6 @@ public final class Constants {
         public static final double trackWidth = 0.5715;
         public static final double wheelBase = 0.5715;
         public static final double wheelCircumference = chosenModule.wheelCircumference;
-
         /*
          * Swerve Kinematics
          * No need to ever change this unless you are not doing a traditional
@@ -122,9 +150,9 @@ public final class Constants {
          * Drive Motor Characterization Values
          * Divide SYSID values by 12 to convert from volts to percent output for CTRE
          */
-        public static final double driveKS = (0.32 / 12); // TODO: This must be tuned to specific robot
-        public static final double driveKV = (1.51 / 12);
-        public static final double driveKA = (0.27 / 12);
+        public static final double driveKS = (0.17809 / 12); 
+        public static final double driveKV = (0.67484 / 12);
+        public static final double driveKA = (0.13136 / 12);
 
         /* Swerve Profiling Values */
         /** Meters per Second */
@@ -138,44 +166,45 @@ public final class Constants {
 
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */
-        public static final class Mod0 { 
-            public static final int driveMotorID = 2;
-            public static final int angleMotorID = 1;
-            public static final int canCoderID = 9;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(300.2);
+        public static final class Mod0 {
+            public static final int driveMotorID = 4;
+            public static final int angleMotorID = 3;
+            public static final int canCoderID = 10;
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(54.84);
             public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
                     canCoderID, angleOffset);
         }
 
         /* Front Right Module - Module 1 */
-        public static final class Mod1 { 
-            public static final int driveMotorID = 8;
-            public static final int angleMotorID = 7;
-            public static final int canCoderID = 12;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(64.7);
+        public static final class Mod1 {
+            public static final int driveMotorID = 2;
+            public static final int angleMotorID = 1;
+            public static final int canCoderID = 9;
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(31.38);
             public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
                     canCoderID, angleOffset);
         }
-
+        
         /* Back Left Module - Module 2 */
-        public static final class Mod2 { 
-            public static final int driveMotorID = 4;
-            public static final int angleMotorID = 3;
-            public static final int canCoderID = 10;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(324.7);
-            public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
-                    canCoderID, angleOffset);
-        }
-
-        /* Back Right Module - Module 3 */
-        public static final class Mod3 { 
+        public static final class Mod2 {
             public static final int driveMotorID = 6;
             public static final int angleMotorID = 5;
             public static final int canCoderID = 11;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(358.8);
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(90.26);
             public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
                     canCoderID, angleOffset);
         }
+        /* Back Right Module - Module 3 */
+        public static final class Mod3 {
+            public static final int driveMotorID = 8;
+            public static final int angleMotorID = 7;
+            public static final int canCoderID = 12;
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(154.16);
+            public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
+                    canCoderID, angleOffset);
+        }
+
+
     }
 
 }
