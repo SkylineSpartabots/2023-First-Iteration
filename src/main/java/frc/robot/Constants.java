@@ -30,6 +30,14 @@ public final class Constants {
         public static final int intakeMotor = 32; //correct
         public static final int moduleID = 16;
         public static final int intakeChannel = 0;
+        
+
+    }
+
+    public static final class LEDConstants {
+        public static final int ledPin = 7;
+        public static final int ledBufferSize = 100;
+
     }
 
     // ALL OF THESE ARE ONLY TRUE ON BLUE ALLIANCE

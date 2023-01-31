@@ -55,6 +55,7 @@ public class RobotContainer {
     private final Extension s_Extension = Extension.getInstance();
     private final Pivot s_Pivot = Pivot.getInstance();
     private final Intake s_Intake = Intake.getInstance();
+    private final Light s_Lights = Light.getInstance();
 
     /* Commands */
 
@@ -109,6 +110,7 @@ public class RobotContainer {
         // operator binds for testing
         // operatorA.onTrue(new InstantCommand(() -> s_Intake.testSolenoid(false)));
         // operatorB.onTrue(new InstantCommand(() -> s_Intake.testSolenoid(true)));
+        operatorB.onTrue(new InstantCommand(() -> s_Lights.LEDSubsystem()));
         // operatorX.onTrue(new InstantCommand(() -> s_Intake.testVelo(1)));
         // operatorY.onTrue(new InstantCommand(() -> s_Intake.testVelo(0)));
         // operatorStart.onTrue(new InstantCommand(() -> s_Extension.testPosition(false)));
