@@ -28,6 +28,8 @@ public class AutoCommandFactory {
             return selectedAuto = forwardAndRightCommand();
         else if (auto.equals("waitAuto"))
             return selectedAuto = pathWithWait();
+        else if (auto.equals("topThreeCone"))
+            return selectedAuto = topThreeCone();
         return null;
     } 
     
@@ -79,6 +81,20 @@ public class AutoCommandFactory {
             followPathCommand(pathGroup.get(0), true), 
             new WaitCommand(2), 
             followPathCommand(pathGroup.get(1), false));
+    }
+
+    private static Command topThreeCone(){
+        List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("top three cone path",
+            new PathConstraints(3.5, 2));
+        return new SequentialCommandGroup(
+            followPathCommand(pathGroup.get(0), true),
+            new WaitCommand(1),
+            followPathCommand(pathGroup.get(1), false),
+            new WaitCommand(1),
+            followPathCommand(pathGroup.get(2), false),
+            new WaitCommand(1),
+            followPathCommand(pathGroup.get(3), false)
+        );
     }
 
 }
