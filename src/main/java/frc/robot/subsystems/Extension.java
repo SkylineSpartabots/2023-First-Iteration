@@ -22,7 +22,8 @@ public class Extension extends SubsystemBase {
     private double velocity;
     private ExtensionStates extensionState = ExtensionStates.ZERO;
 
-    final double extend = -110946;
+    final double maxExtend = 110946;
+    final double minExtend = 0;
     private boolean executablePosition;
 
     public enum ExtensionStates {
@@ -71,8 +72,8 @@ public class Extension extends SubsystemBase {
     }
 
     private boolean invalidPosition(double pos) {
-        executablePosition = !(pos > Constants.ExtensionConstants.backEndPosition
-                || pos < Constants.ExtensionConstants.frontEndPosition);
+        executablePosition = !(pos > maxExtend - 5000
+                || pos < minExtend + 5000);
         return !executablePosition; // boolean junk
     }
 
