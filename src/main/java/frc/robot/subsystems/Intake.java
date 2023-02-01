@@ -1,13 +1,12 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -16,31 +15,30 @@ public class Intake extends SubsystemBase {
     private static Intake instance = null;
 
     public static Intake getInstance() {
-        if (instance == null) 
+        if (instance == null)
             instance = new Intake();
         return instance;
-    } 
-
-    // change IDs
-    private DoubleSolenoid solenoid;
-    private Compressor compressor;
-    private IntakeStates intakeState;
-    private TalonFX mIntakemotor;
-
-    private Intake() {
-        solenoid = new DoubleSolenoid(
-            PneumaticsModuleType.REVPH, 
-            Constants.HardwarePorts.intakeSolenoidForwardChannel, 
-            Constants.HardwarePorts.intakeSolenoidReverseChannel
-        );
-        compressor = new Compressor(PneumaticsModuleType.REVPH);
-        compressor.enableDigital();
-        mIntakemotor = new TalonFX(Constants.HardwarePorts.intakeMotor, "2976 CANivore");
-        configureMotor(mIntakemotor, false); // figure out inversion
-        setState(IntakeStates.OFF);
     }
 
-    private void configureMotor(TalonFX talon, boolean b){
+    // change IDs
+    private Solenoid intakeSolenoid;
+    private Compressor compressor;
+    private IntakeStates intakeState = IntakeStates.OFF_DEPLOYED;
+    private TalonFX mIntakeMotor;
+
+    private Intake() {
+        intakeSolenoid = new Solenoid(
+                Constants.HardwarePorts.moduleID,
+                PneumaticsModuleType.REVPH,
+                Constants.HardwarePorts.intakeChannel);
+        compressor = new Compressor(Constants.HardwarePorts.moduleID, PneumaticsModuleType.REVPH);
+        compressor.enableDigital();
+        mIntakeMotor = new TalonFX(Constants.HardwarePorts.intakeMotor, "2976 CANivore");
+        configureMotor(mIntakeMotor, false); // figure out inversion
+        setState(IntakeStates.OFF_RETRACTED);
+    }
+
+    private void configureMotor(TalonFX talon, boolean b) {
         talon.setInverted(b);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(true);
@@ -52,28 +50,35 @@ public class Intake extends SubsystemBase {
     }
 
     public enum IntakeStates {
-        OFF(Value.kOff, 0),
-        OFF_RETRACTED(Value.kReverse, 0),
-        ON_RETRACTED(Value.kReverse, 1),
-        REV_RETRACTED(Value.kReverse, -1),
-        OFF_DEPLOYED(Value.kForward, 0),
-        ON_DEPLOYED(Value.kForward, 1),
-        REV_DEPLOYED(Value.kForward, -1);
+        OFF_RETRACTED(false, 0),
+        ON_RETRACTED(false, 1),
+        REV_RETRACTED(false, -1),
+        OFF_DEPLOYED(true, 0),
+        ON_DEPLOYED(true, 1),
+        REV_DEPLOYED(true, -1);
 
-        Value value;
+        boolean value;
         int direction;
 
-        private IntakeStates(Value value, int direction) {
+        private IntakeStates(boolean value, int direction) {
             this.value = value;
             this.direction = direction;
         }
-    }    
+    }
 
     public void setState(IntakeStates state) {
         this.intakeState = state;
-        solenoid.set(intakeState.value);
+        intakeSolenoid.set(intakeState.value);
         final int offset = 8000;
-        mIntakemotor.set(TalonFXControlMode.Velocity, offset * intakeState.direction);
+        mIntakeMotor.set(ControlMode.Velocity, offset * intakeState.direction);
+    }
+
+    public void testVelo(int direction) {
+        mIntakeMotor.set(ControlMode.Velocity, 8000 * direction);
+    }
+
+    public void testSolenoid(boolean b) {
+        intakeSolenoid.set(b);
     }
 
     public int getVelocityDirection() {
@@ -81,7 +86,7 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean getIntakeDeployed() {
-        return intakeState.value == Value.kForward ? true : false;
+        return intakeState.value;
     }
 
     @Override
