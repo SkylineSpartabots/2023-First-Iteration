@@ -24,13 +24,13 @@ public class AutoCommandFactory {
     public static Command getAutoCommand(AutoType auto) {
         switch (auto) {
             case Straight:
-                return straight();
+                return selectedAuto = straight();
             case Right:
-                return forwardAndRightCommand();
+                return selectedAuto = forwardAndRightCommand();
             case Wait:
-                return pathWithWait();
+                return selectedAuto = pathWithWait();
             case Test:
-                return test();
+                return selectedAuto = test();
         }
         return null;
     }
