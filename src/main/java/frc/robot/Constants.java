@@ -35,7 +35,7 @@ public final class Constants {
     }
 
     public static final class LEDConstants {
-        public static final int ledPin = 7;
+        public static final int ledPin = 6;
         public static final int ledBufferSize = 100;
 
     }

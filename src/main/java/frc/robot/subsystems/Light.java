@@ -20,60 +20,60 @@ public class Light extends SubsystemBase {
 
     public AddressableLED m_led = new AddressableLED(Constants.LEDConstants.ledPin);
     public AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(Constants.LEDConstants.ledBufferSize);
-    public boolean antTrue = false;
+
 
     public void LEDSubsystem() {
         m_led.setLength(m_ledBuffer.getLength());
         m_led.setData(m_ledBuffer);
         m_led.start();
 
-        setColor(0);
+        //setColor(0);
       }
     /**
    * Sets color of the LED to 
    *
    * @param mode 0:Test 1:Solid Red 2:Solid Green 3:Solid Blue 4:Ant Trail 5:Rainbow 6:
    */
-    public void setColor(int mode) {
+    // public void setColor(int mode) {
         
-        for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-            // Sets the specified LED to the RGB values for green
+    //     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+    //         // Sets the specified LED to the RGB values for green
 
-            switch (mode) {
-                case 0: //Test
-                    m_ledBuffer.setRGB(i, 0,255,0);
-                    break;
-                case 1: //Reset Odometry
-                    m_ledBuffer.setRGB(i, 255,0,0);
-                    break;
+    //         switch (mode) {
+    //             case 0: //Test
+    //                 m_ledBuffer.setRGB(i, 0,255,0);
+    //                 break;
+    //             case 1: //Reset Odometry
+    //                 m_ledBuffer.setRGB(i, 255,0,0);
+    //                 break;
 
-                case 2: //Zero Gyro
-                    m_ledBuffer.setRGB(i,0,0,255);
-                    break;
-                default:
-                    break;
-             }
+    //             case 2: //Zero Gyro
+    //                 m_ledBuffer.setRGB(i,0,0,255);
+    //                 break;
+    //             default:
+    //                 break;
+    //          }
             
-            m_led.setData(m_ledBuffer);
-         }
-    }
+    //         m_led.setData(m_ledBuffer);
+    //      }
+    // }
     public void runAnt(){
-        if (antTrue == true) {
-            for (int k = 1; k < 5; k++) {
-                for (int i = 1; i < m_ledBuffer.getLength(); i++) {
-                if(i-k%5==0) {
-                    
-                    m_ledBuffer.setRGB(i, 0, 0, 0);
-                    
-                }
-                else{m_ledBuffer.setRGB(i, 255, 0, 0);}
-
+        
+        for (int k = 1; k < 5; k++) {
+            for (int i = 1; i < m_ledBuffer.getLength(); i++) {
+            if(i-k%5==0) {
+                
+                m_ledBuffer.setRGB(i, 0, 0, 0);
+                
             }
+            else{m_ledBuffer.setRGB(i, 255, 0, 0);}
 
-            }
-            
         }
+        m_led.setData(m_ledBuffer);
+        }
+        
     }
+    
 
     @Override
 	public void periodic() {
