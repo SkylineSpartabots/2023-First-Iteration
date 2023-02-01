@@ -57,15 +57,27 @@ public class Light extends SubsystemBase {
             m_led.setData(m_ledBuffer);
          }
     }
-    public void checkAnt(){
+    public void runAnt(){
         if (antTrue == true) {
+            for (int k = 1; k < 5; k++) {
+                for (int i = 1; i < m_ledBuffer.getLength(); i++) {
+                if(i-k%5==0) {
+                    
+                    m_ledBuffer.setRGB(i, 0, 0, 0);
+                    
+                }
+                else{m_ledBuffer.setRGB(i, 255, 0, 0);}
+
+            }
+
+            }
             
         }
     }
 
     @Override
 	public void periodic() {
-	
+        runAnt();
     
     }
 }
