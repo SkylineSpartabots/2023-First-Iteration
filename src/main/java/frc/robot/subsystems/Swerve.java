@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import frc.robot.SwerveModule;
 import frc.robot.Constants;
+import frc.robot.subsystems.Light;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -30,6 +31,8 @@ public class Swerve extends SubsystemBase {
         }
         return instance;
     }
+
+    Light LEDLights = new Light();
 
     private SwerveDriveOdometry swerveOdometry;
     private Pigeon2 gyro;
@@ -98,6 +101,7 @@ public class Swerve extends SubsystemBase {
     public void resetOdometry(Pose2d pose) {
         swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
         gyro.setYaw(pose.getRotation().getDegrees());
+        LEDLights.setColor(1);
     }
 
     public SwerveModuleState[] getModuleStates() {
