@@ -25,10 +25,6 @@ public class Robot extends TimedRobot {
     public static CTREConfigs ctreConfigs;
 
     private Command m_autonomousCommand;
-    private static final String auto1 = "straightAuto";
-    private static final String auto2 = "rightAuto";
-    private static final String auto3 = "waitAuto";
-    private static final String auto4 = "test";
     private final SendableChooser<AutoCommandFactory.AutoType> m_chooser = new SendableChooser<>();
     private RobotContainer m_robotContainer;
 
@@ -44,11 +40,11 @@ public class Robot extends TimedRobot {
         m_chooser.addOption("Right Auto", AutoCommandFactory.AutoType.Right);
         m_chooser.addOption("Wait Auto", AutoCommandFactory.AutoType.Wait);
         m_chooser.addOption("Test Auto", AutoCommandFactory.AutoType.Test);
+        m_autonomousCommand = AutoCommandFactory.getAutoCommand(m_chooser.getSelected());
+        SmartDashboard.putData("Auto choices", m_chooser);
         DriverStation.Alliance a = DriverStation.getAlliance();
         SmartDashboard.putString("Alliance",
                 a == DriverStation.Alliance.Blue ? "Blue" : a == DriverStation.Alliance.Red ? "Red" : "Other");
-        SmartDashboard.putData("Auto choices", m_chooser);
-        m_autonomousCommand = AutoCommandFactory.getAutoCommand(m_chooser.getSelected());
         m_robotContainer = new RobotContainer();
     }
 
