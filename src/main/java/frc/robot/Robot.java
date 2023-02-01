@@ -25,26 +25,9 @@ public class Robot extends TimedRobot {
     public static CTREConfigs ctreConfigs;
 
   private Command m_autonomousCommand;
-  private static final String auto1 = "straightAuto";
-  private static final String auto2 = "rightAuto";
-  private static final String auto3 = "waitAuto";
-  private static final String topThreeCone = "topThreeCone";
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
-  private RobotContainer m_robotContainer;
-    private Command m_autonomousCommand;
     private final SendableChooser<AutoCommandFactory.AutoType> m_chooser = new SendableChooser<>();
     private RobotContainer m_robotContainer;
 
-  /**
-   * This function is run when the robot is first started up and should be used
-   * for any
-   * initialization code.
-   */
-  @Override
-  public void robotInit() {
-    ctreConfigs = new CTREConfigs();
-    m_robotContainer = new RobotContainer();
-  }
     /**
      * This function is run when the robot is first started up and should be used
      * for any
