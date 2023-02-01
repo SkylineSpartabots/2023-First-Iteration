@@ -20,7 +20,9 @@ public class Light extends SubsystemBase {
 
     public AddressableLED m_led = new AddressableLED(Constants.LEDConstants.ledPin);
     public AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(Constants.LEDConstants.ledBufferSize);
-
+    private int select = 0;
+    int time = 0;
+    int gap = 1;
 
     public void LEDSubsystem() {
         m_led.setLength(m_ledBuffer.getLength());
@@ -32,7 +34,7 @@ public class Light extends SubsystemBase {
     /**
    * Sets color of the LED to 
    *
-   * @param mode 0:Test 1:Solid Red 2:Solid Green 3:Solid Blue 4:Ant Trail 5:Rainbow 6:
+   * 
    */
     // public void setColor(int mode) {
         
@@ -54,14 +56,47 @@ public class Light extends SubsystemBase {
     //                 break;
     //          }
             
-    //         m_led.setData(m_ledBuffer);
-    //      }
-    // }
+    
+public int getSelected() {
+    return select;
+}
+    /**
+     * @param mode 0:Test 
+     * 1: Red Ants 
+     * 2: Rainbow
+     */
+public void setSelected(int selected) {
+    
+    
+    
+    this.select = selected;
+}
+
+
+    public void update(int selected) {
+            switch (selected) { // uhh what are enums again lol
+                case 1: {
+                    runAnt();
+                    break;
+                }
+
+                case 2: {
+                    runRainbow();
+                    break;
+                }
+
+            }
+    }
+
+    public void runRainbow() {
+        // taste the rainbow (ill do this later aligator)
+    }
+
     public void runAnt(){
         
-        for (int k = 1; k < 5; k++) {
+        
             for (int i = 1; i < m_ledBuffer.getLength(); i++) {
-            if(i-k%5==0) {
+            if(i-gap%5==0) {
                 
                 m_ledBuffer.setRGB(i, 0, 0, 0);
                 
@@ -70,14 +105,25 @@ public class Light extends SubsystemBase {
 
         }
         m_led.setData(m_ledBuffer);
-        }
-        
+        time = 0;
+        if (gap==5) {
+            gap=0;
+            }
+             else {
+
+                gap++;
+
+            };
     }
     
 
     @Override
 	public void periodic() {
-        runAnt();
+        time++; // 1 time = 20 miliseconds pretty sure
+        if (time==20) { // updates selected light animation every 400 miliseconds (20*20=400)
+            update(getSelected()); 
+            time=0;
+        }
     
     }
 }
