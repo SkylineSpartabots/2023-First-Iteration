@@ -23,6 +23,7 @@ public class Light extends SubsystemBase {
     private int selected = 0;
     int time = 0;
     int gap = 1;
+    int alarm = 13;
 
 
     // public void LEDSubsystem() {
@@ -70,7 +71,7 @@ public int getSelected() {
 }
     /**
      * @param selected 
-     * 0:Test 
+     * 0: Test 
      * 1: Red Ants 
      * 2: Rainbow
      */
@@ -82,6 +83,8 @@ public void setSelected(int selected) {
             switch (selected) { // uhh what are enums again lol
                 case 0:{
                     setSolidColor(255, 255, 255);
+                    m_led.setData(m_ledBuffer);
+                    break;
                 }
                 case 1: {
                     runAnt();
@@ -97,8 +100,14 @@ public void setSelected(int selected) {
     }
 
     public void runRainbow() {
-        // taste the rainbow (ill do this later aligator)
-        m_led.setData(m_ledBuffer);
+        for (int h =0; h < 180; h++){
+            for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+                m_ledBuffer.setHSV(i, h, 255, 255);
+                m_led.setData(m_ledBuffer);
+            }
+        }
+        
+        
     }
 
     public void runAnt(){
@@ -126,7 +135,7 @@ public void setSelected(int selected) {
     @Override
 	public void periodic() {
         time++; // 1 time = 20 miliseconds pretty sure
-        if (time==20) { // updates selected light animation every 400 miliseconds (20*20=400)
+        if (time==13) { // updates selected light animation every 260 miliseconds (20*13=260)
             update(getSelected()); 
             time=0;
         }
