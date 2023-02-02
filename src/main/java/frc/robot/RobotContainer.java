@@ -112,8 +112,8 @@ public class RobotContainer {
         // operatorA.onTrue(new InstantCommand(() -> s_Intake.testSolenoid(false)));
         // operatorB.onTrue(new InstantCommand(() -> s_Intake.testSolenoid(true)));
 
-        //operatorX.onTrue(new InstantCommand(() -> s_Lights.LEDSubsystem()));
-
+        operatorX.onTrue(new InstantCommand(() -> s_Lights.setSelected(1)));
+        operatorY.onTrue(new InstantCommand(() -> s_Lights.setSelected(0)));
         // operatorX.onTrue(new InstantCommand(() -> s_Intake.testVelo(1)));
         // operatorY.onTrue(new InstantCommand(() -> s_Intake.testVelo(0)));
         // operatorStart.onTrue(new InstantCommand(() -> s_Extension.testPosition(false)));

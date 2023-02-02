@@ -20,17 +20,19 @@ public class Light extends SubsystemBase {
 
     public AddressableLED m_led = new AddressableLED(Constants.LEDConstants.ledPin);
     public AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(Constants.LEDConstants.ledBufferSize);
-    private int select = 0;
+    private int selected = 0;
     int time = 0;
     int gap = 1;
 
-    public void LEDSubsystem() {
-        m_led.setLength(m_ledBuffer.getLength());
-        m_led.setData(m_ledBuffer);
-        m_led.start();
 
-        //setColor(0);
-      }
+    // public void LEDSubsystem() {
+    //     m_led.setLength(m_ledBuffer.getLength());
+    //     m_led.setData(m_ledBuffer);
+    //     m_led.start();
+
+    //     setColor(0);
+    //   }
+
     /**
    * Sets color of the LED to 
    *
@@ -56,25 +58,31 @@ public class Light extends SubsystemBase {
     //                 break;
     //          }
             
-    
+public void setSolidColor(int r, int g, int b){
+    for (var i = 0; i < m_ledBuffer.getLength(); i++){
+        m_ledBuffer.setRGB(i, r, g, b);
+        m_led.setData(m_ledBuffer);
+    }
+}
+
 public int getSelected() {
-    return select;
+    return selected;
 }
     /**
-     * @param mode 0:Test 
+     * @param selected 
+     * 0:Test 
      * 1: Red Ants 
      * 2: Rainbow
      */
 public void setSelected(int selected) {
-    
-    
-    
-    this.select = selected;
+    this.selected = selected;
 }
-
 
     public void update(int selected) {
             switch (selected) { // uhh what are enums again lol
+                case 0:{
+                    setSolidColor(255, 255, 255);
+                }
                 case 1: {
                     runAnt();
                     break;
@@ -90,10 +98,10 @@ public void setSelected(int selected) {
 
     public void runRainbow() {
         // taste the rainbow (ill do this later aligator)
+        m_led.setData(m_ledBuffer);
     }
 
     public void runAnt(){
-        
         
             for (int i = 1; i < m_ledBuffer.getLength(); i++) {
             if(i-gap%5==0) {
@@ -105,18 +113,16 @@ public void setSelected(int selected) {
 
         }
         m_led.setData(m_ledBuffer);
+
         time = 0;
         if (gap==5) {
             gap=0;
             }
              else {
-
                 gap++;
-
             };
     }
     
-
     @Override
 	public void periodic() {
         time++; // 1 time = 20 miliseconds pretty sure
@@ -124,6 +130,5 @@ public void setSelected(int selected) {
             update(getSelected()); 
             time=0;
         }
-    
     }
 }
