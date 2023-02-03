@@ -37,6 +37,16 @@ public class Light extends SubsystemBase {
         m_led.start();
     }
 
+    public void gapReset(){
+        time = 0;
+        if (gap==groupSize) {
+            gap=0;
+        } 
+        else {
+            gap++;
+        };
+    }
+
     public void increaseTime() {
         time++;
     }
@@ -47,24 +57,18 @@ public class Light extends SubsystemBase {
         }
     }
 
-    public void setSolidColor(int r, int g, int b){
-        for (var i = 0; i < m_ledBuffer.getLength(); i++){
-            m_ledBuffer.setRGB(i, r, g, b);
-            m_led.setData(m_ledBuffer);
-        }
-    }
-
     public int getSelected() {
         return selected;
     }
     /**
      * @param selected 
      * 0: Test 
-     * 1: Red Ants 
-     * 2: Rainbow Solid
-     * 3: Rainbow Segmented
-     * 4: Caution
-     * 5: Velocity
+     * 1: runAnt
+     * 2: runRainbowSolid
+     * 3: runSegmentedRainbow
+     * 4: runCaution
+     * 5: runVelocity
+     * 6: stopLED
      */
     public void setSelected(int selected) {
         this.selected = selected;
@@ -75,18 +79,17 @@ public class Light extends SubsystemBase {
                 case 0:{
                     setSolidColor(255, 255, 255);
                     m_led.setData(m_ledBuffer);
-                    break;}
-                    
+                    break;
+                }
                 case 1: {
                     groupSize= 5;
                     runAnt();
-                    break;}
-
+                    break;
+                }
                 case 2: {
                     runRainbowSolid();
                     break;
                 }
-
                 case 3: {
                     groupSize = 6;
                     runSegmentedRainbow();
@@ -101,9 +104,13 @@ public class Light extends SubsystemBase {
                     runVelocity();
                     break;
                 }
+                case 6: {
+                    stopLED();
+                    break;
+                }
             }
     }
-
+    /*Begin LED mode methods */
     public void runSegmentedRainbow() {
         
         for (int i = 1; i < m_ledBuffer.getLength(); i++) {
@@ -122,7 +129,6 @@ public class Light extends SubsystemBase {
 
         }
         m_led.setData(m_ledBuffer);
-
         gapReset();
         // time = 0;
         // if (gap==groupSize) {
@@ -131,8 +137,7 @@ public class Light extends SubsystemBase {
         // else {
         //     gap++;
         // };
-
-    };
+    }
 
     public void runVelocity() { //uses accelrometer
         double averageVelocity = 0.0;
@@ -148,23 +153,18 @@ public class Light extends SubsystemBase {
                 m_led.setData(m_ledBuffer);
             }
         }
-        
-        
    }
 
     public void runAnt(){
-        
         for (int i = 1; i < m_ledBuffer.getLength(); i++) {
             if((i-gap)%5==0) { // could this 5 be replaced with groupSize???
-                
+
                 m_ledBuffer.setRGB(i, 255, 0, 0);
-                
             }
             else{m_ledBuffer.setRGB(i, 0, 0, 0);}
 
         }
         m_led.setData(m_ledBuffer);
-
         gapReset();
         // time = 0;
         // if (gap==groupSize) {
@@ -179,24 +179,26 @@ public class Light extends SubsystemBase {
         for (int i = 1; i < m_ledBuffer.getLength(); i++) {
             if((i-gap)%2==0) {
 
-                m_ledBuffer.setRGB(i, 255, 0, 210);}
-                
+                m_ledBuffer.setRGB(i, 255, 0, 210);
+            }    
             else{m_ledBuffer.setRGB(i, 255, 0, 0);}
-
         }
         m_led.setData(m_ledBuffer);
-
         gapReset();
     }
 
-    public void gapReset(){
-        time = 0;
-        if (gap==groupSize) {
-            gap=0;
-        } 
-        else {
-            gap++;
-        };
+    public void setSolidColor(int r, int g, int b){
+        for (var i = 0; i < m_ledBuffer.getLength(); i++){
+            m_ledBuffer.setRGB(i, r, g, b);
+            m_led.setData(m_ledBuffer);
+        }
+    }
+    
+    public void stopLED(){
+        for (var i = 0; i < m_ledBuffer.getLength(); i++){
+            m_ledBuffer.setRGB(i, 0,0,0);
+            m_led.setData(m_ledBuffer);
+        }
     }
 
     @Override
