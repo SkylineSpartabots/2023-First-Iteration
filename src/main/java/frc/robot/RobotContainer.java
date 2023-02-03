@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
 import frc.robot.factories.AutoCommandFactory;
 import frc.robot.subsystems.*;
-import frc.robot.subsystems.Extension.ExtensionStates;
 import frc.robot.subsystems.Intake.IntakeStates;
 
 /**
@@ -44,15 +43,15 @@ public class RobotContainer {
 
     /* Operator Buttons, currently just used for testing */
     private final JoystickButton forwardExtension = new JoystickButton(operator, XboxController.Button.kA.value);
-    private final JoystickButton setPivot = new JoystickButton(operator, XboxController.Button.kB.value);
+    private final JoystickButton setElevator = new JoystickButton(operator, XboxController.Button.kB.value);
     private final JoystickButton setIntake = new JoystickButton(operator, XboxController.Button.kX.value);
     private final JoystickButton backExtension = new JoystickButton(operator, XboxController.Button.kY.value);
 
     /* Subsystems */
     private final Swerve s_Swerve ;
     private final Limelight s_Limelight ;
-    private final Extension s_Extension ;
-    private final Pivot s_Pivot ;
+    private final Elevator s_Elevator ;
+    private final Arm s_Arm ;
     private final Intake s_Intake ;
 
     /* Commands */
@@ -64,9 +63,9 @@ public class RobotContainer {
         //initialize subsystems
         s_Swerve = Swerve.getInstance();
         s_Limelight = Limelight.getInstance();
-        s_Extension = Extension.getInstance();
-        s_Pivot = Pivot.getInstance();
+        s_Elevator = Elevator.getInstance();
         s_Intake = Intake.getInstance();
+        s_Arm = Arm.getInstance();
 
         s_Swerve.resetOdometry(new Pose2d());
         s_Swerve.resetOdometry(new Pose2d());
@@ -105,8 +104,6 @@ public class RobotContainer {
                 new InstantCommand(() -> autoBalanceCommand.cancel()),
                 s_Swerve.isPathRunningSupplier));
         // setArm.onTrue(new SetArm(Extension.ExtensionStates.ZERO, Pivot.PivotStates.ZERO));
-        forwardExtension.onTrue(new InstantCommand(() -> s_Extension.testPosition(true)));
-        backExtension.onTrue(new InstantCommand(() -> s_Extension.testPosition(false)));
         // setPivot.onTrue(new InstantCommand(() -> s_Pivot.setVelocity(-0.1)));
         // setIntake.onTrue(new InstantCommand(() -> s_Intake.setState(IntakeStates.ON_DEPLOYED)));
     }

@@ -1,16 +1,17 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class ElevatorSubsystem extends SubsystemBase {
-    static ElevatorSubsystem instance;
-    public ElevatorSubsystem getInstance() {
-        if (instance == null) instance = new ElevatorSubsystem();
+public class Elevator extends SubsystemBase {
+    static Elevator instance;
+    public static Elevator getInstance() {
+        if (instance == null) instance = new Elevator();
         return instance;
     }
     private TalonFX mLeaderElevatorMotor, mFollowerElevatorMotor;
@@ -33,7 +34,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 		}
 	}
     
-    public ElevatorSubsystem() {
+    public Elevator() {
         mLeaderElevatorMotor = new TalonFX(Constants.HardwarePorts.elevatorLeaderMotor);
         configureMotor(mLeaderElevatorMotor, false);
         mFollowerElevatorMotor = new TalonFX(Constants.HardwarePorts.elevatorFollowerMotor, "2976 CANivore");
@@ -52,18 +53,18 @@ public class ElevatorSubsystem extends SubsystemBase {
         talon.config_kD(0, 0, Constants.timeOutMs);
     }
 
-    public setVelocity(double velocity) {
+    public void setVelocity(double velocity) {
         this.velocity = velocity;
         mLeaderElevatorMotor.set(ControlMode.Velocity, velocity);
     }
-    public setPosition(ElevatorStates state) {
+    public void setPosition(ElevatorStates state) {
         elevatorState = state;
-        mLeaderElevatorMotor.set(ControlMode.Position, state);
+        mLeaderElevatorMotor.set(ControlMode.Position, state.statePosition);
     }
-    public getVelocitySetpoint() {
+    public double getVelocitySetpoint() {
         return velocity;
     }
-    public getPositionSetpoint() {
+    public double getPositionSetpoint() {
         return elevatorState.statePosition;
     }
     public double getMeasuredPosition () {
