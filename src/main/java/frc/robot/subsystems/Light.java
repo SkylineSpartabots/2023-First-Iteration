@@ -27,6 +27,7 @@ public class Light extends SubsystemBase {
     private int time = 0;
     int gap = 1;
     int alarm = 13;
+    int groupSize = 5;
 
     public void Light() {
         m_led.setLength(m_ledBuffer.getLength());
@@ -70,58 +71,43 @@ public class Light extends SubsystemBase {
                 case 0:{
                     setSolidColor(255, 255, 255);
                     m_led.setData(m_ledBuffer);
-                    break;
-                }
+                    break;}
+                    
                 case 1: {
+                    groupSize= 5;
                     runAnt();
-                    break;
-                }
+                    break;}
 
                 case 2: {
                     runRainbow();
-                    break;
-                }
+                    break;}
 
                 case 3: {
+                    groupSize = 6;
                     runSegmentedRainbow();
-                    break;
-                }
+                    break;}
 
+                case 4: {
+                    groupSize = 3;
+                    caution();
+                    break;}
             }
     }
 
     public void runSegmentedRainbow() {
         for (int i = 1; i < m_ledBuffer.getLength(); i++) {
-            if((i-gap)%1==0) {
-                
-                m_ledBuffer.setRGB(i, 255, 0, 0);
-                
-            }
-            else if((i-gap)%2==0) {
-                
-                m_ledBuffer.setRGB(i, 255, 0, 127);
-                
-            }
-            else if((i-gap)%3==0) {
-                
-                m_ledBuffer.setRGB(i, 255, 0, 255);
-                
-            }
-            else if((i-gap)%4==0) {
-                
-                m_ledBuffer.setRGB(i, 0, 0, 255);
-                
-            }
-            else if((i-gap)%5==0) {
-                
-                m_ledBuffer.setRGB(i, 0, 255, 0);
-                
-            }
-            else if((i-gap)%6==0) {
-                
-                m_ledBuffer.setRGB(i, 75, 130, 0);
-                
-            } else {m_ledBuffer.setRGB(i, 148, 211, 0);}
+            if((i-gap)%1==0) {m_ledBuffer.setRGB(i, 255, 0, 0);}
+            else if((i-gap)%2==0) {m_ledBuffer.setRGB(i, 255, 0, 127);}
+
+            else if((i-gap)%3==0) {m_ledBuffer.setRGB(i, 255, 0, 255);}
+
+            else if((i-gap)%4==0) {m_ledBuffer.setRGB(i, 0, 0, 255);}
+
+            else if((i-gap)%5==0) {m_ledBuffer.setRGB(i, 0, 255, 0);}
+
+            else if((i-gap)%6==0) {m_ledBuffer.setRGB(i, 75, 130, 0);} 
+
+            else {m_ledBuffer.setRGB(i, 148, 211, 0);}
 
         }
         m_led.setData(m_ledBuffer);
@@ -161,7 +147,7 @@ public class Light extends SubsystemBase {
         m_led.setData(m_ledBuffer);
 
         time = 0;
-        if (gap==5) {
+        if (gap==groupSize) {
             gap=0;
         } 
         else {
@@ -169,6 +155,19 @@ public class Light extends SubsystemBase {
         };
     }
     
+    public void caution(){
+        for (int i = 1; i < m_ledBuffer.getLength(); i++) {
+            if((i-gap)%2==0) {
+
+                m_ledBuffer.setRGB(i, 255, 0, 210);}
+                
+            else{m_ledBuffer.setRGB(i, 255, 0, 0);}
+
+        }
+        m_led.setData(m_ledBuffer);
+    }
+
+
     @Override
 	public void periodic() {
 
