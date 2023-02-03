@@ -24,7 +24,7 @@ import frc.robot.factories.AutoCommandFactory;
 public class Robot extends TimedRobot {
     public static CTREConfigs ctreConfigs;
 
-    private Command m_autonomousCommand;
+  private Command m_autonomousCommand;
     private final SendableChooser<AutoCommandFactory.AutoType> m_chooser = new SendableChooser<>();
     private RobotContainer m_robotContainer;
 
