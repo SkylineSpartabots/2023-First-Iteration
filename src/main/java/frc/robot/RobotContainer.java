@@ -114,6 +114,10 @@ public class RobotContainer {
         // operatorStart.onTrue(new InstantCommand(() -> s_Extension.testPosition(false)));
         operatorA.onTrue(new InstantCommand(() -> s_Pivot.testPosition(true)));
         operatorA.onTrue(new InstantCommand(() -> s_Pivot.testPosition(false)));
+        operatorY.onTrue(new InstantCommand(() -> Extension.getInstance().setEncoderPosition(0)));
+        operatorX.onTrue(new InstantCommand(() -> Extension.getInstance().testPosition(true)));
+        operatorB.onTrue(new InstantCommand(() -> Extension.getInstance().testPosition(false)));
+
     }
 
     public void onRobotDisabled() {
