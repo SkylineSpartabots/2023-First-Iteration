@@ -1,9 +1,11 @@
 package frc.robot.subsystems;
 
+import frc.robot.subsystems.Swerve;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-
+import frc.robot.SwerveModule;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
@@ -27,6 +29,7 @@ public class Light extends SubsystemBase {
     private int time = 0;
     int gap = 1;
     int alarm = 13;
+    int groupSize=0;
 
     public void Light() {
         m_led.setLength(m_ledBuffer.getLength());
@@ -78,7 +81,7 @@ public class Light extends SubsystemBase {
                 }
 
                 case 2: {
-                    runRainbow();
+                    runRainbowSolid();
                     break;
                 }
 
@@ -86,11 +89,16 @@ public class Light extends SubsystemBase {
                     runSegmentedRainbow();
                     break;
                 }
+                case 5: {
+                    runVelocity();
+                    break;
+                }
 
             }
     }
 
     public void runSegmentedRainbow() {
+        
         for (int i = 1; i < m_ledBuffer.getLength(); i++) {
             if((i-gap)%1==0) {
                 
@@ -127,7 +135,7 @@ public class Light extends SubsystemBase {
         m_led.setData(m_ledBuffer);
 
         time = 0;
-        if (gap==7) {
+        if (gap==groupSize) {
             gap=0;
         } 
         else {
@@ -136,7 +144,14 @@ public class Light extends SubsystemBase {
 
     };
 
-    public void runRainbow() {
+    public void runVelocity() { //uses accelrometer
+        double averageVelocity = 0.0;
+        for (SwerveModule mod : Swerve.getInstance().getSwerveModules()) {
+            averageVelocity += mod.getState().speedMetersPerSecond/4;
+        }
+    }
+
+    public void runRainbowSolid() {
         for (int h =0; h < 180; h++){
             for (int i = 0; i < m_ledBuffer.getLength(); i++) {
                 m_ledBuffer.setHSV(i, h, 255, 255);
