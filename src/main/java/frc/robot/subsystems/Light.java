@@ -6,6 +6,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.SwerveModule;
+
+import java.util.Random;
+
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
@@ -25,13 +28,16 @@ public class Light extends SubsystemBase {
 
     public AddressableLED m_led = new AddressableLED(Constants.LEDConstants.ledPin);
     public AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(Constants.LEDConstants.ledBufferSize);
+    Random rand = new Random();
     private int selected = 1;
     private int time = 0;
     int gap = 1; // subtracted from LED index to get it to be evenly divisible by group size
     int limiter = 13; // limits how often the update() method is called
     int groupSize = 0; // changes when gap resets - limit gap - how big in between ants
+    int minusGap = 0; // gap but it goes down not up lol
+    int[] randColor = {rand.nextInt(1,255), rand.nextInt(1,255), rand.nextInt(1,255)};
 
-    public void Light() {
+    public void Light() { //inizilize the leds
         m_led.setLength(m_ledBuffer.getLength());
         m_led.setData(m_ledBuffer);
         m_led.start();
@@ -45,6 +51,12 @@ public class Light extends SubsystemBase {
         else {
             gap++;
         };
+    }
+
+    public void newColors() {
+        for (int i = 0; i < randColor.length; i++) {
+            randColor[1] = rand.nextInt(1,255);
+        }
     }
 
     public void increaseTime() {
@@ -108,6 +120,11 @@ public class Light extends SubsystemBase {
                     stopLED();
                     break;
                 }
+                case 7: {
+                    time = 1;
+                    runWave();
+                    break;
+                }
             }
     }
     /*Begin LED mode methods */
@@ -132,7 +149,7 @@ public class Light extends SubsystemBase {
         gapReset();
         // time = 0;
         // if (gap==groupSize) {
-        //     gap=0;
+        //     
         // } 
         // else {
         //     gap++;
@@ -144,6 +161,34 @@ public class Light extends SubsystemBase {
         for (SwerveModule mod : Swerve.getInstance().getSwerveModules()) {
             averageVelocity += mod.getState().speedMetersPerSecond/4;
         }
+        // need to test velocity to finish this
+    }
+
+    public void runWave() {
+        for (int i = 50; i < m_ledBuffer.getLength()/2; i++) {
+            if(i==gap) { 
+
+                m_ledBuffer.setRGB(i, randColor[0], randColor[1], randColor[2]);
+            }
+
+        }
+        gapReset();
+        for (int i = m_ledBuffer.getLength()/2; i > 0; i--) {
+            if(i==minusGap) { 
+
+                m_ledBuffer.setRGB(i, randColor[0], randColor[1], randColor[2]);
+            }
+
+        }
+
+        if (minusGap==0) {
+            minusGap = 50;
+            newColors();
+        } 
+        else {
+            gap--;
+        };
+        
     }
 
     public void runRainbowSolid() {
@@ -157,7 +202,7 @@ public class Light extends SubsystemBase {
 
     public void runAnt(){
         for (int i = 1; i < m_ledBuffer.getLength(); i++) {
-            if((i-gap)%5==0) { // could this 5 be replaced with groupSize???
+            if((i-gap)%groupSize==0) { // could this 5 be replaced with groupSize??? (ye -iggy)
 
                 m_ledBuffer.setRGB(i, 255, 0, 0);
             }
@@ -207,7 +252,7 @@ public class Light extends SubsystemBase {
         SmartDashboard.putNumber("LED mode", getSelected());
 
         time++; // 1 time = 20 miliseconds pretty sure
-        if (time== limiter) { // updates selected light animation (20*time = miliseconds)
+        if (time==limiter) { // updates selected light animation (20*time = miliseconds)
             update(getSelected()); 
             time=0;
         }
