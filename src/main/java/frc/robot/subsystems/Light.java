@@ -27,9 +27,9 @@ public class Light extends SubsystemBase {
     public AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(Constants.LEDConstants.ledBufferSize);
     private int selected = 1;
     private int time = 0;
-    int gap = 1;
-    int alarm = 13;
-    int groupSize=0;
+    int gap = 1; // subtracted from LED index to get it to be evenly divisible by group size
+    int limiter = 13; // limits how often the update() method is called
+    int groupSize = 0; // changes when gap resets - limit gap - how big in between ants
 
     public void Light() {
         m_led.setLength(m_ledBuffer.getLength());
@@ -61,8 +61,10 @@ public class Light extends SubsystemBase {
      * @param selected 
      * 0: Test 
      * 1: Red Ants 
-     * 2: Rainbow type 1
-     * 3; Rainbow type 2
+     * 2: Rainbow Solid
+     * 3: Rainbow Segmented
+     * 4: Caution
+     * 5: Velocity
      */
     public void setSelected(int selected) {
         this.selected = selected;
@@ -90,15 +92,15 @@ public class Light extends SubsystemBase {
                     runSegmentedRainbow();
                     break;
                 }
+                case 4: {
+                    groupSize = 3;
+                    runCaution();
+                    break;
+                }
                 case 5: {
                     runVelocity();
                     break;
                 }
-
-                case 4: {
-                    groupSize = 3;
-                    caution();
-                    break;}
             }
     }
 
@@ -121,13 +123,14 @@ public class Light extends SubsystemBase {
         }
         m_led.setData(m_ledBuffer);
 
-        time = 0;
-        if (gap==groupSize) {
-            gap=0;
-        } 
-        else {
-            gap++;
-        };
+        gapReset();
+        // time = 0;
+        // if (gap==groupSize) {
+        //     gap=0;
+        // } 
+        // else {
+        //     gap++;
+        // };
 
     };
 
@@ -152,7 +155,7 @@ public class Light extends SubsystemBase {
     public void runAnt(){
         
         for (int i = 1; i < m_ledBuffer.getLength(); i++) {
-            if((i-gap)%5==0) {
+            if((i-gap)%5==0) { // could this 5 be replaced with groupSize???
                 
                 m_ledBuffer.setRGB(i, 255, 0, 0);
                 
@@ -162,16 +165,17 @@ public class Light extends SubsystemBase {
         }
         m_led.setData(m_ledBuffer);
 
-        time = 0;
-        if (gap==groupSize) {
-            gap=0;
-        } 
-        else {
-            gap++;
-        };
+        gapReset();
+        // time = 0;
+        // if (gap==groupSize) {
+        //     gap=0;
+        // } 
+        // else {
+        //     gap++;
+        // };
     }
     
-    public void caution(){
+    public void runCaution(){ //play when robot slows down?
         for (int i = 1; i < m_ledBuffer.getLength(); i++) {
             if((i-gap)%2==0) {
 
@@ -181,8 +185,19 @@ public class Light extends SubsystemBase {
 
         }
         m_led.setData(m_ledBuffer);
+
+        gapReset();
     }
 
+    public void gapReset(){
+        time = 0;
+        if (gap==groupSize) {
+            gap=0;
+        } 
+        else {
+            gap++;
+        };
+    }
 
     @Override
 	public void periodic() {
@@ -190,7 +205,7 @@ public class Light extends SubsystemBase {
         SmartDashboard.putNumber("LED mode", getSelected());
 
         time++; // 1 time = 20 miliseconds pretty sure
-        if (time==7) { // updates selected light animation (20*time = miliseconds)
+        if (time== limiter) { // updates selected light animation (20*time = miliseconds)
             update(getSelected()); 
             time=0;
         }
