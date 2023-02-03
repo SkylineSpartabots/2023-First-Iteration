@@ -113,12 +113,14 @@ public class RobotContainer {
         // operatorB.onTrue(new InstantCommand(() -> s_Intake.testSolenoid(true)));
 
         operatorX.onTrue(new InstantCommand(() -> s_Lights.setSelected(1)));
-        operatorY.onTrue(new InstantCommand(() -> s_Lights.setSelected(0)));
+        operatorY.onTrue(new InstantCommand(() -> s_Lights.setSelected(2)));
+        operatorA.onTrue(new InstantCommand(() -> s_Lights.increaseTime()));
+        operatorB.onTrue(new InstantCommand(() -> s_Lights.decreaseTime()));
         // operatorX.onTrue(new InstantCommand(() -> s_Intake.testVelo(1)));
         // operatorY.onTrue(new InstantCommand(() -> s_Intake.testVelo(0)));
         // operatorStart.onTrue(new InstantCommand(() -> s_Extension.testPosition(false)));
-        operatorA.onTrue(new InstantCommand(() -> s_Pivot.testPosition(true)));
-        operatorA.onTrue(new InstantCommand(() -> s_Pivot.testPosition(false)));
+        // operatorA.onTrue(new InstantCommand(() -> s_Pivot.testPosition(true)));
+        // operatorA.onTrue(new InstantCommand(() -> s_Pivot.testPosition(false)));
     }
 
     public void onRobotDisabled() {
