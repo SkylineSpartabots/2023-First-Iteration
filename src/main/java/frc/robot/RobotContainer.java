@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.*;
 import frc.robot.factories.AutoCommandFactory;
@@ -39,17 +38,29 @@ public class RobotContainer {
 
     /* Driver Buttons */
     private final JoystickButton driverBack = new JoystickButton(driver, XboxController.Button.kBack.value);
+    private final JoystickButton driverStart = new JoystickButton(driver, XboxController.Button.kStart.value);
     private final JoystickButton driverA = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton driverB = new JoystickButton(driver, XboxController.Button.kB.value);
     private final JoystickButton driverX = new JoystickButton(driver, XboxController.Button.kX.value);
     private final JoystickButton driverY = new JoystickButton(driver, XboxController.Button.kY.value);
 
+    private final Trigger driverDpadUp = new Trigger(() -> driver.getPOV() == 0);
+    private final Trigger driverDpadRight = new Trigger(() -> driver.getPOV() == 90);
+    private final Trigger driverDpadDown = new Trigger(() -> driver.getPOV() == 180);
+    private final Trigger driverDpadLeft = new Trigger(() -> driver.getPOV() == 270);
+
     /* Operator Buttons, currently just used for testing */
+    private final JoystickButton operatorBack = new JoystickButton(operator, XboxController.Button.kBack.value);
+    private final JoystickButton operatorStart = new JoystickButton(operator, XboxController.Button.kStart.value);
     private final JoystickButton operatorA = new JoystickButton(operator, XboxController.Button.kA.value);
-    private final JoystickButton operatorY = new JoystickButton(operator, XboxController.Button.kY.value);
     private final JoystickButton operatorB = new JoystickButton(operator, XboxController.Button.kB.value);
     private final JoystickButton operatorX = new JoystickButton(operator, XboxController.Button.kX.value);
-    private final JoystickButton operatorStart = new JoystickButton(operator, XboxController.Button.kStart.value);
+    private final JoystickButton operatorY = new JoystickButton(operator, XboxController.Button.kY.value);
+
+    private final Trigger operatorDpadUp = new Trigger(() -> operator.getPOV() == 0);
+    private final Trigger operatorDpadRight = new Trigger(() -> operator.getPOV() == 90);
+    private final Trigger operatorDpadDown = new Trigger(() -> operator.getPOV() == 180);
+    private final Trigger operatorDpadLeft = new Trigger(() -> operator.getPOV() == 270);
 
     /* Subsystems */
     private final Swerve s_Swerve ;
@@ -114,17 +125,13 @@ public class RobotContainer {
         // setArm.onTrue(new SetArm(Extension.ExtensionStates.ZERO, Pivot.PivotStates.ZERO));
         // setPivot.onTrue(new Instant5tCommand(() -> s_Intake.setState(IntakeStates.ON_DEPLOYED)));
         operatorX.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(-1000)));
+        operatorB.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(1000)));
         operatorB.onTrue(new InstantCommand(() -> s_Arm.bruh()));
 
         // setIntake.onTrue(new InstantCommand(() -> s_Elevator.setPos(0)));
         // -85 bottom
         // 96 top 
 
-        //D-PAD
-        final Trigger opDpadUp = new Trigger(() -> operator.getPOV() == 0);
-        final Trigger opDpadDown = new Trigger(() -> operator.getPOV() == 180);
-        final Trigger opDpadLeft = new Trigger(() -> operator.getPOV() == 270);
-        final Trigger opDpadRight = new Trigger(() -> operator.getPOV() == 90);
         DriverStation.Alliance alliance = DriverStation.getAlliance();
 
             final int[] driveTags;

@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,6 +18,7 @@ public class Arm extends SubsystemBase {
 
     private TalonFX mArmMotor;
     private double velocity;
+    private CANCoder armCANCoder = new CANCoder(Constants.HardwarePorts.armCANCoder);
     private ArmStates armState = ArmStates.ZERO;
 
     public enum ArmStates {
@@ -26,9 +28,10 @@ public class Arm extends SubsystemBase {
         L1(0.0), 
         L2(0.0),
         L3(0.0),
-        TEST(0.5),
-        TESTBACK(-0.5);
+        TEST(0.5);
+
         double statePosition = 0.0;
+
         private ArmStates(double statePosition) {
             this.statePosition = statePosition;
         }
@@ -37,10 +40,11 @@ public class Arm extends SubsystemBase {
 
     public Arm() {
         mArmMotor = new TalonFX(Constants.HardwarePorts.armMotor);
-        configureMotor(mArmMotor);
+        configureMotor(mArmMotor, false);
     }
 
-    private void configureMotor(TalonFX talon){
+    private void configureMotor(TalonFX talon, boolean inverted){
+        talon.setInverted(inverted);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(true);
         talon.config_kF(0, 0.05, Constants.timeOutMs);
@@ -59,23 +63,36 @@ public class Arm extends SubsystemBase {
         this.velocity = velocity;
         mArmMotor.set(ControlMode.Velocity, velocity);
     }
-    public void setPosition(ArmStates state) {
+
+    public void setState(ArmStates state) {
         armState = state;
-        mArmMotor.set(ControlMode.Position, state.statePosition);
+        // mArmMotor.set(ControlMode.Position, state.statePosition);
     }
+
+    public void setPosition(double position) {
+        mArmMotor.setSelectedSensorPosition(position);
+    }
+
     public double getVelocitySetpoint() {
         return velocity;
     }
+
     public double getPositionSetpoint() {
         return armState.statePosition;
     }
+
     public double getMeasuredPosition () {
 		return mArmMotor.getSelectedSensorPosition();
 	}
 
-    public void bruh() {
-        mArmMotor.set(ControlMode.PercentOutput, 0.30);
+    public void setCANCoderPosition(double position) {
+        armCANCoder.setPosition(position);
     }
+
+    public double getCANCoderPosition() {
+        return armCANCoder.getPosition();
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("arm pos setpoint", getPositionSetpoint());

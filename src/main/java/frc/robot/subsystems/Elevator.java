@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -14,8 +15,10 @@ public class Elevator extends SubsystemBase {
         if (instance == null) instance = new Elevator();
         return instance;
     }
+
     private TalonFX mLeaderElevatorMotor, mFollowerElevatorMotor;
     private double velocity;
+    private CANCoder elevatorCANCoder = new CANCoder(Constants.HardwarePorts.elevatorCANCoder);
     ElevatorStates elevatorState = ElevatorStates.ZERO;
 
     public enum ElevatorStates {
@@ -36,9 +39,6 @@ public class Elevator extends SubsystemBase {
     
     double positionSetpoint = 0; 
     
-    /**
-     * 
-     */
     public Elevator() {
         mLeaderElevatorMotor = new TalonFX(Constants.HardwarePorts.elevatorLeaderMotor);
         configureMotor(mLeaderElevatorMotor, false);
@@ -49,8 +49,8 @@ public class Elevator extends SubsystemBase {
         mFollowerElevatorMotor.setSelectedSensorPosition(0);
     }
 
-    private void configureMotor(TalonFX talon, boolean b){
-        talon.setInverted(b);
+    private void configureMotor(TalonFX talon, boolean inverted){
+        talon.setInverted(inverted);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(true);
         talon.setNeutralMode(NeutralMode.Coast);
@@ -69,24 +69,37 @@ public class Elevator extends SubsystemBase {
         this.velocity = velocity;
         mLeaderElevatorMotor.set(ControlMode.Velocity, velocity);
     }
-    public void setPosition(ElevatorStates state) {
+
+    public void setState(ElevatorStates state) {
         elevatorState = state;
-        mLeaderElevatorMotor.set(ControlMode.Position, state.statePosition);
+        // mLeaderElevatorMotor.set(ControlMode.Position, state.statePosition);
     }
 
-    public void setPos(int position) {
+    public void setPosition(int position) {
         positionSetpoint = position;
         mLeaderElevatorMotor.set(ControlMode.Position, position);
     }
+
     public double getVelocitySetpoint() {
         return velocity;
     }
+
     public double getPositionSetpoint() {
         return elevatorState.statePosition;
     }
-    public double getMeasuredPosition () {
+
+    public double getMeasuredPosition() {
 		return mLeaderElevatorMotor.getSelectedSensorPosition();
 	}
+
+    public void setCANCoderPosition(double position) {
+        elevatorCANCoder.setPosition(position);
+    }
+
+    public double getCANCoderPosition() {
+        return elevatorCANCoder.getPosition();
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("leader motor pos measured", mLeaderElevatorMotor.getSelectedSensorPosition());

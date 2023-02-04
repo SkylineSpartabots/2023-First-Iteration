@@ -18,13 +18,17 @@ public final class Constants {
     public static final double stickDeadband = 0.1;
     
     public static final class HardwarePorts {
-        public static final int elevatorLeaderMotor = 21; //i set master and follower arbitrarily
-        public static final int elevatorFollowerMotor = 22; //arbitrary
-        public static final int armMotor = 23; //its a falcon now :)
-        public static final int intakeMotor = 24; //correct
-        public static final int intakeSolenoidForwardChannel = 0;
-        public static final int intakeSolenoidReverseChannel = 0;
+        public static final int elevatorLeaderMotor = 21; 
+        public static final int elevatorFollowerMotor = 22; 
+        public static final int elevatorCANCoder = 0; // configure
+        public static final int armMotor = 23; 
+        public static final int armCANCoder = 0; // configure
+        public static final int intakeMotor = 24; 
+        public static final int intakeSolenoidChannel = 0;
+        public static final int pneumaticHub = 16;
     }
+    
+    public static final double FIELD_WIDTH_METERS = 8.02;
 
     // ALL OF THESE ARE ONLY TRUE ON BLUE ALLIANCE
     public static final Translation2d TOP_LEFT_CHARGE = new Translation2d(2.52, 4.35);
@@ -73,7 +77,6 @@ public final class Constants {
         };
     }
 
-    public static final double FIELD_WIDTH_METERS = 8.02;
 
     public static final class Swerve {
 
