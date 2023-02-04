@@ -126,7 +126,6 @@ public class RobotContainer {
         // setPivot.onTrue(new Instant5tCommand(() -> s_Intake.setState(IntakeStates.ON_DEPLOYED)));
         operatorX.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(-1000)));
         operatorB.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(1000)));
-        operatorB.onTrue(new InstantCommand(() -> s_Arm.bruh()));
 
         // setIntake.onTrue(new InstantCommand(() -> s_Elevator.setPos(0)));
         // -85 bottom
@@ -143,10 +142,10 @@ public class RobotContainer {
             } else { // defaults to blue alliance if alliance is not set for whatever reason
                 driveTags = new int[]{5, 2, 2, 3};
             }
-            opDpadUp.onTrue(new OnTheFlyGeneration(driveTags[0], true)); // fixme whats the POINT of swervePose why cant we call it in the function itself
-            opDpadLeft.onTrue(new OnTheFlyGeneration(driveTags[1], true));
-            opDpadDown.onTrue(new OnTheFlyGeneration(driveTags[2], true));
-            opDpadRight.onTrue(new OnTheFlyGeneration(driveTags[3], true));
+            operatorDpadUp.onTrue(new OnTheFlyGeneration(driveTags[0], true)); // fixme whats the POINT of swervePose why cant we call it in the function itself
+            operatorDpadLeft.onTrue(new OnTheFlyGeneration(driveTags[1], true));
+            operatorDpadDown.onTrue(new OnTheFlyGeneration(driveTags[2], true));
+            operatorDpadRight.onTrue(new OnTheFlyGeneration(driveTags[3], true));
         }
     }
 

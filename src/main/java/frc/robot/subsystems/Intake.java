@@ -34,8 +34,8 @@ public class Intake extends SubsystemBase {
         );
         compressor = new Compressor(Constants.HardwarePorts.pneumaticHub, PneumaticsModuleType.REVPH);
         compressor.enableDigital();
-        mIntakemotor = new TalonFX(Constants.HardwarePorts.intakeMotor);
-        configureMotor(mIntakemotor, false); 
+        mIntakeMotor = new TalonFX(Constants.HardwarePorts.intakeMotor);
+        configureMotor(mIntakeMotor, false); 
         setState(IntakeStates.OFF_RETRACTED);
     }
 
