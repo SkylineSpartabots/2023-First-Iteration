@@ -38,7 +38,6 @@ public class Arm extends SubsystemBase {
     public Arm() {
         mArmMotor = new TalonFX(Constants.HardwarePorts.armMotor);
         configureMotor(mArmMotor);
-
     }
 
     private void configureMotor(TalonFX talon){

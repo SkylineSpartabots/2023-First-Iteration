@@ -18,10 +18,10 @@ public final class Constants {
     public static final double stickDeadband = 0.1;
 
     public static final class HardwarePorts {
-        public static final int elevatorLeaderMotor = 20; //i set master and follower arbitrarily
-        public static final int elevatorFollowerMotor = 45; //arbitrary
-        public static final int armMotor = 21; //its a falcon now :)
-        public static final int intakeMotor = 32; //correct
+        public static final int elevatorLeaderMotor = 21; //i set master and follower arbitrarily
+        public static final int elevatorFollowerMotor = 22; //arbitrary
+        public static final int armMotor = 23; //its a falcon now :)
+        public static final int intakeMotor = 24; //correct
         public static final int intakeSolenoidForwardChannel = 0;
         public static final int intakeSolenoidReverseChannel = 0;
     }

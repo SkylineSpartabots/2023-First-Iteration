@@ -46,7 +46,7 @@ public class Elevator extends SubsystemBase {
         talon.setInverted(b);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(true);
-        talon.setNeutralMode(NeutralMode.Brake);
+        talon.setNeutralMode(NeutralMode.Coast);
         talon.config_kF(0, 0, Constants.timeOutMs);
         talon.config_kP(0, 0, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);
@@ -54,7 +54,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public void changePosition(boolean up) {
-        elevatorState.statePosition += up ? 0.3 : -0.3;
+        elevatorState.statePosition += up ? 100 : -100;
         mLeaderElevatorMotor.set(ControlMode.Position, elevatorState.statePosition);
     }
 
@@ -75,9 +75,10 @@ public class Elevator extends SubsystemBase {
     public double getMeasuredPosition () {
 		return mLeaderElevatorMotor.getSelectedSensorPosition();
 	}
-
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("leader motor pos measured", mLeaderElevatorMotor.getSelectedSensorPosition());
+        SmartDashboard.putNumber("follower motor pos measured", mFollowerElevatorMotor.getSelectedSensorPosition());
         SmartDashboard.putNumber("elevator pos setpoint", getPositionSetpoint());
 		SmartDashboard.putNumber("elevator pos measured", getMeasuredPosition());
 		SmartDashboard.putNumber("elevator set velo", getVelocitySetpoint());
