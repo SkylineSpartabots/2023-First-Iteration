@@ -13,6 +13,7 @@ public class SetArm extends CommandBase {
 
 	SetArm(ArmStates state) {
 		s_Arm = Arm.getInstance();
+		addRequirements(s_Arm);
 		this.state = state;
 	}
 

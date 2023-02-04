@@ -13,6 +13,7 @@ public class SetElevator extends CommandBase {
 
 	SetElevator(ElevatorStates state) {
 		s_Elevator = Elevator.getInstance();
+		addRequirements(s_Elevator);
 		this.state = state;
 	}
 
