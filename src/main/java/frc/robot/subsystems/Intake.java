@@ -28,10 +28,10 @@ public class Intake extends SubsystemBase {
 
     private Intake() {
         intakeSolenoid = new Solenoid(
-                Constants.HardwarePorts.moduleID,
+                16,
                 PneumaticsModuleType.REVPH,
-                Constants.HardwarePorts.intakeChannel);
-        compressor = new Compressor(Constants.HardwarePorts.moduleID, PneumaticsModuleType.REVPH);
+                0);
+        compressor = new Compressor(16, PneumaticsModuleType.REVPH);
         compressor.enableDigital();
         mIntakeMotor = new TalonFX(Constants.HardwarePorts.intakeMotor, "2976 CANivore");
         configureMotor(mIntakeMotor, false); // figure out inversion
