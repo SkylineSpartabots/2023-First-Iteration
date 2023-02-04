@@ -49,8 +49,9 @@ public class Arm extends SubsystemBase {
         talon.config_kD(0, 0, Constants.timeOutMs);
     }
 
+
     public void changePosition(boolean forward) {
-        armState.statePosition += forward ? 0.3 : -0.3;
+        armState.statePosition += forward ? 3 : -3;
         mArmMotor.set(ControlMode.Position, armState.statePosition);
     }
 
@@ -72,6 +73,9 @@ public class Arm extends SubsystemBase {
 		return mArmMotor.getSelectedSensorPosition();
 	}
 
+    public void bruh() {
+        mArmMotor.set(ControlMode.PercentOutput, 0.30);
+    }
     @Override
     public void periodic() {
         SmartDashboard.putNumber("arm pos setpoint", getPositionSetpoint());
