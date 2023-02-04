@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -10,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.*;
 import frc.robot.factories.AutoCommandFactory;
 import frc.robot.subsystems.*;
@@ -112,12 +114,27 @@ public class RobotContainer {
         // operatorX.onTrue(new InstantCommand(() -> s_Intake.testVelo(1)));
         // operatorY.onTrue(new InstantCommand(() -> s_Intake.testVelo(0)));
         // operatorStart.onTrue(new InstantCommand(() -> s_Extension.testPosition(false)));
-        operatorA.onTrue(new InstantCommand(() -> s_Pivot.testPosition(true)));
-        operatorA.onTrue(new InstantCommand(() -> s_Pivot.testPosition(false)));
+//        operatorA.onTrue(new InstantCommand(() -> s_Pivot.testPosition(true)));
+//        operatorA.onTrue(new InstantCommand(() -> s_Pivot.testPosition(false)));
         operatorY.onTrue(new InstantCommand(() -> Extension.getInstance().setEncoderPosition(0)));
         operatorX.onTrue(new InstantCommand(() -> Extension.getInstance().testPosition(true)));
         operatorB.onTrue(new InstantCommand(() -> Extension.getInstance().testPosition(false)));
-
+        JoystickButton opLeftBump = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
+        JoystickButton opRightBump = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
+        JoystickButton opLeftStick = new JoystickButton(operator, XboxController.Button.kLeftStick.value);
+        JoystickButton opRightStick = new JoystickButton(operator, XboxController.Button.kRightStick.value);
+        DriverStation.Alliance alliance = DriverStation.getAlliance();
+        if (alliance == DriverStation.Alliance.Blue) {
+            opLeftStick.onTrue(new OnTheFlyGeneration(s_Swerve.getPose(), 4, true)); // todo actually useful
+            opRightStick.onTrue(new OnTheFlyGeneration(s_Swerve.getPose(), 8, true));
+            opLeftBump.onTrue(new OnTheFlyGeneration(s_Swerve.getPose(), 7, true));
+            opRightBump.onTrue(new OnTheFlyGeneration(s_Swerve.getPose(), 8, true));
+        } else if (alliance == DriverStation.Alliance.Red) {
+            opLeftStick.onTrue(new OnTheFlyGeneration(s_Swerve.getPose(), 1, true)); // todo actually useful
+            opRightStick.onTrue(new OnTheFlyGeneration(s_Swerve.getPose(), 2, true));
+            opLeftBump.onTrue(new OnTheFlyGeneration(s_Swerve.getPose(), 3, true));
+            opRightBump.onTrue(new OnTheFlyGeneration(s_Swerve.getPose(), 5, true));
+        }
     }
 
     public void onRobotDisabled() {
