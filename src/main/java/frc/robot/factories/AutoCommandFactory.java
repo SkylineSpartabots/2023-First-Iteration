@@ -25,10 +25,6 @@ public class AutoCommandFactory {
 
     public static Command getAutoCommand(AutoType auto) {
         switch (auto) {
-            case Straight:
-                return selectedAuto = straight();
-            case Right:
-                return selectedAuto = forwardAndRightCommand();
             case Wait:
                 return selectedAuto = pathWithWait();
             case OneConeDockMiddle:
@@ -50,16 +46,14 @@ public class AutoCommandFactory {
     }
 
     public enum AutoType {
-        Straight,
-        Right,
         Wait,
         OneConeDockMiddle,
         TwoConeBottom,
-        TwoConeDockBottom, 
+        TwoConeDockBottom,
         TwoConeDockTop,
         TwoConeTop,
         ThreeConeTop,
-        ThreeConeBottom
+        ThreeConeBottom,
     }
 
     public static Command getSelectedAuto() {
@@ -91,16 +85,6 @@ public class AutoCommandFactory {
                         s_Swerve.chassisConsumer,
                         s_Swerve));
         return lastCommand;
-    }
-
-    private static Command straight() {
-        PathPlannerTrajectory path = PathPlanner.loadPath("test", new PathConstraints(4, 3));
-        return followPathCommand(path, true);
-    }
-
-    private static Command forwardAndRightCommand() {
-        PathPlannerTrajectory path = PathPlanner.loadPath("forward and right", new PathConstraints(4, 3));
-        return followPathCommand(path, true);
     }
 
     private static Command pathWithWait() {
@@ -170,6 +154,7 @@ public class AutoCommandFactory {
             // pick up cone
             followPathCommand(pathGroup.get(1), false)
             // put cone
+
         );
     }
     private static Command threeConeTop() {
@@ -185,10 +170,10 @@ public class AutoCommandFactory {
             // pick up cone
             followPathCommand(pathGroup.get(3), false)
             // put cone
-            
+
         );
     }
-    
+
     private static Command threeConeBottom() {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("3 cone bottom",
         new PathConstraints(4, 3));
@@ -202,7 +187,7 @@ public class AutoCommandFactory {
             // pick up cone
             followPathCommand(pathGroup.get(3), false)
             // put cone
-            
+
         );
     }
  }
