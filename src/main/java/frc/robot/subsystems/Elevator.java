@@ -37,8 +37,6 @@ public class Elevator extends SubsystemBase {
 		}
 	}
     
-    double positionSetpoint = 0; 
-    
     public Elevator() {
         mLeaderElevatorMotor = new TalonFX(Constants.HardwarePorts.elevatorLeaderMotor);
         configureMotor(mLeaderElevatorMotor, false);
@@ -75,11 +73,6 @@ public class Elevator extends SubsystemBase {
         // mLeaderElevatorMotor.set(ControlMode.Position, state.statePosition);
     }
 
-    public void setPosition(int position) {
-        positionSetpoint = position;
-        mLeaderElevatorMotor.set(ControlMode.Position, position);
-    }
-
     public double getVelocitySetpoint() {
         return velocity;
     }
@@ -102,12 +95,10 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("leader motor pos measured", mLeaderElevatorMotor.getSelectedSensorPosition());
-        SmartDashboard.putNumber("follower motor pos measured", mFollowerElevatorMotor.getSelectedSensorPosition());
-        SmartDashboard.putNumber("elevator pos setpoint", getPositionSetpoint());
-		SmartDashboard.putNumber("elevator pos measured", getMeasuredPosition());
-		SmartDashboard.putNumber("elevator set velo", getVelocitySetpoint());
-        SmartDashboard.putNumber("ESETPT", positionSetpoint);
+        SmartDashboard.putNumber("leadMotorPos", mLeaderElevatorMotor.getSelectedSensorPosition());
+        SmartDashboard.putNumber("followMotorPos", mFollowerElevatorMotor.getSelectedSensorPosition());
+        SmartDashboard.putNumber("elevSetpoint", getPositionSetpoint());
+		SmartDashboard.putNumber("elevatorVelocity", getVelocitySetpoint());
 
     }
 }
