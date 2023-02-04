@@ -19,6 +19,8 @@ public class Arm extends SubsystemBase {
     private double velocity;
     private ArmStates armState = ArmStates.ZERO;
 
+    private double position = 0.0;
+
     public enum ArmStates {
         ZERO(0.0),
         GROUND(0.0),
@@ -49,9 +51,12 @@ public class Arm extends SubsystemBase {
         talon.config_kI(0, 0, Constants.timeOutMs);
         talon.config_kD(0, 0, Constants.timeOutMs);
     }
-    public void increasePostition(double amount) {
-        armState.statePosition += amount;
+
+    public void changePostition(boolean forward) {
+        armState.statePosition += forward ? 0.3 : -0.3;
+        mArmMotor.set(ControlMode.Position, armState.statePosition);
     }
+
     public void setVelocity(double velocity) {
         this.velocity = velocity;
         mArmMotor.set(ControlMode.Velocity, velocity);

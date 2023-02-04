@@ -44,9 +44,11 @@ public class RobotContainer {
 
     /* Operator Buttons, currently just used for testing */
     private final JoystickButton armForward = new JoystickButton(operator, XboxController.Button.kA.value);
-    private final JoystickButton setElevator = new JoystickButton(operator, XboxController.Button.kB.value);
+    //private final JoystickButton setElevator = new JoystickButton(operator, XboxController.Button.kB.value);
     private final JoystickButton setIntake = new JoystickButton(operator, XboxController.Button.kX.value);
     private final JoystickButton armBack = new JoystickButton(operator, XboxController.Button.kY.value);
+    private final JoystickButton elevatorUp = new JoystickButton(operator, XboxController.Button.kB.value);
+    private final JoystickButton elevatorDown = new JoystickButton(operator, XboxController.Button.kX.value);
 
     /* Subsystems */
     private final Swerve s_Swerve ;
@@ -104,8 +106,10 @@ public class RobotContainer {
                 autoBalanceCommand,
                 new InstantCommand(() -> autoBalanceCommand.cancel()),
                 s_Swerve.isPathRunningSupplier));
-        //armForward.onTrue(new InstantCommand(() -> s_Arm.));
-        armBack.onTrue(new SetArm(ArmStates.TESTBACK));
+        armForward.onTrue(new InstantCommand(() -> s_Arm.changePosition(true)));
+        armBack.onTrue(new InstantCommand(() -> s_Arm.changePosition(false)));
+        elevatorUp.onTrue(new InstantCommand(() -> s_Elevator.changePosition(true)));
+        elevatorDown.onTrue(new InstantCommand(() -> s_Elevator.changePosition(false)));
         // setArm.onTrue(new SetArm(Extension.ExtensionStates.ZERO, Pivot.PivotStates.ZERO));
         // setPivot.onTrue(new InstantCommand(() -> s_Pivot.setVelocity(-0.1)));
         // setIntake.onTrue(new InstantCommand(() -> s_Intake.setState(IntakeStates.ON_DEPLOYED)));

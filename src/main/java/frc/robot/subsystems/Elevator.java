@@ -18,6 +18,8 @@ public class Elevator extends SubsystemBase {
     private double velocity;
     ElevatorStates elevatorState = ElevatorStates.ZERO;
 
+    private double position = 0.0;
+
     public enum ElevatorStates {
 		ZERO(0.0),
 		GROUND(0.0),
@@ -51,6 +53,11 @@ public class Elevator extends SubsystemBase {
         talon.config_kP(0, 0, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);
         talon.config_kD(0, 0, Constants.timeOutMs);
+    }
+
+    public void changePostition(boolean up) {
+        elevatorState.statePosition += up ? 0.3 : -0.3;
+        mArmMotor.set(ControlMode.Position, elevatorState.statePosition);
     }
 
     public void setVelocity(double velocity) {
