@@ -26,7 +26,8 @@ public class Arm extends SubsystemBase {
         L1(0.0), 
         L2(0.0),
         L3(0.0),
-        TEST(1.0);
+        TEST(0.5),
+        TESTBACK(-0.5);
         double statePosition = 0.0;
         private ArmStates(double statePosition) {
             this.statePosition = statePosition;
@@ -47,6 +48,9 @@ public class Arm extends SubsystemBase {
         talon.config_kP(0, 0, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);
         talon.config_kD(0, 0, Constants.timeOutMs);
+    }
+    public void increasePostition(double amount) {
+        armState.statePosition += amount;
     }
     public void setVelocity(double velocity) {
         this.velocity = velocity;
