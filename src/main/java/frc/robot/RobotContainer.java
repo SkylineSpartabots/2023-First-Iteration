@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -10,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.*;
 import frc.robot.factories.AutoCommandFactory;
 import frc.robot.subsystems.*;
@@ -44,10 +46,10 @@ public class RobotContainer {
 
     /* Operator Buttons, currently just used for testing */
     private final JoystickButton operatorA = new JoystickButton(operator, XboxController.Button.kA.value);
-    //private final JoystickButton setElevator = new JoystickButton(operator, XboxController.Button.kB.value);
-    private final JoystickButton operatorX = new JoystickButton(operator, XboxController.Button.kX.value);
     private final JoystickButton operatorY = new JoystickButton(operator, XboxController.Button.kY.value);
     private final JoystickButton operatorB = new JoystickButton(operator, XboxController.Button.kB.value);
+    private final JoystickButton operatorX = new JoystickButton(operator, XboxController.Button.kX.value);
+    private final JoystickButton operatorStart = new JoystickButton(operator, XboxController.Button.kStart.value);
 
     /* Subsystems */
     private final Swerve s_Swerve ;
@@ -69,7 +71,7 @@ public class RobotContainer {
         s_Intake = Intake.getInstance();
         s_Arm = Arm.getInstance();
 
-        s_Swerve.resetOdometry(new Pose2d());
+        // s_Swerve.resetOdometry(new Pose2d());
         s_Swerve.resetOdometry(new Pose2d());
         s_Swerve.zeroGyro();
         s_Swerve.setDefaultCommand(
@@ -84,7 +86,7 @@ public class RobotContainer {
         configureButtonBindings();
     }
 
-    /**
+     /**
      * Use this method to define your button->command mappings. Buttons can be
      * created by
      * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -117,6 +119,28 @@ public class RobotContainer {
         // setIntake.onTrue(new InstantCommand(() -> s_Elevator.setPos(0)));
         // -85 bottom
         // 96 top 
+
+        //D-PAD
+        final Trigger opDpadUp = new Trigger(() -> operator.getPOV() == 0);
+        final Trigger opDpadDown = new Trigger(() -> operator.getPOV() == 180);
+        final Trigger opDpadLeft = new Trigger(() -> operator.getPOV() == 270);
+        final Trigger opDpadRight = new Trigger(() -> operator.getPOV() == 90);
+        DriverStation.Alliance alliance = DriverStation.getAlliance();
+
+            final int[] driveTags;
+        {
+            // up gets you to substation, left/down/right will get you to the left/middle/right grids individually
+            // maybe can be further optimized to shift slightly left or right if bot has cone
+            if (alliance == DriverStation.Alliance.Red) {
+                driveTags = new int[]{4, 6, 7, 8}; // see 5.9.2 in game manual
+            } else { // defaults to blue alliance if alliance is not set for whatever reason
+                driveTags = new int[]{5, 2, 2, 3};
+            }
+            opDpadUp.onTrue(new OnTheFlyGeneration(driveTags[0], true)); // fixme whats the POINT of swervePose why cant we call it in the function itself
+            opDpadLeft.onTrue(new OnTheFlyGeneration(driveTags[1], true));
+            opDpadDown.onTrue(new OnTheFlyGeneration(driveTags[2], true));
+            opDpadRight.onTrue(new OnTheFlyGeneration(driveTags[3], true));
+        }
     }
 
     public void onRobotDisabled() {

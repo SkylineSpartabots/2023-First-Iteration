@@ -12,13 +12,14 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SmartResetOdometry extends CommandBase {
-    int kTargetPitch = 0;
     Swerve s_Swerve;
     Limelight s_Limelight;
     boolean isReset;
+    Timer timer = new Timer();
 
     public SmartResetOdometry() {
         s_Swerve = Swerve.getInstance();
@@ -30,7 +31,8 @@ public class SmartResetOdometry extends CommandBase {
     @Override
     public void initialize() {
         isReset = false;
-
+        timer.reset();
+        timer.start();
     }
 
     @Override
@@ -56,11 +58,11 @@ public class SmartResetOdometry extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return isReset;
+        return isReset || timer.hasElapsed(0.2);
     }
     
     @Override
     public void end(boolean interrupted){
-        //code for targetDestination pose2d.
+        timer.stop();
     }
 }
