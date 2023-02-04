@@ -59,7 +59,7 @@ public class Light extends SubsystemBase {
 
     public void newRandomColor() {
         for (int i = 0; i < randColor.length; i++) {
-            randColor[1] = rand.nextInt(1,255);
+            randColor[1] = rand.nextInt(10,255);
         }
     }
 
@@ -93,45 +93,49 @@ public class Light extends SubsystemBase {
     public void update(int selected) {
             switch (selected) { // uhh what are enums again lol
                 case 0:{
-                    setSolidColor(255, 255, 255);
-                    m_led.setData(m_ledBuffer);
+                    limiter = 1;
+                    runWave();
                     break;
                 }
                 case 1: {
                     groupSize= 5;
-                    time = 8;
+                    limiter = 8;
                     runAnt();
                     break;
                 }
                 case 2: {
-                    time = 2;
+                    limiter = 2;
                     runRainbowSolid();
                     break;
                 }
                 case 3: {
                     groupSize = 6;
-                    time = 4;
+                    limiter = 4;
                     runSegmentedRainbow();
                     break;
                 }
                 case 4: {
+                    limiter = 1;
+                    runVelocity();
+                    break;
+                }
+                case 5: {
                     groupSize = 3;
                     time = 7;
                     runCaution();
                     break;
                 }
-                case 5: {
-                    time = 1;
-                    runVelocity();
-                    break;
-                }
                 case 6: {
-                    stopLED();
+                    
                     break;
                 }
                 case 7: {
-                    time = 1;
-                    runWave();
+                    
+                    break;
+                }
+                case 8: {
+                    limiter = 5;
+                    runGrab();
                     break;
                 }
             }
@@ -221,11 +225,17 @@ public class Light extends SubsystemBase {
         }
    }
 
+   public void runGrab() {
+    // setState() should select this when intake enum = -1, then turn solid red, then when (past motor voltage - current mv >= big jump) turn green)
+
+   
+}
+
     public void runAnt(){
         for (int i = 1; i < m_ledBuffer.getLength(); i++) {
             if((i-gap)%groupSize==0) { // could this 5 be replaced with groupSize??? (ye -iggy)
 
-                m_ledBuffer.setRGB(i, 255, 0, 0);
+                m_ledBuffer.setRGB(i, 255, 255, 0);
             }
             else{m_ledBuffer.setRGB(i, 0, 0, 0);}
 
@@ -256,13 +266,6 @@ public class Light extends SubsystemBase {
     public void setSolidColor(int r, int g, int b){
         for (var i = 0; i < m_ledBuffer.getLength(); i++){
             m_ledBuffer.setRGB(i, r, g, b);
-            m_led.setData(m_ledBuffer);
-        }
-    }
-    
-    public void stopLED(){
-        for (var i = 0; i < m_ledBuffer.getLength(); i++){
-            m_ledBuffer.setRGB(i, 0,0,0);
             m_led.setData(m_ledBuffer);
         }
     }
