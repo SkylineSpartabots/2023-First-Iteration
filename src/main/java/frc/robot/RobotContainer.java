@@ -36,19 +36,18 @@ public class RobotContainer {
     private final int rotationAxis = XboxController.Axis.kRightX.value;
 
     /* Driver Buttons */
-    private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kBack.value);
-    private final JoystickButton auto = new JoystickButton(driver, XboxController.Button.kA.value);
-    private final JoystickButton smartPathing = new JoystickButton(driver, XboxController.Button.kB.value);
-    private final JoystickButton smartOdo = new JoystickButton(driver, XboxController.Button.kX.value);
-    private final JoystickButton autoBalance = new JoystickButton(driver, XboxController.Button.kY.value);
+    private final JoystickButton driverBack = new JoystickButton(driver, XboxController.Button.kBack.value);
+    private final JoystickButton driverA = new JoystickButton(driver, XboxController.Button.kA.value);
+    private final JoystickButton driverB = new JoystickButton(driver, XboxController.Button.kB.value);
+    private final JoystickButton driverX = new JoystickButton(driver, XboxController.Button.kX.value);
+    private final JoystickButton driverY = new JoystickButton(driver, XboxController.Button.kY.value);
 
     /* Operator Buttons, currently just used for testing */
-    private final JoystickButton armForward = new JoystickButton(operator, XboxController.Button.kA.value);
+    private final JoystickButton operatorA = new JoystickButton(operator, XboxController.Button.kA.value);
     //private final JoystickButton setElevator = new JoystickButton(operator, XboxController.Button.kB.value);
-    private final JoystickButton setIntake = new JoystickButton(operator, XboxController.Button.kX.value);
-    private final JoystickButton armBack = new JoystickButton(operator, XboxController.Button.kY.value);
-    private final JoystickButton elevatorUp = new JoystickButton(operator, XboxController.Button.kB.value);
-    private final JoystickButton elevatorDown = new JoystickButton(operator, XboxController.Button.kX.value);
+    private final JoystickButton operatorX = new JoystickButton(operator, XboxController.Button.kX.value);
+    private final JoystickButton operatorY = new JoystickButton(operator, XboxController.Button.kY.value);
+    private final JoystickButton operatorB = new JoystickButton(operator, XboxController.Button.kB.value);
 
     /* Subsystems */
     private final Swerve s_Swerve ;
@@ -94,26 +93,30 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
-        auto.onTrue(AutoCommandFactory.getSelectedAuto()); // change based on which auto needs to be tested
-        smartPathing.onTrue(new ConditionalCommand(
+        driverBack.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
+        driverA.onTrue(AutoCommandFactory.getSelectedAuto()); // change based on which auto needs to be tested
+        driverB.onTrue(new ConditionalCommand(
                 new InstantCommand(() -> AutoCommandFactory.cancelLastCommand()),
                 new InstantCommand(() -> CommandScheduler.getInstance().schedule(new OnTheFlyGeneration(0, true))),
                 s_Swerve.isPathRunningSupplier));
-        smartOdo.onTrue(new SmartResetOdometry());
+        driverX.onTrue(new SmartResetOdometry());
         Command autoBalanceCommand = new AutoBalance();
-        autoBalance.onTrue(new ConditionalCommand(
+        driverY.onTrue(new ConditionalCommand(
                 autoBalanceCommand,
                 new InstantCommand(() -> autoBalanceCommand.cancel()),
                 s_Swerve.isPathRunningSupplier));
-        armForward.onTrue(new InstantCommand(() -> s_Arm.changePosition(true)));
-        armBack.onTrue(new InstantCommand(() -> s_Arm.changePosition(false)));
+        operatorA.onTrue(new InstantCommand(() -> s_Arm.changePosition(true)));
+        operatorY.onTrue(new InstantCommand(() -> s_Arm.changePosition(false)));
         // elevatorUp.onTrue(new InstantCommand(() -> s_Elevator.changePosition(true)));
         // elevatorDown.onTrue(new InstantCommand(() -> s_Elevator.changePosition(false)));
         // setArm.onTrue(new SetArm(Extension.ExtensionStates.ZERO, Pivot.PivotStates.ZERO));
-        // setPivot.onTrue(new InstantCommand(() -> s_Pivot.setVelocity(-0.1)));
-        // setIntake.onTrue(new InstantCommand(() -> s_Intake.setState(IntakeStates.ON_DEPLOYED)));
-        setIntake.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(0.05)));
+        // setPivot.onTrue(new Instant5tCommand(() -> s_Intake.setState(IntakeStates.ON_DEPLOYED)));
+        operatorX.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(-1000)));
+        operatorB.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(1000)));
+
+        // setIntake.onTrue(new InstantCommand(() -> s_Elevator.setPos(0)));
+        // -85 bottom
+        // 96 top 
     }
 
     public void onRobotDisabled() {

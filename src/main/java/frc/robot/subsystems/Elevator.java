@@ -34,12 +34,19 @@ public class Elevator extends SubsystemBase {
 		}
 	}
     
+    double positionSetpoint = 0; 
+    
+    /**
+     * 
+     */
     public Elevator() {
         mLeaderElevatorMotor = new TalonFX(Constants.HardwarePorts.elevatorLeaderMotor);
         configureMotor(mLeaderElevatorMotor, false);
-        mFollowerElevatorMotor = new TalonFX(Constants.HardwarePorts.elevatorFollowerMotor, "2976 CANivore");
+        mFollowerElevatorMotor = new TalonFX(Constants.HardwarePorts.elevatorFollowerMotor);
         configureMotor(mFollowerElevatorMotor, false);
         mFollowerElevatorMotor.set(ControlMode.Follower, Constants.HardwarePorts.elevatorLeaderMotor);
+        mLeaderElevatorMotor.setSelectedSensorPosition(0);
+        mFollowerElevatorMotor.setSelectedSensorPosition(0);
     }
 
     private void configureMotor(TalonFX talon, boolean b){
@@ -47,8 +54,8 @@ public class Elevator extends SubsystemBase {
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(true);
         talon.setNeutralMode(NeutralMode.Coast);
-        talon.config_kF(0, 0, Constants.timeOutMs);
-        talon.config_kP(0, 0, Constants.timeOutMs);
+        talon.config_kF(0, 0.05, Constants.timeOutMs);
+        talon.config_kP(0, 0.12, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);
         talon.config_kD(0, 0, Constants.timeOutMs);
     }
@@ -66,6 +73,11 @@ public class Elevator extends SubsystemBase {
         elevatorState = state;
         mLeaderElevatorMotor.set(ControlMode.Position, state.statePosition);
     }
+
+    public void setPos(int position) {
+        positionSetpoint = position;
+        mLeaderElevatorMotor.set(ControlMode.Position, position);
+    }
     public double getVelocitySetpoint() {
         return velocity;
     }
@@ -82,5 +94,7 @@ public class Elevator extends SubsystemBase {
         SmartDashboard.putNumber("elevator pos setpoint", getPositionSetpoint());
 		SmartDashboard.putNumber("elevator pos measured", getMeasuredPosition());
 		SmartDashboard.putNumber("elevator set velo", getVelocitySetpoint());
+        SmartDashboard.putNumber("ESETPT", positionSetpoint);
+
     }
 }

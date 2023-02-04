@@ -43,8 +43,8 @@ public class Arm extends SubsystemBase {
     private void configureMotor(TalonFX talon){
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(true);
-        talon.config_kF(0, 0, Constants.timeOutMs);
-        talon.config_kP(0, 0, Constants.timeOutMs);
+        talon.config_kF(0, 0.05, Constants.timeOutMs);
+        talon.config_kP(0, 0.12, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);
         talon.config_kD(0, 0, Constants.timeOutMs);
     }
