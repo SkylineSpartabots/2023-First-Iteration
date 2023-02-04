@@ -112,11 +112,12 @@ public class RobotContainer {
         // operatorA.onTrue(new InstantCommand(() -> s_Intake.testSolenoid(false)));
         // operatorB.onTrue(new InstantCommand(() -> s_Intake.testSolenoid(true)));
 
-        operatorX.onTrue(new InstantCommand(() -> s_Lights.setSelected(1)));
-        operatorX.onFalse(new InstantCommand(() -> s_Lights.setSelected(6))); // change to a or b. move a and b to triggers
-        operatorY.onTrue(new InstantCommand(() -> s_Lights.setSelected(2)));
-        operatorA.onTrue(new InstantCommand(() -> s_Lights.increaseTime()));
-        operatorB.onTrue(new InstantCommand(() -> s_Lights.decreaseTime()));
+        operatorX.onTrue(new InstantCommand(() -> s_Lights.setSelected(2)));
+        operatorY.onFalse(new InstantCommand(() -> s_Lights.setSelected(3))); // change to a or b. move a and b to triggers
+        operatorA.onFalse(new InstantCommand(() -> s_Lights.setSelected(4)));
+        operatorB.onFalse(new InstantCommand(() -> s_Lights.setSelected(5)));
+        // operatorA.onTrue(new InstantCommand(() -> s_Lights.increaseTime()));
+        // operatorB.onTrue(new InstantCommand(() -> s_Lights.decreaseTime()));
         
         // operatorX.onTrue(new InstantCommand(() -> s_Intake.testVelo(1)));
         // operatorY.onTrue(new InstantCommand(() -> s_Intake.testVelo(0)));

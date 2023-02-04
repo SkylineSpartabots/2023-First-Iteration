@@ -37,7 +37,7 @@ public class Light extends SubsystemBase {
     int minusGap = 0; // gap but it goes down not up lol
     int[] randColor = {rand.nextInt(1,255), rand.nextInt(1,255), rand.nextInt(1,255)};
 
-    public void Light() { //inizilize the leds
+    public void Light() { //inizilize the leds yes this will be a warning forever
         m_led.setLength(m_ledBuffer.getLength());
         m_led.setData(m_ledBuffer);
         m_led.start();
@@ -53,7 +53,7 @@ public class Light extends SubsystemBase {
         };
     }
 
-    public void newColors() {
+    public void newRandomColor() {
         for (int i = 0; i < randColor.length; i++) {
             randColor[1] = rand.nextInt(1,255);
         }
@@ -183,7 +183,7 @@ public class Light extends SubsystemBase {
 
         if (minusGap==0) {
             minusGap = 50;
-            newColors();
+            newRandomColor();
         } 
         else {
             gap--;
