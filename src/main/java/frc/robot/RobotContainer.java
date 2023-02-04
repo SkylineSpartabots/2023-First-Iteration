@@ -86,7 +86,7 @@ public class RobotContainer {
         configureButtonBindings();
     }
 
-    /**
+     /**
      * Use this method to define your button->command mappings. Buttons can be
      * created by
      * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -119,21 +119,27 @@ public class RobotContainer {
         operatorY.onTrue(new InstantCommand(() -> Extension.getInstance().setEncoderPosition(0)));
         operatorX.onTrue(new InstantCommand(() -> Extension.getInstance().testPosition(true)));
         operatorB.onTrue(new InstantCommand(() -> Extension.getInstance().testPosition(false)));
-        JoystickButton opLeftBump = new JoystickButton(operator, XboxController.Button.kLeftBumper.value);
-        JoystickButton opRightBump = new JoystickButton(operator, XboxController.Button.kRightBumper.value);
-        JoystickButton opLeftStick = new JoystickButton(operator, XboxController.Button.kLeftStick.value);
-        JoystickButton opRightStick = new JoystickButton(operator, XboxController.Button.kRightStick.value);
+
+        //D-PAD
+        final Trigger opDpadUp = new Trigger(() -> operator.getPOV() == 0);
+        final Trigger opDpadDown = new Trigger(() -> operator.getPOV() == 180);
+        final Trigger opDpadRight = new Trigger(() -> operator.getPOV() == 90);
+        final Trigger opDpadLeft = new Trigger(() -> operator.getPOV() == 270);
         DriverStation.Alliance alliance = DriverStation.getAlliance();
-        if (alliance == DriverStation.Alliance.Blue) {
-            opLeftStick.onTrue(new OnTheFlyGeneration(s_Swerve.getPose(), 4, true)); // todo actually useful
-            opRightStick.onTrue(new OnTheFlyGeneration(s_Swerve.getPose(), 8, true));
-            opLeftBump.onTrue(new OnTheFlyGeneration(s_Swerve.getPose(), 7, true));
-            opRightBump.onTrue(new OnTheFlyGeneration(s_Swerve.getPose(), 8, true));
-        } else if (alliance == DriverStation.Alliance.Red) {
-            opLeftStick.onTrue(new OnTheFlyGeneration(s_Swerve.getPose(), 1, true)); // todo actually useful
-            opRightStick.onTrue(new OnTheFlyGeneration(s_Swerve.getPose(), 2, true));
-            opLeftBump.onTrue(new OnTheFlyGeneration(s_Swerve.getPose(), 3, true));
-            opRightBump.onTrue(new OnTheFlyGeneration(s_Swerve.getPose(), 5, true));
+
+        {
+            final int[] driveTags;
+            // up gets you to substation, left/down/right will get you to the left/middle/right grids individually
+            // maybe can be further optimized to shift slightly left or right if bot has cone
+            if (alliance == DriverStation.Alliance.Red) {
+                driveTags = new int[]{4, 6, 7, 8}; // see 5.9.2 in game manual
+            } else { // defaults to blue alliance if alliance is not set for whatever reason
+                driveTags = new int[]{5, 2, 2, 3};
+            }
+            opDpadUp.onTrue(new OnTheFlyGeneration(driveTags[0], true)); // fixme whats the POINT of swervePose why cant we call it in the function itself
+            opDpadLeft.onTrue(new OnTheFlyGeneration(driveTags[1], true));
+            opDpadDown.onTrue(new OnTheFlyGeneration(driveTags[2], true));
+            opDpadRight.onTrue(new OnTheFlyGeneration(driveTags[3], true));
         }
     }
 
