@@ -70,7 +70,7 @@ public class Elevator extends SubsystemBase {
 
     public void setState(ElevatorStates state) {
         elevatorState = state;
-        // mLeaderElevatorMotor.set(ControlMode.Position, state.statePosition);
+        mLeaderElevatorMotor.set(ControlMode.Position, state.statePosition);
     }
 
     public double getVelocitySetpoint() {
