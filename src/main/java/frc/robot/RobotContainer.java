@@ -108,11 +108,12 @@ public class RobotContainer {
                 s_Swerve.isPathRunningSupplier));
         armForward.onTrue(new InstantCommand(() -> s_Arm.changePosition(true)));
         armBack.onTrue(new InstantCommand(() -> s_Arm.changePosition(false)));
-        elevatorUp.onTrue(new InstantCommand(() -> s_Elevator.changePosition(true)));
-        elevatorDown.onTrue(new InstantCommand(() -> s_Elevator.changePosition(false)));
+        // elevatorUp.onTrue(new InstantCommand(() -> s_Elevator.changePosition(true)));
+        // elevatorDown.onTrue(new InstantCommand(() -> s_Elevator.changePosition(false)));
         // setArm.onTrue(new SetArm(Extension.ExtensionStates.ZERO, Pivot.PivotStates.ZERO));
         // setPivot.onTrue(new InstantCommand(() -> s_Pivot.setVelocity(-0.1)));
         // setIntake.onTrue(new InstantCommand(() -> s_Intake.setState(IntakeStates.ON_DEPLOYED)));
+        setIntake.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(0.05)));
     }
 
     public void onRobotDisabled() {
