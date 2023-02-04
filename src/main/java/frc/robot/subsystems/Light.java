@@ -8,6 +8,7 @@ import frc.robot.Constants;
 import frc.robot.SwerveModule;
 
 import java.util.Random;
+import java.math.*;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
@@ -36,6 +37,9 @@ public class Light extends SubsystemBase {
     int groupSize = 0; // changes when gap resets - limit gap - how big in between ants
     int minusGap = 0; // gap but it goes down not up lol
     int[] randColor = {rand.nextInt(1,255), rand.nextInt(1,255), rand.nextInt(1,255)};
+
+    // varibles needed for valocity
+    double p = 0;
 
     public void Light() { //inizilize the leds yes this will be a warning forever
         m_led.setLength(m_ledBuffer.getLength());
@@ -95,24 +99,29 @@ public class Light extends SubsystemBase {
                 }
                 case 1: {
                     groupSize= 5;
+                    time = 8;
                     runAnt();
                     break;
                 }
                 case 2: {
+                    time = 2;
                     runRainbowSolid();
                     break;
                 }
                 case 3: {
                     groupSize = 6;
+                    time = 4;
                     runSegmentedRainbow();
                     break;
                 }
                 case 4: {
                     groupSize = 3;
+                    time = 7;
                     runCaution();
                     break;
                 }
                 case 5: {
+                    time = 1;
                     runVelocity();
                     break;
                 }
@@ -161,7 +170,19 @@ public class Light extends SubsystemBase {
         for (SwerveModule mod : Swerve.getInstance().getSwerveModules()) {
             averageVelocity += mod.getState().speedMetersPerSecond/4;
         }
-        // need to test velocity to finish this
+        // 4.572 mps max
+        double d = averageVelocity - p;
+
+        if (d>=0.1) {p+=0.2;} 
+        else if (d<=-0.2) {p-=0.2;}
+
+        int color = (int)Math.round(p/4.572);
+        color = color*240; //240 is a value color
+
+        for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+            m_ledBuffer.setHSV(i, color, 255, 255);
+        }
+
     }
 
     public void runWave() {

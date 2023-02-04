@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.*;
 import frc.robot.factories.AutoCommandFactory;
 import frc.robot.subsystems.*;
@@ -48,6 +48,7 @@ public class RobotContainer {
     private final JoystickButton operatorB = new JoystickButton(operator, XboxController.Button.kB.value);
     private final JoystickButton operatorX = new JoystickButton(operator, XboxController.Button.kX.value);
     private final JoystickButton operatorStart = new JoystickButton(operator, XboxController.Button.kStart.value);
+    private final Trigger operatorDpadUp = new Trigger(() -> operator.getPOV() == 0);
 
     /* Subsystems */
     private final Swerve s_Swerve = Swerve.getInstance() ;
@@ -115,7 +116,8 @@ public class RobotContainer {
         operatorX.onTrue(new InstantCommand(() -> s_Lights.setSelected(2)));
         operatorY.onFalse(new InstantCommand(() -> s_Lights.setSelected(3))); // change to a or b. move a and b to triggers
         operatorA.onFalse(new InstantCommand(() -> s_Lights.setSelected(4)));
-        operatorB.onFalse(new InstantCommand(() -> s_Lights.setSelected(5)));
+        operatorB.onFalse(new InstantCommand(() -> s_Lights.setSelected(6)));
+
         // operatorA.onTrue(new InstantCommand(() -> s_Lights.increaseTime()));
         // operatorB.onTrue(new InstantCommand(() -> s_Lights.decreaseTime()));
         
