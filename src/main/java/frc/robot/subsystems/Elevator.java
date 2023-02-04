@@ -71,10 +71,6 @@ public class Elevator extends SubsystemBase {
 		return mLeaderElevatorMotor.getSelectedSensorPosition();
 	}
 
-	public void setEncoderPosition (double position) {
-		mLeaderElevatorMotor.setSelectedSensorPosition(position);
-	}
-
     @Override
     public void periodic() {
         SmartDashboard.putNumber("elevator pos setpoint", getPositionSetpoint());

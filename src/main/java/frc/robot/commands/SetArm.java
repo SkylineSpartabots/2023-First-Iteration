@@ -5,22 +5,17 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Elevator;
 
 public class SetArm extends CommandBase {
-	Elevator s_Elevator;
 	Arm s_Arm;
-	Elevator.ElevatorStates elevatorState;
 	Arm.ArmStates armState;
 
-	public SetArm(Elevator.ElevatorStates elevatorState, Arm.ArmStates armState) {
-		s_Elevator = Elevator.getInstance();
+	public SetArm(Arm.ArmStates armState) {
 		s_Arm = Arm.getInstance();
-		addRequirements(s_Elevator, s_Arm);
-		this.elevatorState = elevatorState;
+		addRequirements(s_Arm);
 		this.armState = armState;
 	}
 
 	@Override
 	public void initialize() {
-		s_Elevator.setPosition(elevatorState);
 		s_Arm.setPosition(armState);
 	}
 

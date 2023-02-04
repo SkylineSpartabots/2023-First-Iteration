@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
 import frc.robot.factories.AutoCommandFactory;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.Arm.ArmStates;
 import frc.robot.subsystems.Intake.IntakeStates;
 
 /**
@@ -42,10 +43,10 @@ public class RobotContainer {
     private final JoystickButton autoBalance = new JoystickButton(driver, XboxController.Button.kY.value);
 
     /* Operator Buttons, currently just used for testing */
-    private final JoystickButton forwardExtension = new JoystickButton(operator, XboxController.Button.kA.value);
+    private final JoystickButton armForward = new JoystickButton(operator, XboxController.Button.kA.value);
     private final JoystickButton setElevator = new JoystickButton(operator, XboxController.Button.kB.value);
     private final JoystickButton setIntake = new JoystickButton(operator, XboxController.Button.kX.value);
-    private final JoystickButton backExtension = new JoystickButton(operator, XboxController.Button.kY.value);
+    private final JoystickButton armBack = new JoystickButton(operator, XboxController.Button.kY.value);
 
     /* Subsystems */
     private final Swerve s_Swerve ;
@@ -103,6 +104,8 @@ public class RobotContainer {
                 autoBalanceCommand,
                 new InstantCommand(() -> autoBalanceCommand.cancel()),
                 s_Swerve.isPathRunningSupplier));
+        //armForward.onTrue(new InstantCommand(() -> s_Arm.));
+        armBack.onTrue(new SetArm(ArmStates.TESTBACK));
         // setArm.onTrue(new SetArm(Extension.ExtensionStates.ZERO, Pivot.PivotStates.ZERO));
         // setPivot.onTrue(new InstantCommand(() -> s_Pivot.setVelocity(-0.1)));
         // setIntake.onTrue(new InstantCommand(() -> s_Intake.setState(IntakeStates.ON_DEPLOYED)));
