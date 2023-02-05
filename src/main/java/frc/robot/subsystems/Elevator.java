@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,10 +21,11 @@ public class Elevator extends SubsystemBase {
     private double velocity;
     private CANCoder elevatorCANCoder = new CANCoder(Constants.HardwarePorts.elevatorCANCoder);
     ElevatorStates elevatorState = ElevatorStates.ZERO;
+    CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
 
     public enum ElevatorStates {
 		ZERO(0.0),
-		GROUND(0.0),
+		GROUND(300),
 		SUBSTATION(0.0),
 		L1(0.0),
 		L2(0.0),
@@ -45,6 +47,9 @@ public class Elevator extends SubsystemBase {
         mFollowerElevatorMotor.set(ControlMode.Follower, Constants.HardwarePorts.elevatorLeaderMotor);
         mLeaderElevatorMotor.setSelectedSensorPosition(0);
         mFollowerElevatorMotor.setSelectedSensorPosition(0);
+        canCoderConfig.sensorDirection = true;
+        elevatorCANCoder.configAllSettings(canCoderConfig);
+        setCANCoderPosition(0);
     }
 
     private void configureMotor(TalonFX talon, boolean inverted){
@@ -70,7 +75,7 @@ public class Elevator extends SubsystemBase {
 
     public void setState(ElevatorStates state) {
         elevatorState = state;
-        mLeaderElevatorMotor.set(ControlMode.Position, state.statePosition);
+        // mLeaderElevatorMotor.set(ControlMode.Position, state.statePosition);
     }
 
     public double getVelocitySetpoint() {
@@ -97,8 +102,8 @@ public class Elevator extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("leadMotorPos", mLeaderElevatorMotor.getSelectedSensorPosition());
         SmartDashboard.putNumber("followMotorPos", mFollowerElevatorMotor.getSelectedSensorPosition());
+        SmartDashboard.putNumber("CanCoderPos", getCANCoderPosition());
         SmartDashboard.putNumber("elevSetpoint", getPositionSetpoint());
 		SmartDashboard.putNumber("elevatorVelocity", getVelocitySetpoint());
-
     }
 }

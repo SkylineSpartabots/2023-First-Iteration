@@ -15,6 +15,7 @@ import frc.robot.commands.*;
 import frc.robot.factories.AutoCommandFactory;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Arm.ArmStates;
+import frc.robot.subsystems.Elevator.ElevatorStates;
 import frc.robot.subsystems.Intake.IntakeStates;
 
 /**
@@ -44,18 +45,18 @@ public class RobotContainer {
     private final JoystickButton driverX = new JoystickButton(driver, XboxController.Button.kX.value);
     private final JoystickButton driverY = new JoystickButton(driver, XboxController.Button.kY.value);
 
-    private final Trigger driverDpadUp = new Trigger(() -> driver.getPOV() == 0);
-    private final Trigger driverDpadRight = new Trigger(() -> driver.getPOV() == 90);
-    private final Trigger driverDpadDown = new Trigger(() -> driver.getPOV() == 180);
-    private final Trigger driverDpadLeft = new Trigger(() -> driver.getPOV() == 270);
+    // private final Trigger driverDpadUp = new Trigger(() -> driver.getPOV() == 0);
+    // private final Trigger driverDpadRight = new Trigger(() -> driver.getPOV() == 90);
+    // private final Trigger driverDpadDown = new Trigger(() -> driver.getPOV() == 180);
+    // private final Trigger driverDpadLeft = new Trigger(() -> driver.getPOV() == 270);
 
     /* Operator Buttons, currently just used for testing */
-    private final JoystickButton operatorBack = new JoystickButton(operator, XboxController.Button.kBack.value);
-    private final JoystickButton operatorStart = new JoystickButton(operator, XboxController.Button.kStart.value);
+    // private final JoystickButton operatorBack = new JoystickButton(operator, XboxController.Button.kBack.value);
+    // private final JoystickButton operatorStart = new JoystickButton(operator, XboxController.Button.kStart.value);
     private final JoystickButton operatorA = new JoystickButton(operator, XboxController.Button.kA.value);
-    private final JoystickButton operatorB = new JoystickButton(operator, XboxController.Button.kB.value);
-    private final JoystickButton operatorX = new JoystickButton(operator, XboxController.Button.kX.value);
-    private final JoystickButton operatorY = new JoystickButton(operator, XboxController.Button.kY.value);
+    // private final JoystickButton operatorB = new JoystickButton(operator, XboxController.Button.kB.value);
+    // private final JoystickButton operatorX = new JoystickButton(operator, XboxController.Button.kX.value);
+    // private final JoystickButton operatorY = new JoystickButton(operator, XboxController.Button.kY.value);
 
     private final Trigger operatorDpadUp = new Trigger(() -> operator.getPOV() == 0);
     private final Trigger operatorDpadRight = new Trigger(() -> operator.getPOV() == 90);
@@ -118,14 +119,15 @@ public class RobotContainer {
                 autoBalanceCommand,
                 new InstantCommand(() -> autoBalanceCommand.cancel()),
                 s_Swerve.isPathRunningSupplier));
-        operatorA.onTrue(new InstantCommand(() -> s_Arm.changePosition(true)));
-        operatorY.onTrue(new InstantCommand(() -> s_Arm.changePosition(false)));
+        // operatorA.onTrue(new InstantCommand(() -> s_Arm.changePosition(true)));
+        // operatorY.onTrue(new InstantCommand(() -> s_Arm.changePosition(false)));
         // elevatorUp.onTrue(new InstantCommand(() -> s_Elevator.changePosition(true)));
         // elevatorDown.onTrue(new InstantCommand(() -> s_Elevator.changePosition(false)));
         // setArm.onTrue(new SetArm(Extension.ExtensionStates.ZERO, Pivot.PivotStates.ZERO));
         // setPivot.onTrue(new Instant5tCommand(() -> s_Intake.setState(IntakeStates.ON_DEPLOYED)));
-        operatorX.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(-1000)));
-        operatorB.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(1000)));
+        // operatorX.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(-1000)));
+        // operatorB.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(1000)));
+        operatorA.onTrue(new SetElevator(ElevatorStates.GROUND));
 
         // setIntake.onTrue(new InstantCommand(() -> s_Elevator.setPos(0)));
         // -85 bottom
@@ -138,9 +140,9 @@ public class RobotContainer {
             // up gets you to substation, left/down/right will get you to the left/middle/right grids individually
             // maybe can be further optimized to shift slightly left or right if bot has cone
             if (alliance == DriverStation.Alliance.Red) {
-                driveTags = new int[]{4, 6, 7, 8}; // see 5.9.2 in game manual
+                driveTags = new int[]{3, 5, 6, 7}; // see 5.9.2 in game manual
             } else { // defaults to blue alliance if alliance is not set for whatever reason
-                driveTags = new int[]{5, 2, 2, 3};
+                driveTags = new int[]{4, 1, 1, 2};
             }
             operatorDpadUp.onTrue(new OnTheFlyGeneration(driveTags[0], true)); // fixme whats the POINT of swervePose why cant we call it in the function itself
             operatorDpadLeft.onTrue(new OnTheFlyGeneration(driveTags[1], true));

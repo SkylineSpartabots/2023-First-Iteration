@@ -30,10 +30,11 @@ public class SetArm extends CommandBase {
 
 	@Override
 	public boolean isFinished() {
-		if (Math.abs(s_Arm.getCANCoderPosition() - s_Arm.getPositionSetpoint()) < 150) {
-			s_Arm.setVelocity(0);
-			return true;
-		}
-		return false;
+		return Math.abs(s_Arm.getCANCoderPosition() - s_Arm.getPositionSetpoint()) < 30;
+	}
+
+	@Override
+	public void end(boolean interrupted) {
+		s_Arm.setVelocity(0);
 	}
 }

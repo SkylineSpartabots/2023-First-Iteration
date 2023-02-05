@@ -9,9 +9,9 @@ public class SetElevator extends CommandBase {
 	Elevator s_Elevator;
 	Elevator.ElevatorStates state;
 	double elevatorSpeed;
-	PIDController elevatorContoller = new PIDController(0.01, 0, 0);  // tune PID
+	PIDController elevatorContoller = new PIDController(10, 1e-2, 0);  // tune PID
 
-	SetElevator(ElevatorStates state) {
+	public SetElevator(ElevatorStates state) {
 		s_Elevator = Elevator.getInstance();
 		addRequirements(s_Elevator);
 		this.state = state;
@@ -30,6 +30,11 @@ public class SetElevator extends CommandBase {
 
 	@Override
 	public boolean isFinished() {
-		return Math.abs(s_Elevator.getCANCoderPosition() - s_Elevator.getPositionSetpoint()) < 150;
+		return Math.abs(s_Elevator.getCANCoderPosition() - s_Elevator.getPositionSetpoint()) < 10;
+	}
+
+	@Override
+	public void end(boolean interrupted) {
+		s_Elevator.setVelocity(0);
 	}
 }
