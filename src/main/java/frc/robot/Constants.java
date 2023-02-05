@@ -17,20 +17,18 @@ public final class Constants {
     public static final int timeOutMs = 10;
     public static final double stickDeadband = 0.1;
     
-    public static final class ExtensionConstants {
-        public static final int extensionMotor = 21;
-        public static final double backEndPosition = 105000; // in encoder units
-        public static final double frontEndPosition = 5000; //falcon encoder units
-    }
-
     public static final class HardwarePorts {
-        public static final int pivotLeaderMotor = 20; //i set master and follower arbitrarily
-        public static final int pivotFollowerMotor = 45; //arbitrary
-        public static final int extensionMotor = 23; //this one is a neo someone needs to get out the neo hardware tuning thing
-        public static final int intakeMotor = 32; //correct
-        public static final int moduleID = 16;
-        public static final int intakeChannel = 0;
+        public static final int elevatorLeaderMotor = 21; 
+        public static final int elevatorFollowerMotor = 22; 
+        public static final int elevatorCANCoder = 25; // configure
+        public static final int armMotor = 23; 
+        public static final int armCANCoder = 0; // configure
+        public static final int intakeMotor = 24; 
+        public static final int intakeSolenoidChannel = 0;
+        public static final int pneumaticHub = 16;
     }
+    
+    public static final double FIELD_WIDTH_METERS = 8.02;
 
     // ALL OF THESE ARE ONLY TRUE ON BLUE ALLIANCE
     public static final Translation2d TOP_LEFT_CHARGE = new Translation2d(2.52, 4.35);
@@ -59,8 +57,7 @@ public final class Constants {
         public static final Pose3d[] gameAprilTags = {
                 new Pose3d(15.51, 1.07, 0.46, new Rotation3d(0, 0, Math.PI)),
                 new Pose3d(15.51, 2.74, 0.46, new Rotation3d(0, 0, Math.PI)),
-                // new Pose3d(15.51, 4.42, 0.46, new Rotation3d(0, 0, Math.PI)),
-                new Pose3d(0, 0, 0.46, new Rotation3d(0, 0, 0)),
+                new Pose3d(15.51, 4.42, 0.46, new Rotation3d(0, 0, Math.PI)),
                 new Pose3d(16.18, 6.75, 0.69, new Rotation3d(0, 0, Math.PI)),
                 new Pose3d(0.36, 6.75, 0.69, new Rotation3d(0, 0, 0)),
                 new Pose3d(1.03, 4.42, 0.46, new Rotation3d(0, 0, 0)),
@@ -69,10 +66,10 @@ public final class Constants {
         };
 
         public static final Pose2d[] gameAprilTags2d = {
-            new Pose2d(15.51, 1.07, new Rotation2d(0)),
-            new Pose2d(15.51, 2.74, new Rotation2d(0)),
-            new Pose2d(15.51, 4.42, new Rotation2d(0)),
-            new Pose2d(16.18, 6.75, new Rotation2d(0)),
+            new Pose2d(15.51, 1.07, new Rotation2d(Math.PI)),
+            new Pose2d(15.51, 2.74, new Rotation2d(Math.PI)),
+            new Pose2d(15.51, 4.42, new Rotation2d(Math.PI)),
+            new Pose2d(16.18, 6.75, new Rotation2d(Math.PI)),
             new Pose2d(0.36, 6.75, new Rotation2d(0)),
             new Pose2d(1.03, 4.42, new Rotation2d(0)),
             new Pose2d(1.03, 2.74, new Rotation2d(0)),
@@ -80,7 +77,6 @@ public final class Constants {
         };
     }
 
-    public static final double FIELD_WIDTH_METERS = 8.02;
 
     public static final class Swerve {
 

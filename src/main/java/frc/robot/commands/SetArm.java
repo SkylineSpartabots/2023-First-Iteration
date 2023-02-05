@@ -1,32 +1,40 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Extension;
-import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Arm.ArmStates;
 
 public class SetArm extends CommandBase {
-	Extension s_Extension;
-	Pivot s_Pivot;
-	Extension.ExtensionStates extensionState;
-	Pivot.PivotStates pivotState;
+	Arm s_Arm;
+	Arm.ArmStates state;
+	double armSpeed;
+	PIDController elevatorContoller = new PIDController(0.01, 0, 0);  // tune PID
 
-	public SetArm(Extension.ExtensionStates extensionState, Pivot.PivotStates pivotState) {
-		s_Pivot = Pivot.getInstance();
-		s_Extension = Extension.getInstance();
-		addRequirements(s_Pivot, s_Extension);
-		this.extensionState = extensionState;
-		this.pivotState = pivotState;
+	SetArm(ArmStates state) {
+		s_Arm = Arm.getInstance();
+		addRequirements(s_Arm);
+		this.state = state;
 	}
 
 	@Override
 	public void initialize() {
-		s_Extension.setPosition(extensionState);
-		s_Pivot.setPosition(pivotState);
+		s_Arm.setState(state);
+	}
+
+	@Override
+	public void execute() {
+		armSpeed = elevatorContoller.calculate(s_Arm.getCANCoderPosition(), s_Arm.getPositionSetpoint());
+		s_Arm.setVelocity(armSpeed);
 	}
 
 	@Override
 	public boolean isFinished() {
-		return true;
+		return Math.abs(s_Arm.getCANCoderPosition() - s_Arm.getPositionSetpoint()) < 30;
 	}
-	
+
+	@Override
+	public void end(boolean interrupted) {
+		s_Arm.setVelocity(0);
+	}
 }
