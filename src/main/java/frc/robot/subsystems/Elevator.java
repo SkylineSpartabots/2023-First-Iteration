@@ -2,10 +2,12 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+// import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -17,15 +19,16 @@ public class Elevator extends SubsystemBase {
         return instance;
     }
 
-    private TalonFX mLeaderElevatorMotor, mFollowerElevatorMotor;
+    private WPI_TalonFX mLeaderElevatorMotor, mFollowerElevatorMotor;
     private double velocity;
     private CANCoder elevatorCANCoder = new CANCoder(Constants.HardwarePorts.elevatorCANCoder);
     ElevatorStates elevatorState = ElevatorStates.ZERO;
     CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
+    ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0, 0, 0, 0);
 
     public enum ElevatorStates {
 		ZERO(0.0),
-		GROUND(300),
+		GROUND(800),
 		SUBSTATION(0.0),
 		L1(0.0),
 		L2(0.0),
@@ -40,9 +43,9 @@ public class Elevator extends SubsystemBase {
 	}
     
     public Elevator() {
-        mLeaderElevatorMotor = new TalonFX(Constants.HardwarePorts.elevatorLeaderMotor);
+        mLeaderElevatorMotor = new WPI_TalonFX(Constants.HardwarePorts.elevatorLeaderMotor);
         configureMotor(mLeaderElevatorMotor, false);
-        mFollowerElevatorMotor = new TalonFX(Constants.HardwarePorts.elevatorFollowerMotor);
+        mFollowerElevatorMotor = new WPI_TalonFX(Constants.HardwarePorts.elevatorFollowerMotor);
         configureMotor(mFollowerElevatorMotor, false);
         mFollowerElevatorMotor.set(ControlMode.Follower, Constants.HardwarePorts.elevatorLeaderMotor);
         mLeaderElevatorMotor.setSelectedSensorPosition(0);
@@ -52,7 +55,7 @@ public class Elevator extends SubsystemBase {
         setCANCoderPosition(0);
     }
 
-    private void configureMotor(TalonFX talon, boolean inverted){
+    private void configureMotor(WPI_TalonFX talon, boolean inverted){
         talon.setInverted(inverted);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(true);
@@ -71,6 +74,10 @@ public class Elevator extends SubsystemBase {
     public void setVelocity(double velocity) {
         this.velocity = velocity;
         mLeaderElevatorMotor.set(ControlMode.Velocity, velocity);
+    }
+
+    public void setVoltage(double velocity) {
+        mLeaderElevatorMotor.setVoltage(elevatorFeedforward.calculate(velocity));
     }
 
     public void setState(ElevatorStates state) {

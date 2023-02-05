@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 
@@ -41,12 +42,14 @@ public class Arm extends SubsystemBase {
     public Arm() {
         mArmMotor = new TalonFX(Constants.HardwarePorts.armMotor);
         configureMotor(mArmMotor, false);
+        mArmMotor.setSelectedSensorPosition(0);
     }
 
     private void configureMotor(TalonFX talon, boolean inverted){
         talon.setInverted(inverted);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(true);
+        talon.setNeutralMode(NeutralMode.Coast);
         talon.config_kF(0, 0.05, Constants.timeOutMs);
         talon.config_kP(0, 0.12, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);
@@ -95,8 +98,9 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("arm pos setpoint", getPositionSetpoint());
-		SmartDashboard.putNumber("arm pos measured", getMeasuredPosition());
+        SmartDashboard.putNumber("armEncPos", getMeasuredPosition());
+        SmartDashboard.putNumber("armCANpos", getCANCoderPosition());
+		SmartDashboard.putNumber("arm pos measured", getPositionSetpoint());
 		SmartDashboard.putNumber("arm set velo", getVelocitySetpoint());
     }
 }

@@ -1,6 +1,9 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
+// import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorStates;
@@ -9,7 +12,11 @@ public class SetElevator extends CommandBase {
 	Elevator s_Elevator;
 	Elevator.ElevatorStates state;
 	double elevatorSpeed;
-	PIDController elevatorContoller = new PIDController(10, 1e-2, 0);  // tune PID
+	ProfiledPIDController elevatorController = new ProfiledPIDController(
+		10, 0, 0, 
+		new TrapezoidProfile.Constraints(100000000, 10000)
+	);
+	// PIDController elevatorController = new PIDController(10, 1e-2, 0);  // tune PID
 
 	public SetElevator(ElevatorStates state) {
 		s_Elevator = Elevator.getInstance();
@@ -24,7 +31,7 @@ public class SetElevator extends CommandBase {
 
 	@Override
 	public void execute() {
-		elevatorSpeed = elevatorContoller.calculate(s_Elevator.getCANCoderPosition(), s_Elevator.getPositionSetpoint());
+		elevatorSpeed = elevatorController.calculate(s_Elevator.getCANCoderPosition(), s_Elevator.getPositionSetpoint());
 		s_Elevator.setVelocity(elevatorSpeed);
 	}
 

@@ -127,7 +127,7 @@ public class RobotContainer {
         // setPivot.onTrue(new Instant5tCommand(() -> s_Intake.setState(IntakeStates.ON_DEPLOYED)));
         // operatorX.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(-1000)));
         // operatorB.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(1000)));
-        operatorA.onTrue(new SetElevator(ElevatorStates.GROUND));
+        // operatorA.onTrue(new SetElevator(ElevatorStates.GROUND));
 
         // setIntake.onTrue(new InstantCommand(() -> s_Elevator.setPos(0)));
         // -85 bottom
