@@ -1,6 +1,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Arm.ArmStates;
@@ -8,10 +10,14 @@ import frc.robot.subsystems.Arm.ArmStates;
 public class SetArm extends CommandBase {
 	Arm s_Arm;
 	Arm.ArmStates state;
-	double armSpeed;
-	PIDController elevatorContoller = new PIDController(0.01, 0, 0);  // tune PID
+	double armVoltage;
+	// PIDController armController = new PIDController(0.025, 2.5e-3, 0.0);  // tune PID
+	ProfiledPIDController armController = new ProfiledPIDController(
+		0.025, 2.5e-3, 0, 
+		new TrapezoidProfile.Constraints(5, 5)
+	);
 
-	SetArm(ArmStates state) {
+	public SetArm(ArmStates state) {
 		s_Arm = Arm.getInstance();
 		addRequirements(s_Arm);
 		this.state = state;
@@ -24,17 +30,18 @@ public class SetArm extends CommandBase {
 
 	@Override
 	public void execute() {
-		armSpeed = elevatorContoller.calculate(s_Arm.getCANCoderPosition(), s_Arm.getPositionSetpoint());
-		s_Arm.setVelocity(armSpeed);
+		armVoltage = armController.calculate(s_Arm.getCANCoderPosition(), s_Arm.getPositionSetpoint());
+		s_Arm.setVoltage(armVoltage);
 	}
 
 	@Override
 	public boolean isFinished() {
-		return Math.abs(s_Arm.getCANCoderPosition() - s_Arm.getPositionSetpoint()) < 30;
+		// return Math.abs(s_Arm.getCANCoderPosition() - s_Arm.getPositionSetpoint()) < 2;
+		return false;
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		s_Arm.setVelocity(0);
+		s_Arm.setVoltage(0);
 	}
 }

@@ -22,9 +22,9 @@ public class Elevator extends SubsystemBase {
     private WPI_TalonFX mLeaderElevatorMotor, mFollowerElevatorMotor;
     private double velocity;
     private CANCoder elevatorCANCoder = new CANCoder(Constants.HardwarePorts.elevatorCANCoder);
-    ElevatorStates elevatorState = ElevatorStates.ZERO;
     CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
     ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0, 0, 0, 0);
+    ElevatorStates elevatorState = ElevatorStates.ZERO;
 
     public enum ElevatorStates {
 		ZERO(0.0),
