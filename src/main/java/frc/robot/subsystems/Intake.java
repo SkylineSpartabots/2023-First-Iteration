@@ -31,18 +31,19 @@ private final Light s_Lights = Light.getInstance();
 
     private Intake() {
         intakeSolenoid = new Solenoid(
-                Constants.HardwarePorts.moduleID,
-                PneumaticsModuleType.REVPH,
-                Constants.HardwarePorts.intakeChannel);
-        compressor = new Compressor(Constants.HardwarePorts.moduleID, PneumaticsModuleType.REVPH);
+            Constants.HardwarePorts.pneumaticHub,
+            PneumaticsModuleType.REVPH, 
+            Constants.HardwarePorts.intakeSolenoidChannel
+        );
+        compressor = new Compressor(Constants.HardwarePorts.pneumaticHub, PneumaticsModuleType.REVPH);
         compressor.enableDigital();
-        mIntakeMotor = new TalonFX(Constants.HardwarePorts.intakeMotor, "2976 CANivore");
-        configureMotor(mIntakeMotor, false); // figure out inversion
+        mIntakeMotor = new TalonFX(Constants.HardwarePorts.intakeMotor);
+        configureMotor(mIntakeMotor, false); 
         setState(IntakeStates.OFF_RETRACTED);
     }
 
-    private void configureMotor(TalonFX talon, boolean b) {
-        talon.setInverted(b);
+    private void configureMotor(TalonFX talon, boolean inverted){
+        talon.setInverted(inverted);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(true);
         talon.setNeutralMode(NeutralMode.Coast);
@@ -67,7 +68,7 @@ private final Light s_Lights = Light.getInstance();
             this.value = value;
             this.direction = direction;
         }
-    }
+    } 
 
     public void setState(IntakeStates state) {
         this.intakeState = state;
