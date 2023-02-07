@@ -25,17 +25,16 @@ public class Arm extends SubsystemBase {
     private double voltage;
     private CANCoder armCANCoder = new CANCoder(Constants.HardwarePorts.armCANCoder);
     CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
-    ArmFeedforward elevatorFeedforward = new ArmFeedforward(0.2782, 0.13793, 0.0025705, 0.00053547);
     private ArmStates armState = ArmStates.ZERO;
 
     public enum ArmStates {
         ZERO(0.0),
         GROUND(300),
-        SUBSTATION(0.0),
-        L1(0.0), 
+        SUBSTATION(150),
+        L1(250), 
         L2(0.0),
         L3(0.0),
-        TEST(0.5);
+        TEST(0.0);
 
         double statePosition = 0.0;
 
@@ -57,7 +56,7 @@ public class Arm extends SubsystemBase {
     private void configureMotor(WPI_TalonFX talon, boolean inverted){
         talon.setInverted(inverted);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
-        talon.enableVoltageCompensation(true);
+        talon.enableVoltageCompensation(false);
         talon.setNeutralMode(NeutralMode.Brake);
         talon.config_kF(0, 0.05, Constants.timeOutMs);
         talon.config_kP(0, 0.12, Constants.timeOutMs);
@@ -118,7 +117,7 @@ public class Arm extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("armEncPos", getMeasuredPosition());
         SmartDashboard.putNumber("armCANpos", getCANCoderPosition());
-		SmartDashboard.putNumber("armposset", getPositionSetpoint());
+		SmartDashboard.putNumber("armPosSet", getPositionSetpoint());
 		SmartDashboard.putNumber("arm set velo", getVelocitySetpoint());
 		SmartDashboard.putNumber("arm set volt", getVoltageSetpoint());
     }
