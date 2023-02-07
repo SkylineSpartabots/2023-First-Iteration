@@ -36,10 +36,14 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         ctreConfigs = new CTREConfigs();
-        m_chooser.setDefaultOption("Straight Auto", AutoCommandFactory.AutoType.Straight);
-        m_chooser.addOption("Right Auto", AutoCommandFactory.AutoType.Right);
+        m_chooser.setDefaultOption("3C T", AutoCommandFactory.AutoType.ThreeConeTop);
         m_chooser.addOption("Wait Auto", AutoCommandFactory.AutoType.Wait);
-        m_chooser.addOption("Test Auto", AutoCommandFactory.AutoType.Test);
+        m_chooser.addOption("1C M Dock", AutoCommandFactory.AutoType.OneConeDockMiddle);
+        m_chooser.addOption("2C B", AutoCommandFactory.AutoType.TwoConeBottom);
+        m_chooser.addOption("2C B Dock", AutoCommandFactory.AutoType.TwoConeDockBottom);
+        m_chooser.addOption("2C T Dock", AutoCommandFactory.AutoType.TwoConeDockTop);
+        m_chooser.addOption("2C T", AutoCommandFactory.AutoType.TwoConeTop);
+        m_chooser.addOption("3C B", AutoCommandFactory.AutoType.ThreeConeBottom);
         m_autonomousCommand = AutoCommandFactory.getAutoCommand(m_chooser.getSelected());
         SmartDashboard.putData("Auto choices", m_chooser);
         DriverStation.Alliance a = DriverStation.getAlliance();
