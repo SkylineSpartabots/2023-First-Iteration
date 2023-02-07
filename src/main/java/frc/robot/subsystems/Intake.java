@@ -26,6 +26,9 @@ public class Intake extends SubsystemBase {
     private IntakeStates intakeState = IntakeStates.OFF_DEPLOYED;
     private TalonFX mIntakeMotor;
 
+//lights yippie
+private final Light s_Lights = Light.getInstance();
+
     private Intake() {
         intakeSolenoid = new Solenoid(
                 Constants.HardwarePorts.moduleID,
@@ -71,6 +74,8 @@ public class Intake extends SubsystemBase {
         intakeSolenoid.set(intakeState.value);
         final int offset = 8000;
         mIntakeMotor.set(ControlMode.Velocity, offset * intakeState.direction);
+
+        if(state.direction==1) {s_Lights.setSelected(6);}
     }
 
     public void testVelo(int direction) {

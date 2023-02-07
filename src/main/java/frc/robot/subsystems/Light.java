@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Intake;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -41,7 +42,7 @@ public class Light extends SubsystemBase {
     // varibles needed for valocity
     double p = 0;
 
-    public void Light() { //inizilize the leds yes this will be a warning forever
+    public void Light() { //inizilize the leds. yes this will be a warning forever
         m_led.setLength(m_ledBuffer.getLength());
         m_led.setData(m_ledBuffer);
         m_led.start();
@@ -78,16 +79,21 @@ public class Light extends SubsystemBase {
     }
     /**
      * @param selected 
-     * 0: Test 
+     * 0: runWave
      * 1: runAnt
      * 2: runRainbowSolid
      * 3: runSegmentedRainbow
-     * 4: runCaution
-     * 5: runVelocity
-     * 6: stopLED
+     * 4: runVelocity
+     * Modes with triggers:
+     * 5: runCaution
+     * 6: runGrab
      */
     public void setSelected(int selected) {
         this.selected = selected;
+    }
+
+    public void setRandomRelaxed() {
+        selected = rand.nextInt(1, 5);
     }
 
     public void update(int selected) {
@@ -126,16 +132,12 @@ public class Light extends SubsystemBase {
                     break;
                 }
                 case 6: {
-                    
+                    limiter = 8;
+                    runGrab();
                     break;
                 }
                 case 7: {
                     
-                    break;
-                }
-                case 8: {
-                    limiter = 5;
-                    runGrab();
                     break;
                 }
             }
@@ -220,15 +222,18 @@ public class Light extends SubsystemBase {
         for (int h =0; h < 180; h++){
             for (int i = 0; i < m_ledBuffer.getLength(); i++) {
                 m_ledBuffer.setHSV(i, h, 255, 255);
-                m_led.setData(m_ledBuffer);
             }
+            m_led.setData(m_ledBuffer);
         }
    }
 
    public void runGrab() {
-    // setState() should select this when intake enum = -1, then turn solid red, then when (past motor voltage - current mv >= big jump) turn green)
-
-   
+    //(past motor voltage - current mv >= big jump) turn green) idk how to get voltage tho
+    // if () {} else {
+    // for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+    // m_ledBuffer.setRGB(i,255,0,0);
+    // }
+//}
 }
 
     public void runAnt(){
