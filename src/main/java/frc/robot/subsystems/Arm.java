@@ -8,10 +8,13 @@ import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
+// DO NOT USE RIGHT NOW
 public class Arm extends SubsystemBase {
     static Arm instance;
 
@@ -26,6 +29,13 @@ public class Arm extends SubsystemBase {
     private CANCoder armCANCoder = new CANCoder(Constants.HardwarePorts.armCANCoder);
     CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
     private ArmStates armState = ArmStates.ZERO;
+	ProfiledPIDController armController = new ProfiledPIDController(
+		0.030, 2.5e-3, 0, 
+		new TrapezoidProfile.Constraints(50, 100)
+	);
+	ArmFeedforward armFeedforward = new ArmFeedforward(0.2782, 0.13793, 0.0025705, 0.00053547);
+	double armVoltage;
+	double armFeedforwardVoltage = 0;
 
     public enum ArmStates {
         ZERO(0.0),
@@ -51,6 +61,7 @@ public class Arm extends SubsystemBase {
         canCoderConfig.sensorDirection = true;
         armCANCoder.configAllSettings(canCoderConfig);
         armCANCoder.setPosition(0);
+        setState(ArmStates.ZERO);
     }
 
     private void configureMotor(WPI_TalonFX talon, boolean inverted){
@@ -82,11 +93,13 @@ public class Arm extends SubsystemBase {
 
     public void setState(ArmStates state) {
         armState = state;
-        // mArmMotor.set(ControlMode.Position, state.statePosition);
+        mArmMotor.set(ControlMode.Position, armState.statePosition);
+		armController.reset(getCANCoderPosition());
     }
 
     public void setPosition(double position) {
         mArmMotor.setSelectedSensorPosition(position);
+		armController.setGoal(getPositionSetpoint());
     }
 
     public double getVelocitySetpoint() {
@@ -115,6 +128,15 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
+		armVoltage = armController.calculate(getCANCoderPosition());
+		armFeedforwardVoltage = armFeedforward.calculate(0, armController.getSetpoint().velocity);
+		SmartDashboard.putNumber("PID velo", armController.getSetpoint().velocity);
+		SmartDashboard.putNumber("PID pos", armController.getSetpoint().position);
+		setVoltage(armVoltage + armFeedforwardVoltage);
+		// if(Math.abs(getCANCoderPosition() - getPositionSetpoint()) < 5) {
+		// 	armController.reset(armController.getSetpoint());
+		// }
+
         SmartDashboard.putNumber("armEncPos", getMeasuredPosition());
         SmartDashboard.putNumber("armCANpos", getCANCoderPosition());
 		SmartDashboard.putNumber("armPosSet", getPositionSetpoint());

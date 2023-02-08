@@ -17,7 +17,7 @@ public class SetArm extends CommandBase {
 	// PIDController armController = new PIDController(0.028, 2.5e-3, 0.0);  // tune PID
 	ProfiledPIDController armController = new ProfiledPIDController(
 		0.030, 2.5e-3, 0, 
-		new TrapezoidProfile.Constraints(50, 50)
+		new TrapezoidProfile.Constraints(50, 100)
 	);
 	ArmFeedforward armFeedforward = new ArmFeedforward(0.2782, 0.13793, 0.0025705, 0.00053547);
 
