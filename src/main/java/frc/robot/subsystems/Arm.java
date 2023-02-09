@@ -93,14 +93,15 @@ public class Arm extends SubsystemBase {
 
     public void setState(ArmStates state) {
         armState = state;
-        mArmMotor.set(ControlMode.Position, armState.statePosition);
-		armController.reset(getCANCoderPosition());
+        // mArmMotor.set(ControlMode.Position, armState.statePosition);
+		armController.setGoal(getPositionSetpoint());
+		// armController.reset(getCANCoderPosition());
     }
 
-    public void setPosition(double position) {
-        mArmMotor.setSelectedSensorPosition(position);
-		armController.setGoal(getPositionSetpoint());
-    }
+    // public void setPosition(double position) {
+    //     mArmMotor.setSelectedSensorPosition(position);
+	// 	armController.setGoal(getPositionSetpoint());
+    // }
 
     public double getVelocitySetpoint() {
         return velocity;
@@ -133,9 +134,9 @@ public class Arm extends SubsystemBase {
 		SmartDashboard.putNumber("PID velo", armController.getSetpoint().velocity);
 		SmartDashboard.putNumber("PID pos", armController.getSetpoint().position);
 		setVoltage(armVoltage + armFeedforwardVoltage);
-		// if(Math.abs(getCANCoderPosition() - getPositionSetpoint()) < 5) {
-		// 	armController.reset(armController.getSetpoint());
-		// }
+		if(Math.abs(getCANCoderPosition() - getPositionSetpoint()) < 5) {
+			armController.reset(armController.getSetpoint());
+		}
 
         SmartDashboard.putNumber("armEncPos", getMeasuredPosition());
         SmartDashboard.putNumber("armCANpos", getCANCoderPosition());
