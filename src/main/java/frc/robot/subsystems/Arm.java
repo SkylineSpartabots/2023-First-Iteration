@@ -93,13 +93,12 @@ public class Arm extends SubsystemBase {
 
     public void setState(ArmStates state) {
         armState = state;
-        mArmMotor.set(ControlMode.Position, armState.statePosition);
 		armController.reset(getCANCoderPosition());
+        armController.setGoal(state.statePosition);
     }
 
     public void setPosition(double position) {
         mArmMotor.setSelectedSensorPosition(position);
-		armController.setGoal(getPositionSetpoint());
     }
 
     public double getVelocitySetpoint() {
