@@ -62,12 +62,6 @@ public class Arm extends SubsystemBase {
         talon.config_kD(0, 0, Constants.timeOutMs);
     }
 
-
-    public void changePosition(boolean forward) {
-        armState.statePosition += forward ? 3 : -3;
-        mArmMotor.set(ControlMode.Position, armState.statePosition);
-    }
-
     public void setVelocity(double velocity) {
         this.velocity = velocity;
         mArmMotor.set(ControlMode.Velocity, velocity);
@@ -80,10 +74,9 @@ public class Arm extends SubsystemBase {
 
     public void setState(ArmStates state) {
         armState = state;
-        // mArmMotor.set(ControlMode.Position, state.statePosition);
     }
 
-    public void setPosition(double position) {
+    public void setMotorPosition(double position) {
         mArmMotor.setSelectedSensorPosition(position);
     }
 
@@ -95,11 +88,11 @@ public class Arm extends SubsystemBase {
         return voltage;
     }
 
-    public double getPositionSetpoint() {
+    public double getCANCoderSetpoint() {
         return armState.statePosition;
     }
 
-    public double getMeasuredPosition () {
+    public double getMotorPosition () {
 		return mArmMotor.getSelectedSensorPosition();
 	}
 
@@ -113,9 +106,8 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("armEncPos", getMeasuredPosition());
         SmartDashboard.putNumber("armCANpos", getCANCoderPosition());
-		SmartDashboard.putNumber("armPosSet", getPositionSetpoint());
+		SmartDashboard.putNumber("armPosSet", getCANCoderSetpoint());
 		SmartDashboard.putNumber("arm set velo", getVelocitySetpoint());
 		SmartDashboard.putNumber("arm set volt", getVoltageSetpoint());
     }

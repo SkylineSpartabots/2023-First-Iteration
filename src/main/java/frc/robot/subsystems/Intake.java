@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -24,7 +24,7 @@ public class Intake extends SubsystemBase {
     private Solenoid intakeSolenoid;
     private Compressor compressor;
     private IntakeStates intakeState = IntakeStates.OFF_DEPLOYED;
-    private TalonFX mIntakeMotor;
+    private WPI_TalonFX mIntakeMotor;
 
     private Intake() {
         intakeSolenoid = new Solenoid(
@@ -34,12 +34,12 @@ public class Intake extends SubsystemBase {
         );
         compressor = new Compressor(Constants.HardwarePorts.pneumaticHub, PneumaticsModuleType.REVPH);
         compressor.enableDigital();
-        mIntakeMotor = new TalonFX(Constants.HardwarePorts.intakeMotor);
+        mIntakeMotor = new WPI_TalonFX(Constants.HardwarePorts.intakeMotor);
         configureMotor(mIntakeMotor, false); 
         setState(IntakeStates.OFF_RETRACTED);
     }
 
-    private void configureMotor(TalonFX talon, boolean inverted){
+    private void configureMotor(WPI_TalonFX talon, boolean inverted){
         talon.setInverted(inverted);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(true);
