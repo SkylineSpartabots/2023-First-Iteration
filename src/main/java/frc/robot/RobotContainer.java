@@ -15,8 +15,6 @@ import frc.robot.commands.*;
 import frc.robot.factories.AutoCommandFactory;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Arm.ArmStates;
-import frc.robot.subsystems.Elevator.ElevatorStates;
-import frc.robot.subsystems.Intake.IntakeStates;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -39,7 +37,7 @@ public class RobotContainer {
 
     /* Driver Buttons */
     private final JoystickButton driverBack = new JoystickButton(driver, XboxController.Button.kBack.value);
-    private final JoystickButton driverStart = new JoystickButton(driver, XboxController.Button.kStart.value);
+    // private final JoystickButton driverStart = new JoystickButton(driver, XboxController.Button.kStart.value);
     private final JoystickButton driverA = new JoystickButton(driver, XboxController.Button.kA.value);
     private final JoystickButton driverB = new JoystickButton(driver, XboxController.Button.kB.value);
     private final JoystickButton driverX = new JoystickButton(driver, XboxController.Button.kX.value);
@@ -161,6 +159,7 @@ public class RobotContainer {
 
     public void onRobotDisabled() {
         // reset mechanisms so it does not have to be done manually
+        CommandScheduler.getInstance().schedule(new SetArm(ArmStates.ZERO));
     }
 
 }
