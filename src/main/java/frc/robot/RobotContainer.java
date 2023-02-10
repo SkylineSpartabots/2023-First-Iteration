@@ -128,11 +128,14 @@ public class RobotContainer {
         // operatorX.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(-1000)));
         // operatorB.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(1000)));
         // operatorA.onTrue(new SetElevator(ElevatorStates.GROUND));
-        operatorA.onTrue(new SetArm(ArmStates.GROUND));
+        operatorA.onTrue(new SetArm(ArmStates.CONE));
         operatorB.onTrue(new SetArm(ArmStates.ZERO));
         operatorX.onTrue(new SetArm(ArmStates.L1));
         operatorY.onTrue(new SetArm(ArmStates.SUBSTATION));
-        
+        operatorDpadUp.onTrue(new InstantCommand(() -> s_Intake.testVelo(1)));
+        operatorDpadDown.onTrue(new InstantCommand(() -> s_Intake.testVelo(-1)));
+        operatorDpadRight.onTrue(new InstantCommand(() -> s_Intake.testVelo(0)));
+                
 
         // setIntake.onTrue(new InstantCommand(() -> s_Elevator.setPos(0)));
         // -85 bottom
