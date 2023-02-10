@@ -22,7 +22,7 @@ public final class Constants {
         public static final int elevatorFollowerMotor = 22; 
         public static final int elevatorCANCoder = 25; // configure
         public static final int armMotor = 23; 
-        public static final int armCANCoder = 0; // configure
+        public static final int armCANCoder = 26; // configure
         public static final int intakeMotor = 24; 
         public static final int intakeSolenoidChannel = 0;
         public static final int pneumaticHub = 16;

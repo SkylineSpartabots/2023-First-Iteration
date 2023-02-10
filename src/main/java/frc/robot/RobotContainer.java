@@ -54,9 +54,9 @@ public class RobotContainer {
     // private final JoystickButton operatorBack = new JoystickButton(operator, XboxController.Button.kBack.value);
     // private final JoystickButton operatorStart = new JoystickButton(operator, XboxController.Button.kStart.value);
     private final JoystickButton operatorA = new JoystickButton(operator, XboxController.Button.kA.value);
-    // private final JoystickButton operatorB = new JoystickButton(operator, XboxController.Button.kB.value);
-    // private final JoystickButton operatorX = new JoystickButton(operator, XboxController.Button.kX.value);
-    // private final JoystickButton operatorY = new JoystickButton(operator, XboxController.Button.kY.value);
+    private final JoystickButton operatorB = new JoystickButton(operator, XboxController.Button.kB.value);
+    private final JoystickButton operatorX = new JoystickButton(operator, XboxController.Button.kX.value);
+    private final JoystickButton operatorY = new JoystickButton(operator, XboxController.Button.kY.value);
 
     private final Trigger operatorDpadUp = new Trigger(() -> operator.getPOV() == 0);
     private final Trigger operatorDpadRight = new Trigger(() -> operator.getPOV() == 90);
@@ -127,7 +127,12 @@ public class RobotContainer {
         // setPivot.onTrue(new Instant5tCommand(() -> s_Intake.setState(IntakeStates.ON_DEPLOYED)));
         // operatorX.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(-1000)));
         // operatorB.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(1000)));
-        operatorA.onTrue(new SetElevator(ElevatorStates.GROUND));
+        // operatorA.onTrue(new SetElevator(ElevatorStates.GROUND));
+        operatorA.onTrue(new SetArm(ArmStates.GROUND));
+        operatorB.onTrue(new SetArm(ArmStates.ZERO));
+        operatorX.onTrue(new SetArm(ArmStates.L1));
+        operatorY.onTrue(new SetArm(ArmStates.SUBSTATION));
+        
 
         // setIntake.onTrue(new InstantCommand(() -> s_Elevator.setPos(0)));
         // -85 bottom
