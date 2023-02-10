@@ -127,11 +127,12 @@ public class Light extends SubsystemBase {
                 }
                 case 5: {
                     groupSize = 3;
-                    time = 7;
+                    limiter = 7;
                     runCaution();
                     break;
                 }
                 case 6: {
+                    groupSize = 3;  
                     limiter = 8;
                     runGrab();
                     break;
@@ -227,14 +228,31 @@ public class Light extends SubsystemBase {
         }
    }
 
+   // (past motor voltage - current mv >= big jump) idk how to get voltage tho 
    public void runGrab() {
-    //(past motor voltage - current mv >= big jump) turn green) idk how to get voltage tho
-    // if () {} else {
-    // for (int i = 0; i < m_ledBuffer.getLength(); i++) {
-    // m_ledBuffer.setRGB(i,255,0,0);
-    // }
-//}
-}
+    // if () { 
+
+    //     for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+    //         if((i-gap)%groupSize==0) { // could this 5 be replaced with groupSize??? (ye -iggy)
+
+    //             m_ledBuffer.setRGB(i, 255, 0, 0);
+    //         }
+    //         else{m_ledBuffer.setRGB(i, 0, 0, 0);}
+    //         }
+    //     } 
+    //     else {
+
+    //     for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+    //         if((i-gap)%groupSize==0) { // could this 5 be replaced with groupSize??? (ye -iggy)
+
+    //             m_ledBuffer.setRGB(i, 0, 0, 255);
+    //         }
+    //         else{m_ledBuffer.setRGB(i, 0, 0, 0);}
+    //         }
+            
+    //     }
+    }
+
 
     public void runAnt(){
         for (int i = 1; i < m_ledBuffer.getLength(); i++) {
