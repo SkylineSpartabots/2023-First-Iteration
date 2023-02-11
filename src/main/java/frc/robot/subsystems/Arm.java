@@ -33,7 +33,7 @@ public class Arm extends SubsystemBase {
         L2(0.0),
         L3(0.0),
         TEST(0.0),
-        CONE(360.0);
+        CONE(400.0);
 
         double statePosition = 0.0;
 

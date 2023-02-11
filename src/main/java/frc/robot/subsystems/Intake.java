@@ -28,22 +28,21 @@ public class Intake extends SubsystemBase {
 
     private Intake() {
         intakeSolenoid = new Solenoid(
-            Constants.HardwarePorts.pneumaticHub,
-            PneumaticsModuleType.REVPH, 
-            Constants.HardwarePorts.intakeSolenoidChannel
-        );
+                Constants.HardwarePorts.pneumaticHub,
+                PneumaticsModuleType.REVPH,
+                Constants.HardwarePorts.intakeSolenoidChannel);
         compressor = new Compressor(Constants.HardwarePorts.pneumaticHub, PneumaticsModuleType.REVPH);
         compressor.enableDigital();
         mIntakeMotor = new WPI_TalonFX(Constants.HardwarePorts.intakeMotor);
-        configureMotor(mIntakeMotor, false); 
+        configureMotor(mIntakeMotor, true);
         setState(IntakeStates.OFF_RETRACTED);
     }
 
-    private void configureMotor(WPI_TalonFX talon, boolean inverted){
+    private void configureMotor(WPI_TalonFX talon, boolean inverted) {
         talon.setInverted(inverted);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(true);
-        talon.setNeutralMode(NeutralMode.Brake);
+        talon.setNeutralMode(NeutralMode.Coast);
         talon.config_kF(0, 0.05, Constants.timeOutMs);
         talon.config_kP(0, 0.12, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);
@@ -65,13 +64,13 @@ public class Intake extends SubsystemBase {
             this.value = value;
             this.direction = direction;
         }
-    } 
+    }
 
     public void setState(IntakeStates state) {
         this.intakeState = state;
         intakeSolenoid.set(intakeState.value);
-        final int offset = 8000;
-        mIntakeMotor.set(ControlMode.Velocity, offset * intakeState.direction);
+        final double offset = 0.80;
+        mIntakeMotor.set(ControlMode.PercentOutput, offset * intakeState.direction);
     }
 
     public void testVelo(int direction) {
