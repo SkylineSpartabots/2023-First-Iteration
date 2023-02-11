@@ -15,6 +15,7 @@ import frc.robot.commands.*;
 import frc.robot.factories.AutoCommandFactory;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Arm.ArmStates;
+import frc.robot.subsystems.Intake.IntakeStates;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -126,11 +127,18 @@ public class RobotContainer {
         // operatorX.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(-1000)));
         // operatorB.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(1000)));
         // operatorA.onTrue(new SetElevator(ElevatorStates.GROUND));
-        operatorA.onTrue(new SetArm(ArmStates.GROUND));
+        operatorA.onTrue(new SetArm(ArmStates.CONE));
         operatorB.onTrue(new SetArm(ArmStates.ZERO));
         operatorX.onTrue(new SetArm(ArmStates.L1));
         operatorY.onTrue(new SetArm(ArmStates.SUBSTATION));
-        
+        operatorDpadDown.onTrue(new SetIntake(IntakeStates.OFF_RETRACTED));
+        operatorDpadUp.onTrue(new SetIntake(IntakeStates.ON_RETRACTED));
+        operatorDpadLeft.onTrue(new SetIntake(IntakeStates.ON_DEPLOYED));
+        operatorDpadRight.onTrue(new SetIntake(IntakeStates.OFF_DEPLOYED));
+        // operatorDpadUp.onTrue(new InstantCommand(() -> s_Intake.testVelo(1)));
+        // operatorDpadDown.onTrue(new InstantCommand(() -> s_Intake.testVelo(-1)));
+        // operatorDpadRight.onTrue(new InstantCommand(() -> s_Intake.testVelo(0)));
+                
 
         // setIntake.onTrue(new InstantCommand(() -> s_Elevator.setPos(0)));
         // -85 bottom
@@ -147,10 +155,10 @@ public class RobotContainer {
             } else { // defaults to blue alliance if alliance is not set for whatever reason
                 driveTags = new int[]{4, 1, 1, 2};
             }
-            operatorDpadUp.onTrue(new OnTheFlyGeneration(driveTags[0], true)); // fixme whats the POINT of swervePose why cant we call it in the function itself
-            operatorDpadLeft.onTrue(new OnTheFlyGeneration(driveTags[1], true));
-            operatorDpadDown.onTrue(new OnTheFlyGeneration(driveTags[2], true));
-            operatorDpadRight.onTrue(new OnTheFlyGeneration(driveTags[3], true));
+            // operatorDpadUp.onTrue(new OnTheFlyGeneration(driveTags[0], true)); // fixme whats the POINT of swervePose why cant we call it in the function itself
+            // operatorDpadLeft.onTrue(new OnTheFlyGeneration(driveTags[1], true));
+            // operatorDpadDown.onTrue(new OnTheFlyGeneration(driveTags[2], true));
+            // operatorDpadRight.onTrue(new OnTheFlyGeneration(driveTags[3], true));
         }
     }
 
