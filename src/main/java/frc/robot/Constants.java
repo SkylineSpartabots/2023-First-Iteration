@@ -16,6 +16,7 @@ import frc.lib.util.SwerveModuleConstants;
 public final class Constants {
     public static final int timeOutMs = 10;
     public static final double stickDeadband = 0.1;
+    public static final double triggerDeadzone = 0.2;
     
     public static final class HardwarePorts {
         public static final int elevatorLeaderMotor = 21; 
