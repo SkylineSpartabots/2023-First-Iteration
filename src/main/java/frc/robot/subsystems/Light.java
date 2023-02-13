@@ -38,6 +38,8 @@ public class Light extends SubsystemBase {
     int groupSize = 0; // changes when gap resets - limit gap - how big in between ants
     int minusGap = 0; // gap but it goes down not up lol
     int[] randColor = {rand.nextInt(1,255), rand.nextInt(1,255), rand.nextInt(1,255)};
+    int finish = 0;
+    boolean grabbed = false;
 
     // varibles needed for valocity
     double p = 0;
@@ -92,7 +94,7 @@ public class Light extends SubsystemBase {
         this.selected = selected;
     }
 
-    public void setRandomRelaxed() {
+    public void setRandomNormal() {
         selected = rand.nextInt(1, 5);
     }
 
@@ -228,10 +230,10 @@ public class Light extends SubsystemBase {
         }
    }
 
-   // (past motor voltage - current mv >= big jump) idk how to get voltage tho 
    public void runGrab() {
-    // if () { 
+    // if () { grabbed = true; }  // (past motor voltage - current mv >= big jump) idk how to get voltage tho 
 
+    // if (grabbed) {
     //     for (int i = 0; i < m_ledBuffer.getLength(); i++) {
     //         if((i-gap)%groupSize==0) { // could this 5 be replaced with groupSize??? (ye -iggy)
 
@@ -239,7 +241,11 @@ public class Light extends SubsystemBase {
     //         }
     //         else{m_ledBuffer.setRGB(i, 0, 0, 0);}
     //         }
-    //     } 
+    //          finish++;
+    //          if (finish==10) {
+    //          finish = 0;
+    //          setRandomRelaxed;}
+    // } 
     //     else {
 
     //     for (int i = 0; i < m_ledBuffer.getLength(); i++) {
