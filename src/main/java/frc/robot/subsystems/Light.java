@@ -28,6 +28,8 @@ public class Light extends SubsystemBase {
         return instance;
     }
 
+    private final Intake s_Intake = Intake.getInstance();
+
     public AddressableLED m_led = new AddressableLED(Constants.LEDConstants.ledPin);
     public AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(Constants.LEDConstants.ledBufferSize);
     Random rand = new Random();
@@ -96,6 +98,10 @@ public class Light extends SubsystemBase {
 
     public void setRandomNormal() {
         selected = rand.nextInt(1, 5);
+    }
+
+    public void setRandomRelaxed(){
+        // iggy what does this do?
     }
 
     public void update(int selected) {
@@ -230,33 +236,32 @@ public class Light extends SubsystemBase {
         }
    }
 
-   public void runGrab() {
-    // if () { grabbed = true; }  // (past motor voltage - current mv >= big jump) idk how to get voltage tho 
+   public void runGrab() { 
+    if (s_Intake.getVolts() >= 14) { grabbed = true;} // I got the voltage but idk how much it would jump. 14 is a guess cause the motor opperates at 12v (i think) so 14v is >
+    if (grabbed) {
+        for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+            if((i-gap)%groupSize==0) { // could this 5 be replaced with groupSize??? (ye -iggy)
 
-    // if (grabbed) {
-    //     for (int i = 0; i < m_ledBuffer.getLength(); i++) {
-    //         if((i-gap)%groupSize==0) { // could this 5 be replaced with groupSize??? (ye -iggy)
+                m_ledBuffer.setRGB(i, 255, 0, 0);
+            }
+            else{m_ledBuffer.setRGB(i, 0, 0, 0);}
+            }
+             finish++;
+             if (finish==10) {
+             finish = 0;
+             setRandomRelaxed();}
+    } 
+        else {
 
-    //             m_ledBuffer.setRGB(i, 255, 0, 0);
-    //         }
-    //         else{m_ledBuffer.setRGB(i, 0, 0, 0);}
-    //         }
-    //          finish++;
-    //          if (finish==10) {
-    //          finish = 0;
-    //          setRandomRelaxed;}
-    // } 
-    //     else {
+        for (int i = 0; i < m_ledBuffer.getLength(); i++) {
+            if((i-gap)%groupSize==0) { // could this 5 be replaced with groupSize??? (ye -iggy)
 
-    //     for (int i = 0; i < m_ledBuffer.getLength(); i++) {
-    //         if((i-gap)%groupSize==0) { // could this 5 be replaced with groupSize??? (ye -iggy)
-
-    //             m_ledBuffer.setRGB(i, 0, 0, 255);
-    //         }
-    //         else{m_ledBuffer.setRGB(i, 0, 0, 0);}
-    //         }
+                m_ledBuffer.setRGB(i, 0, 0, 255);
+            }
+            else{m_ledBuffer.setRGB(i, 0, 0, 0);}
+            }
             
-    //     }
+        }
     }
 
 

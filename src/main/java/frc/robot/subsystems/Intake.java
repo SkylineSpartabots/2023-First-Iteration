@@ -94,6 +94,10 @@ private final Light s_Lights = Light.getInstance();
         return intakeState.value;
     }
 
+    public double getVolts(){
+        return mIntakeMotor.getMotorOutputVoltage();
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("intake motor deployed", getIntakeDeployed());
