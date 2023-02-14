@@ -41,7 +41,7 @@ public class Light extends SubsystemBase {
     int minusGap = 0; // gap but it goes down not up lol
     int[] randColor = {rand.nextInt(1,255), rand.nextInt(1,255), rand.nextInt(1,255)};
     int finish = 0;
-    boolean grabbed = false;
+    boolean grabbed = false; // added a thing in intake to set it to off when reversed.
 
     // varibles needed for valocity
     double p = 0;
@@ -238,9 +238,10 @@ public class Light extends SubsystemBase {
 
    public void runGrab() { 
     if (s_Intake.getVolts() >= 14) { grabbed = true;} // I got the voltage but idk how much it would jump. 14 is a guess cause the motor opperates at 12v (i think) so 14v is >
-    if (grabbed) {
+    
+    if (grabbed) { // is this when it does have something? cause it is setting it to a random thing i would think, so that is for the not grabbed right?
         for (int i = 0; i < m_ledBuffer.getLength(); i++) {
-            if((i-gap)%groupSize==0) { // could this 5 be replaced with groupSize??? (ye -iggy)
+            if((i-gap)%groupSize==0) { 
 
                 m_ledBuffer.setRGB(i, 255, 0, 0);
             }
@@ -248,13 +249,13 @@ public class Light extends SubsystemBase {
             }
              finish++;
              if (finish==10) {
-             finish = 0;
-             setRandomRelaxed();}
+                finish = 0;
+                setRandomRelaxed();} // what is this?
     } 
-        else {
+    else { // is this when it doesnt have a thing?
 
         for (int i = 0; i < m_ledBuffer.getLength(); i++) {
-            if((i-gap)%groupSize==0) { // could this 5 be replaced with groupSize??? (ye -iggy)
+            if((i-gap)%groupSize==0) { 
 
                 m_ledBuffer.setRGB(i, 0, 0, 255);
             }
@@ -267,7 +268,7 @@ public class Light extends SubsystemBase {
 
     public void runAnt(){
         for (int i = 1; i < m_ledBuffer.getLength(); i++) {
-            if((i-gap)%groupSize==0) { // could this 5 be replaced with groupSize??? (ye -iggy)
+            if((i-gap)%groupSize==0) { 
 
                 m_ledBuffer.setRGB(i, 255, 255, 0);
             }

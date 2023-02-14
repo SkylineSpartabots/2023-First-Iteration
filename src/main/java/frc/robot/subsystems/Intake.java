@@ -26,8 +26,8 @@ public class Intake extends SubsystemBase {
     private IntakeStates intakeState = IntakeStates.OFF_DEPLOYED;
     private WPI_TalonFX mIntakeMotor;
 
-//lights yippie
-private final Light s_Lights = Light.getInstance();
+    //lights yippie
+    private final Light s_Lights = Light.getInstance();
 
     private Intake() {
         intakeSolenoid = new Solenoid(
@@ -74,7 +74,9 @@ private final Light s_Lights = Light.getInstance();
         intakeSolenoid.set(intakeState.value);
         final double offset = 0.80;
         mIntakeMotor.set(ControlMode.PercentOutput, offset * intakeState.direction);
+
         if(state.direction==1) {s_Lights.setSelected(6);}
+        if(state.direction==-1) {s_Lights.grabbed = false;} // i think this should work
 
     }
 
