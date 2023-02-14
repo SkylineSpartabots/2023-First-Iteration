@@ -7,13 +7,13 @@ public class SetIntake extends CommandBase {
     Intake s_Intake;
     Intake.IntakeStates state;
 
-    SetIntake(Intake.IntakeStates state) {
+    public SetIntake(Intake.IntakeStates state) {
         s_Intake = Intake.getInstance();        
         this.state = state;
     }
 
     public void initialize() {
-        // s_Intake.setState(state);
+        s_Intake.setState(state);
     }    
 
     public void execute() {

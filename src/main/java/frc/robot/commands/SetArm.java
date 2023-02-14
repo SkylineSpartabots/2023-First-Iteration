@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+// import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
@@ -8,10 +9,11 @@ import frc.robot.subsystems.Arm.ArmStates;
 public class SetArm extends CommandBase {
 	Arm s_Arm;
 	Arm.ArmStates state;
-	double armSpeed;
-	PIDController elevatorContoller = new PIDController(0.01, 0, 0);  // tune PID
+	double armVoltage;
+	PIDController armController = new PIDController(0.030, 2.5e-3, 0.0); // tune PID
+	// ArmFeedforward armFeedforward = new ArmFeedforward(0.2782, 0.13793, 0.0025705, 0.00053547);
 
-	SetArm(ArmStates state) {
+	public SetArm(ArmStates state) {
 		s_Arm = Arm.getInstance();
 		addRequirements(s_Arm);
 		this.state = state;
@@ -24,17 +26,20 @@ public class SetArm extends CommandBase {
 
 	@Override
 	public void execute() {
-		armSpeed = elevatorContoller.calculate(s_Arm.getCANCoderPosition(), s_Arm.getPositionSetpoint());
-		s_Arm.setVelocity(armSpeed);
+		armVoltage = armController.calculate(s_Arm.getCANCoderPosition(), s_Arm.getCANCoderSetpoint());
+		s_Arm.setVoltage(armVoltage);
+		if (Math.abs(s_Arm.getCANCoderPosition() - s_Arm.getCANCoderSetpoint()) < 5) {
+			armController.reset();
+		}
 	}
 
 	@Override
 	public boolean isFinished() {
-		return Math.abs(s_Arm.getCANCoderPosition() - s_Arm.getPositionSetpoint()) < 30;
+		return false;
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		s_Arm.setVelocity(0);
+		s_Arm.setVoltage(0);
 	}
 }

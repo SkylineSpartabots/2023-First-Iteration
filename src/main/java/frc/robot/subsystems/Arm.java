@@ -1,8 +1,10 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,19 +18,22 @@ public class Arm extends SubsystemBase {
         return instance;
     }
 
-    private TalonFX mArmMotor;
+    private WPI_TalonFX mArmMotor;
     private double velocity;
+    private double voltage;
     private CANCoder armCANCoder = new CANCoder(Constants.HardwarePorts.armCANCoder);
+    CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
     private ArmStates armState = ArmStates.ZERO;
 
     public enum ArmStates {
         ZERO(0.0),
-        GROUND(0.0),
-        SUBSTATION(0.0),
-        L1(0.0), 
+        GROUND(300),
+        SUBSTATION(150),
+        L1(250), 
         L2(0.0),
         L3(0.0),
-        TEST(0.5);
+        TEST(0.0),
+        CONE(400.0);
 
         double statePosition = 0.0;
 
@@ -39,24 +44,23 @@ public class Arm extends SubsystemBase {
     }
 
     public Arm() {
-        mArmMotor = new TalonFX(Constants.HardwarePorts.armMotor);
-        configureMotor(mArmMotor, false);
+        mArmMotor = new WPI_TalonFX(Constants.HardwarePorts.armMotor);
+        configureMotor(mArmMotor, true);
+        mArmMotor.setSelectedSensorPosition(0);
+        canCoderConfig.sensorDirection = true;
+        armCANCoder.configAllSettings(canCoderConfig);
+        armCANCoder.setPosition(0);
     }
 
-    private void configureMotor(TalonFX talon, boolean inverted){
+    private void configureMotor(WPI_TalonFX talon, boolean inverted){
         talon.setInverted(inverted);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
-        talon.enableVoltageCompensation(true);
+        talon.enableVoltageCompensation(false);
+        talon.setNeutralMode(NeutralMode.Brake);
         talon.config_kF(0, 0.05, Constants.timeOutMs);
         talon.config_kP(0, 0.12, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);
         talon.config_kD(0, 0, Constants.timeOutMs);
-    }
-
-
-    public void changePosition(boolean forward) {
-        armState.statePosition += forward ? 3 : -3;
-        mArmMotor.set(ControlMode.Position, armState.statePosition);
     }
 
     public void setVelocity(double velocity) {
@@ -64,24 +68,32 @@ public class Arm extends SubsystemBase {
         mArmMotor.set(ControlMode.Velocity, velocity);
     }
 
-    public void setState(ArmStates state) {
-        armState = state;
-        // mArmMotor.set(ControlMode.Position, state.statePosition);
+    public void setVoltage(double voltage) {
+        this.voltage = voltage;
+        mArmMotor.setVoltage(voltage);
     }
 
-    public void setPosition(double position) {
+    public void setState(ArmStates state) {
+        armState = state;
+    }
+
+    public void setMotorPosition(double position) {
         mArmMotor.setSelectedSensorPosition(position);
     }
 
     public double getVelocitySetpoint() {
         return velocity;
     }
+    
+    public double getVoltageSetpoint() {
+        return voltage;
+    }
 
-    public double getPositionSetpoint() {
+    public double getCANCoderSetpoint() {
         return armState.statePosition;
     }
 
-    public double getMeasuredPosition () {
+    public double getMotorPosition () {
 		return mArmMotor.getSelectedSensorPosition();
 	}
 
@@ -95,9 +107,10 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("arm pos setpoint", getPositionSetpoint());
-		SmartDashboard.putNumber("arm pos measured", getMeasuredPosition());
+        SmartDashboard.putNumber("armCANpos", getCANCoderPosition());
+		SmartDashboard.putNumber("armPosSet", getCANCoderSetpoint());
 		SmartDashboard.putNumber("arm set velo", getVelocitySetpoint());
+		SmartDashboard.putNumber("arm set volt", getVoltageSetpoint());
     }
 }
 

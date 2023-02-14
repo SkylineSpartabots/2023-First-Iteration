@@ -8,8 +8,8 @@ import frc.robot.subsystems.Elevator.ElevatorStates;
 public class SetElevator extends CommandBase {
 	Elevator s_Elevator;
 	Elevator.ElevatorStates state;
-	double elevatorSpeed;
-	PIDController elevatorContoller = new PIDController(10, 1e-2, 0);  // tune PID
+	double elevatorVoltage;
+	PIDController elevatorController = new PIDController(0.0, 0.0, 0.0); // tune PID
 
 	public SetElevator(ElevatorStates state) {
 		s_Elevator = Elevator.getInstance();
@@ -24,13 +24,16 @@ public class SetElevator extends CommandBase {
 
 	@Override
 	public void execute() {
-		elevatorSpeed = elevatorContoller.calculate(s_Elevator.getCANCoderPosition(), s_Elevator.getPositionSetpoint());
-		s_Elevator.setVelocity(elevatorSpeed);
+		elevatorVoltage = elevatorController.calculate(s_Elevator.getCANCoderPosition(), s_Elevator.getCANCoderSetpoint());
+		s_Elevator.setVelocity(elevatorVoltage);
+		if (Math.abs(s_Elevator.getCANCoderPosition() - s_Elevator.getCANCoderSetpoint()) < 5) {
+			elevatorController.reset();
+		}
 	}
 
 	@Override
 	public boolean isFinished() {
-		return Math.abs(s_Elevator.getCANCoderPosition() - s_Elevator.getPositionSetpoint()) < 10;
+		return false;
 	}
 
 	@Override
