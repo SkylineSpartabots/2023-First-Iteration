@@ -21,18 +21,17 @@ public class Elevator extends SubsystemBase {
     private WPI_TalonFX mLeaderElevatorMotor, mFollowerElevatorMotor;
     private double velocity;
     private double voltage;
-    private CANCoder elevatorCANCoder = new CANCoder(Constants.HardwarePorts.elevatorCANCoder);
+    private CANCoder elevatorCANCoder = new CANCoder(Constants.HardwarePorts.elevatorCANCoder); // max 1860
     CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
-    // ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0, 0, 0, 0);
     ElevatorStates elevatorState = ElevatorStates.ZERO;
 
     public enum ElevatorStates {
 		ZERO(0.0),
-		GROUND(0.0),
-		SUBSTATION(0.0),
-		L1(0.0),
+		GROUND(300),
+		SUBSTATION(600),
+		L1(900),
 		L2(0.0),
-		L3(0.0),
+		L3(1500),
 		TEST(0.0); 
 
 		double statePosition = 0.0;
@@ -59,7 +58,7 @@ public class Elevator extends SubsystemBase {
         talon.setInverted(inverted);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(true);
-        talon.setNeutralMode(NeutralMode.Coast);
+        talon.setNeutralMode(NeutralMode.Brake);
         talon.config_kF(0, 0.05, Constants.timeOutMs);
         talon.config_kP(0, 0.12, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);

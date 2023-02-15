@@ -21,7 +21,7 @@ public class Arm extends SubsystemBase {
     private WPI_TalonFX mArmMotor;
     private double velocity;
     private double voltage;
-    private CANCoder armCANCoder = new CANCoder(Constants.HardwarePorts.armCANCoder);
+    private CANCoder armCANCoder = new CANCoder(Constants.HardwarePorts.armCANCoder); // max 420
     CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
     private ArmStates armState = ArmStates.ZERO;
 

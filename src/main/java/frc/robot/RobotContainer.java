@@ -15,6 +15,7 @@ import frc.robot.commands.*;
 import frc.robot.factories.AutoCommandFactory;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Arm.ArmStates;
+import frc.robot.subsystems.Elevator.ElevatorStates;
 import frc.robot.subsystems.Intake.IntakeStates;
 
 /**
@@ -153,16 +154,20 @@ public class RobotContainer {
         // operatorA.onTrue(new SetElevator(ElevatorStates.GROUND));
         // operatorA.onTrue(new SetArm(ArmStates.CONE));
         // operatorB.onTrue(new SetArm(ArmStates.ZERO));
-        driverX.onTrue(new SetArm(ArmStates.L1));
-        driverY.onTrue(new SetArm(ArmStates.SUBSTATION));
+        // driverX.onTrue(new SetArm(ArmStates.L1));
+        // driverY.onTrue(new SetArm(ArmStates.SUBSTATION));
         // operatorDpadDown.onTrue(new SetIntake(IntakeStates.OFF_RETRACTED));
         // operatorDpadUp.onTrue(new SetIntake(IntakeStates.ON_RETRACTED));
         // operatorDpadLeft.onTrue(new SetIntake(IntakeStates.ON_DEPLOYED));
         // operatorDpadRight.onTrue(new SetIntake(IntakeStates.OFF_DEPLOYED));
-        driverLeftTrigger.onTrue(new SetIntake(IntakeStates.OFF_RETRACTED));
-        driverRightTrigger.onTrue(new SetIntake(IntakeStates.ON_RETRACTED));
-        driverA.onTrue(new SetArm(ArmStates.CONE));
-        driverB.onTrue(new SetArm(ArmStates.ZERO));
+        // driverLeftTrigger.onTrue(new SetIntake(IntakeStates.OFF_RETRACTED));
+        // driverRightTrigger.onTrue(new SetIntake(IntakeStates.ON_RETRACTED));
+        // driverA.onTrue(new SetArm(ArmStates.CONE));
+        // driverB.onTrue(new SetArm(ArmStates.ZERO));
+        operatorDpadDown.onTrue(new SetElevator(ElevatorStates.ZERO));
+        operatorDpadUp.onTrue(new SetElevator(ElevatorStates.GROUND));
+        operatorDpadRight.onTrue(new SetElevator(ElevatorStates.SUBSTATION));
+        operatorDpadLeft.onTrue(new SetElevator(ElevatorStates.L3));
 
         // operatorDpadUp.onTrue(new InstantCommand(() -> s_Intake.testVelo(1)));
         // operatorDpadDown.onTrue(new InstantCommand(() -> s_Intake.testVelo(-1)));
