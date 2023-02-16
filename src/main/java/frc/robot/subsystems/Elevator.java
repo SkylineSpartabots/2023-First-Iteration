@@ -57,7 +57,7 @@ public class Elevator extends SubsystemBase {
     private void configureMotor(WPI_TalonFX talon, boolean inverted){
         talon.setInverted(inverted);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
-        talon.enableVoltageCompensation(true);
+        talon.enableVoltageCompensation(false);
         talon.setNeutralMode(NeutralMode.Brake);
         talon.config_kF(0, 0.05, Constants.timeOutMs);
         talon.config_kP(0, 0.12, Constants.timeOutMs);
