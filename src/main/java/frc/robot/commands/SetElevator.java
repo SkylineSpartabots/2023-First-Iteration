@@ -12,7 +12,7 @@ public class SetElevator extends CommandBase {
 	double elevatorVoltage;
 	double elevatorFeedforwardVolage;
 	PIDController elevatorController = new PIDController(0.025, 2.5e-3, 0.0); // tune PID
-	ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0, 0, 0, 0);
+	ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0.083319, 0.46718, 62.909, 3.709);
 
 	public SetElevator(ElevatorStates state) {
 		s_Elevator = Elevator.getInstance();
