@@ -25,17 +25,17 @@ public class Elevator extends SubsystemBase {
     CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
     ElevatorStates elevatorState = ElevatorStates.ZERO;
 
-    public enum ElevatorStates {
-		ZERO(0.0),
-		GROUNDCONE(300), //intaking cone from ground
-        GROUNDCUBE(300), //intaking cube from ground
-		SUBSTATION(600),
-		L1CONE(900),
-		L2CONE(0.0), //middle scoring thing
-		L3CONE(1200), //upper scoring thing
-        L1CUBE(900),
-		L2CUBE(0.0), 
-		L3CUBE(1200),
+    public enum ElevatorStates { //all are measured values unless otherwise indicated
+		ZERO(0.0), //bottomed out
+		GROUNDCONE(0.0), //intaking cone from ground
+        GROUNDCUBE(0.0), //intaking cube from ground
+		SUBSTATION(600), //not measured yet
+		L1CONE(0.0), 
+		L2CONE(1198.0), //middle scoring thing
+		L3CONE(1200), //upper scoring thing - not measured yet
+        L1CUBE(0),
+		L2CUBE(900.0), 
+		L3CUBE(1849.0),
 		TEST(0.0); 
 
 		double statePosition = 0.0;

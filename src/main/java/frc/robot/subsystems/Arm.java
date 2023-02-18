@@ -26,18 +26,17 @@ public class Arm extends SubsystemBase {
     private ArmStates armState = ArmStates.ZERO;
 
     public enum ArmStates {
-        ZERO(0.0),
-        GROUNDCONE(300), //intaking cone from ground
-        GROUNDCUBE(300), //intaking cube from ground
-        SUBSTATION(150),
-        L1CONE(250), 
-        L2CONE(0.0), //middle scoring thing
-        L3CONE(0.0), //upper scoring thing
-        L1CUBE(250), 
-        L2CUBE(0.0), //middle scoring thing
-        L3CUBE(0.0),
-        TEST(0.0),
-        CONE(400.0);
+        ZERO(0.0), //when curled up
+        GROUNDCONE(181), //intaking cone from ground
+        GROUNDCUBE(200), //intaking cube from ground
+        SUBSTATION(150), //not measured yet
+        L1CONE(150), 
+        L2CONE(92.0), //middle scoring thing
+        L3CONE(0.0), //upper scoring thing - not measured yet
+        L1CUBE(150), 
+        L2CUBE(121.0), //middle scoring thing
+        L3CUBE(129.0),
+        TEST(0.0);
 
         double statePosition = 0.0;
 
