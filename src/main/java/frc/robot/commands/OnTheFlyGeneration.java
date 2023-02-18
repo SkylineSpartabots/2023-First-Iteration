@@ -1,6 +1,8 @@
 package frc.robot.commands;
 
 
+import java.util.ArrayList;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -15,7 +17,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants;
 import frc.robot.factories.AutoCommandFactory;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Arm.ArmStates;
+import frc.robot.subsystems.Elevator.ElevatorStates;
 
 public class OnTheFlyGeneration extends CommandBase {
     Pose2d currentPos;

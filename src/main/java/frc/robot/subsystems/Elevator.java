@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Elevator extends SubsystemBase {
-    static Elevator instance;
+    private static Elevator instance;
     public static Elevator getInstance() {
         if (instance == null) instance = new Elevator();
         return instance;
@@ -25,13 +25,17 @@ public class Elevator extends SubsystemBase {
     CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
     ElevatorStates elevatorState = ElevatorStates.ZERO;
 
-    public enum ElevatorStates {
-		ZERO(0.0),
-		GROUND(300),
-		SUBSTATION(600),
-		L1(900),
-		L2(0.0),
-		L3(1500),
+    public enum ElevatorStates { //all are measured values unless otherwise indicated
+		ZERO(0.0), //bottomed out
+		GROUNDCONE(0.0), //intaking cone from ground
+        GROUNDCUBE(0.0), //intaking cube from ground
+		SUBSTATION(600), //not measured yet
+		L1CONE(0.0), 
+		L2CONE(1198.0), //middle scoring thing
+		L3CONE(1200), //upper scoring thing - not measured yet
+        L1CUBE(0),
+		L2CUBE(900.0), 
+		L3CUBE(1849.0),
 		TEST(0.0); 
 
 		double statePosition = 0.0;
