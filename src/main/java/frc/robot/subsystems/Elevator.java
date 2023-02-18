@@ -50,6 +50,7 @@ public class Elevator extends SubsystemBase {
         mLeaderElevatorMotor.setSelectedSensorPosition(0);
         mFollowerElevatorMotor.setSelectedSensorPosition(0);
         canCoderConfig.sensorDirection = true;
+        canCoderConfig.unitString = "centimeters";
         elevatorCANCoder.configAllSettings(canCoderConfig);
         setCANCoderPosition(0);
     }
@@ -58,7 +59,7 @@ public class Elevator extends SubsystemBase {
         talon.setInverted(inverted);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(false);
-        talon.setNeutralMode(NeutralMode.Brake);
+        talon.setNeutralMode(NeutralMode.Coast);
         talon.config_kF(0, 0.05, Constants.timeOutMs);
         talon.config_kP(0, 0.12, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);

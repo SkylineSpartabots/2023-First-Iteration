@@ -10,7 +10,7 @@ public class SetArm extends CommandBase {
 	Arm s_Arm;
 	Arm.ArmStates state;
 	double armVoltage;
-	PIDController armController = new PIDController(0.030, 2.5e-3, 0.0); // tune PID
+	PIDController armController = new PIDController(0.030 / 2, 2.5e-3 / 2, 0.0 / 2); // tune PID
 	// ArmFeedforward armFeedforward = new ArmFeedforward(0.2782, 0.13793, 0.0025705, 0.00053547);
 
 	public SetArm(ArmStates state) {

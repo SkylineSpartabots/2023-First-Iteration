@@ -27,13 +27,13 @@ public class Arm extends SubsystemBase {
 
     public enum ArmStates {
         ZERO(0.0),
-        GROUND(300),
-        SUBSTATION(150),
-        L1(250), 
+        GROUND(300 / 2),
+        SUBSTATION(150 / 2),
+        L1(250 / 2), 
         L2(0.0),
         L3(0.0),
         TEST(0.0),
-        CONE(400.0);
+        CONE(400.0 / 2);
 
         double statePosition = 0.0;
 
@@ -56,7 +56,7 @@ public class Arm extends SubsystemBase {
         talon.setInverted(inverted);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(false);
-        talon.setNeutralMode(NeutralMode.Brake);
+        talon.setNeutralMode(NeutralMode.Coast);
         talon.config_kF(0, 0.05, Constants.timeOutMs);
         talon.config_kP(0, 0.12, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);
@@ -111,6 +111,7 @@ public class Arm extends SubsystemBase {
 		SmartDashboard.putNumber("armPosSet", getCANCoderSetpoint());
 		SmartDashboard.putNumber("arm set velo", getVelocitySetpoint());
 		SmartDashboard.putNumber("arm set volt", getVoltageSetpoint());
+        SmartDashboard.putNumber("armMotpos", getMotorPosition());
     }
 }
 
