@@ -27,11 +27,15 @@ public class Arm extends SubsystemBase {
 
     public enum ArmStates {
         ZERO(0.0),
-        GROUND(300),
+        GROUNDCONE(300), //intaking cone from ground
+        GROUNDCUBE(300), //intaking cube from ground
         SUBSTATION(150),
-        L1(250), 
-        L2(0.0),
-        L3(0.0),
+        L1CONE(250), 
+        L2CONE(0.0), //middle scoring thing
+        L3CONE(0.0), //upper scoring thing
+        L1CUBE(250), 
+        L2CUBE(0.0), //middle scoring thing
+        L3CUBE(0.0),
         TEST(0.0),
         CONE(400.0);
 
@@ -56,7 +60,7 @@ public class Arm extends SubsystemBase {
         talon.setInverted(inverted);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(false);
-        talon.setNeutralMode(NeutralMode.Brake);
+        talon.setNeutralMode(NeutralMode.Coast);
         talon.config_kF(0, 0.05, Constants.timeOutMs);
         talon.config_kP(0, 0.12, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);

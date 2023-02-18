@@ -165,9 +165,9 @@ public class RobotContainer {
         // driverA.onTrue(new SetArm(ArmStates.CONE));
         // driverB.onTrue(new SetArm(ArmStates.ZERO));
         operatorDpadDown.onTrue(new SetElevator(ElevatorStates.ZERO));
-        operatorDpadUp.onTrue(new SetElevator(ElevatorStates.GROUND));
+        operatorDpadUp.onTrue(new SetElevator(ElevatorStates.L1CONE));
         operatorDpadRight.onTrue(new SetElevator(ElevatorStates.SUBSTATION));
-        operatorDpadLeft.onTrue(new SetElevator(ElevatorStates.L3));
+        operatorDpadLeft.onTrue(new SetElevator(ElevatorStates.L3CONE));
 
         // operatorDpadUp.onTrue(new InstantCommand(() -> s_Intake.testVelo(1)));
         // operatorDpadDown.onTrue(new InstantCommand(() -> s_Intake.testVelo(-1)));
