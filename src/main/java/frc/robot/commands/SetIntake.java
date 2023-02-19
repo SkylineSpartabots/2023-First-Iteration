@@ -13,7 +13,6 @@ public class SetIntake extends CommandBase {
     }
 
     public void initialize() {
-        // s_Intake.setState(state);
         s_Intake.setState(state);
     }    
 
