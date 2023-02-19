@@ -47,7 +47,7 @@ public class CompleteMechanism extends SubsystemBase{
 
     public void setState(MechanismState state){
         currentState = state;
-        SetMechanism command = new SetMechanism(state);
-        command.schedule();
+        // SetMechanism command = new SetMechanism(state);
+        // command.schedule();
     }
 }

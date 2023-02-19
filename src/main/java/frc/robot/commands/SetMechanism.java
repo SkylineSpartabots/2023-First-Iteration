@@ -15,6 +15,7 @@ public class SetMechanism extends CommandBase{
     public SetMechanism(MechanismState state){
         this.state = state;
         mech = CompleteMechanism.getInstance();
+        mech.setState(state);
     }
     
     @Override
