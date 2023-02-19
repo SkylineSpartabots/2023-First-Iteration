@@ -27,8 +27,8 @@ public class Arm extends SubsystemBase {
 
     public enum ArmStates {
         ZERO(0.0), //when curled up
-        GROUNDCONE(181), //intaking cone from ground
-        GROUNDCUBE(200), //intaking cube from ground
+        GROUNDCONE(171), //intaking cone from ground
+        GROUNDCUBE(180), //intaking cube from ground
         SUBSTATION(150), //not measured yet
         L1CONE(150), 
         L2CONE(92.0), //middle scoring thing
@@ -36,7 +36,7 @@ public class Arm extends SubsystemBase {
         L1CUBE(150), 
         L2CUBE(121.0), //middle scoring thing
         L3CUBE(129.0),
-        TEST(0.0);
+        TEST(50);
 
         double statePosition = 0.0;
 
@@ -59,7 +59,7 @@ public class Arm extends SubsystemBase {
         talon.setInverted(inverted);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(false);
-        talon.setNeutralMode(NeutralMode.Coast);
+        talon.setNeutralMode(NeutralMode.Brake);
         talon.config_kF(0, 0.05, Constants.timeOutMs);
         talon.config_kP(0, 0.12, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);
@@ -112,9 +112,9 @@ public class Arm extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("armCANpos", getCANCoderPosition());
 		SmartDashboard.putNumber("armPosSet", getCANCoderSetpoint());
-		SmartDashboard.putNumber("arm set velo", getVelocitySetpoint());
+		// SmartDashboard.putNumber("arm set velo", getVelocitySetpoint());
 		SmartDashboard.putNumber("arm set volt", getVoltageSetpoint());
-        SmartDashboard.putNumber("armMotpos", getMotorPosition());
+        // SmartDashboard.putNumber("armMotpos", getMotorPosition());
     }
 }
 
