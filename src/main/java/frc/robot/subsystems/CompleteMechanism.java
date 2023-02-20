@@ -22,7 +22,7 @@ public class CompleteMechanism extends SubsystemBase{
     public enum MechanismState{
         LOWCONE(ElevatorStates.L1CONE, ArmStates.L1CONE),
         MIDCONE(ElevatorStates.L2CONE, ArmStates.L2CONE),
-        UPPERCONE(ElevatorStates.L3CONE, ArmStates.L3CONE),
+        HIGHCONE(ElevatorStates.L3CONE, ArmStates.L3CONE),
         CUBEINTAKE(ElevatorStates.GROUNDCUBE, ArmStates.GROUNDCUBE),
         CONEINTAKE(ElevatorStates.GROUNDCONE, ArmStates.GROUNDCONE),
         LOWCUBE(ElevatorStates.L1CUBE, ArmStates.L1CUBE),
