@@ -117,6 +117,14 @@ public class Arm extends SubsystemBase {
         return armCANCoder.getLastError();
     }
 
+    public boolean armError() {
+        if(getCANCoderStatus() != ErrorCode.OK) {
+            mArmMotor.setVoltage(0);
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("armCANpos", getCANCoderPosition());
@@ -125,6 +133,7 @@ public class Arm extends SubsystemBase {
 		SmartDashboard.putNumber("arm set volt", getVoltageSetpoint());
         SmartDashboard.putNumber("arm CANCoder Voltage", getCANCoderVoltage());
         // SmartDashboard.putNumber("armMotpos", getMotorPosition());
+        SmartDashboard.putBoolean("arm error", armError());
     }
 }
 

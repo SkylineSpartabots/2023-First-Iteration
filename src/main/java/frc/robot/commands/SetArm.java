@@ -37,7 +37,7 @@ public class SetArm extends CommandBase {
 
 	@Override
 	public boolean isFinished() {
-		return s_Arm.getCANCoderVoltage() < 5 && s_Arm.getCANCoderStatus() != ErrorCode.OK;
+		return true;
 	}
 
 	@Override
