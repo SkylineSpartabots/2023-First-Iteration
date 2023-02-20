@@ -108,13 +108,19 @@ public class Arm extends SubsystemBase {
         return armCANCoder.getPosition();
     }
 
+    public double getCANCoderVoltage(){
+        return armCANCoder.getBusVoltage();
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("armCANpos", getCANCoderPosition());
 		SmartDashboard.putNumber("armPosSet", getCANCoderSetpoint());
 		// SmartDashboard.putNumber("arm set velo", getVelocitySetpoint());
 		SmartDashboard.putNumber("arm set volt", getVoltageSetpoint());
+        SmartDashboard.putNumber("arm CANCoder Voltage", getCANCoderVoltage());
         // SmartDashboard.putNumber("armMotpos", getMotorPosition());
     }
 }
+
 

@@ -36,6 +36,9 @@ public class SetArm extends CommandBase {
 
 	@Override
 	public boolean isFinished() {
+		if(s_Arm.getCANCoderVoltage() < 5){
+			return true;
+		}
 		return false;
 	}
 
