@@ -6,8 +6,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Light;
+
+  
 
 public class AutoBalance extends CommandBase {
+    
+    //lights yippie
+    private final Light s_Lights = Light.getInstance();
+
     Swerve s_Swerve;
     double robotPitch;
     double driveSpeed;
@@ -20,6 +27,8 @@ public class AutoBalance extends CommandBase {
 
     @Override
     public void execute() {
+        s_Lights.setSelected(5);
+        
         robotPitch = s_Swerve.getPitch();
         if (Math.abs(robotPitch) < 0.3) {
             robotPitch = 0;

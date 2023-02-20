@@ -40,8 +40,9 @@ public class Light extends SubsystemBase {
     int groupSize = 0; // changes when gap resets - limit gap - how big in between ants
     int minusGap = 0; // gap but it goes down not up lol
     int[] randColor = {rand.nextInt(1,255), rand.nextInt(1,255), rand.nextInt(1,255)};
-    int finish = 0;
+    int finish = 0; // Timer that sets random state when an action is completed (rn just grab)
     boolean grabbed = false; // added a thing in intake to set it to off when reversed.
+    int isExpired = 0; // same as finished but calls random state when a process has been running for too long
 
     // varibles needed for valocity
     double p = 0;
@@ -96,7 +97,7 @@ public class Light extends SubsystemBase {
         this.selected = selected;
     }
 
-    public void setRandomNormal() {
+    public void setRandomNormal() { // Picks a random cosmetic state when finished triggers
         selected = rand.nextInt(1, 5);
     }
 
@@ -167,13 +168,6 @@ public class Light extends SubsystemBase {
         }
         m_led.setData(m_ledBuffer);
         gapReset();
-        // time = 0;
-        // if (gap==groupSize) {
-        //     
-        // } 
-        // else {
-        //     gap++;
-        // };
     }
 
     public void runVelocity() { //uses accelrometer
@@ -184,7 +178,7 @@ public class Light extends SubsystemBase {
         // 4.572 mps max
         double d = averageVelocity - p;
 
-        if (d>=0.1) {p+=0.2;} 
+        if (d>=0.1) {p+=0.2;}
         else if (d<=-0.2) {p-=0.2;}
 
         int color = (int)Math.round(p/4.572);
@@ -197,7 +191,7 @@ public class Light extends SubsystemBase {
     }
 
     public void runWave() {
-        for (int i = 50; i < m_ledBuffer.getLength()/2; i++) {// is this right? i will never increase
+        for (int i = 50; i < m_ledBuffer.getLength(); i++) {
             if(i==gap) { 
 
                 m_ledBuffer.setRGB(i, randColor[0], randColor[1], randColor[2]);
@@ -244,8 +238,10 @@ public class Light extends SubsystemBase {
             else{m_ledBuffer.setRGB(i, 0, 0, 0);}
             }
              finish++;
-             if (finish==10) {
+             if (finish==80) {
                 finish = 0;
+                isExpired = 0;
+                grabbed = false;
                 setRandomNormal();}
     } 
     else {
@@ -257,6 +253,11 @@ public class Light extends SubsystemBase {
             }
             else{m_ledBuffer.setRGB(i, 0, 0, 0);}
             }
+
+            isExpired++;
+             if (isExpired==325) {
+                isExpired = 0;
+                setRandomNormal();}
             
         }
     }
@@ -273,16 +274,9 @@ public class Light extends SubsystemBase {
         }
         m_led.setData(m_ledBuffer);
         gapReset();
-        // time = 0;
-        // if (gap==groupSize) {
-        //     gap=0;
-        // } 
-        // else {
-        //     gap++;
-        // };
     }
     
-    public void runCaution(){ //play when robot slows down?
+    public void runCaution(){ //is set when we are balancin da robot
         for (int i = 1; i < m_ledBuffer.getLength(); i++) {
             if((i-gap)%2==0) {
 
@@ -290,6 +284,12 @@ public class Light extends SubsystemBase {
             }    
             else{m_ledBuffer.setRGB(i, 255, 0, 0);}
         }
+
+        finish++;
+             if (finish==150) {
+                finish = 0;
+                setRandomNormal();}
+
         m_led.setData(m_ledBuffer);
         gapReset();
     }
