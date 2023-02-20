@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 
+// import edu.wpi.first.networktables.NetworkMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -27,7 +28,7 @@ public class Arm extends SubsystemBase {
     private ArmStates armState = ArmStates.ZERO;
 
     public enum ArmStates {
-        ZERO(0.0), //when curled up
+        ZERO(10.0), //when curled up
         GROUNDCONE(171), //intaking cone from ground
         GROUNDCUBE(180), //intaking cube from ground
         SUBSTATION(150), //not measured yet
@@ -115,6 +116,13 @@ public class Arm extends SubsystemBase {
 
     public ErrorCode getCANCoderStatus() {
         return armCANCoder.getLastError();
+    }
+
+    private boolean inCoast = false;
+    public void toggleNeutral(){
+        inCoast = !inCoast;
+        NeutralMode newNeutral = inCoast ? NeutralMode.Coast : NeutralMode.Brake;
+        mArmMotor.setNeutralMode(newNeutral);
     }
 
     @Override
