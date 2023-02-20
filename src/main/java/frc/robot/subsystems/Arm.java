@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -108,8 +109,12 @@ public class Arm extends SubsystemBase {
         return armCANCoder.getPosition();
     }
 
-    public double getCANCoderVoltage(){
+    public double getCANCoderVoltage() {
         return armCANCoder.getBusVoltage();
+    }
+
+    public ErrorCode getCANCoderStatus() {
+        return armCANCoder.getLastError();
     }
 
     @Override
