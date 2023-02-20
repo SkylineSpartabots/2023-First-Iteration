@@ -100,10 +100,6 @@ public class Light extends SubsystemBase {
         selected = rand.nextInt(1, 5);
     }
 
-    public void setRandomRelaxed(){
-        // iggy what does this do?
-    }
-
     public void update(int selected) {
             switch (selected) { // uhh what are enums again lol
                 case 0:{
@@ -201,7 +197,7 @@ public class Light extends SubsystemBase {
     }
 
     public void runWave() {
-        for (int i = 50; i < m_ledBuffer.getLength()/2; i++) {
+        for (int i = 50; i < m_ledBuffer.getLength()/2; i++) {// is this right? i will never increase
             if(i==gap) { 
 
                 m_ledBuffer.setRGB(i, randColor[0], randColor[1], randColor[2]);
@@ -239,25 +235,25 @@ public class Light extends SubsystemBase {
    public void runGrab() { 
     if (s_Intake.getVolts() >= 14) { grabbed = true;} // I got the voltage but idk how much it would jump. 14 is a guess cause the motor opperates at 12v (i think) so 14v is >
     
-    if (grabbed) { // is this when it does have something? cause it is setting it to a random thing i would think, so that is for the not grabbed right?
+    if (grabbed) {
         for (int i = 0; i < m_ledBuffer.getLength(); i++) {
             if((i-gap)%groupSize==0) { 
 
-                m_ledBuffer.setRGB(i, 255, 0, 0);
+                m_ledBuffer.setRGB(i, 0, 0, 255);
             }
             else{m_ledBuffer.setRGB(i, 0, 0, 0);}
             }
              finish++;
              if (finish==10) {
                 finish = 0;
-                setRandomRelaxed();} // what is this?
+                setRandomNormal();}
     } 
-    else { // is this when it doesnt have a thing?
+    else {
 
         for (int i = 0; i < m_ledBuffer.getLength(); i++) {
             if((i-gap)%groupSize==0) { 
 
-                m_ledBuffer.setRGB(i, 0, 0, 255);
+                m_ledBuffer.setRGB(i, 255, 0, 0);
             }
             else{m_ledBuffer.setRGB(i, 0, 0, 0);}
             }
