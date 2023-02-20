@@ -21,19 +21,22 @@ public class Arm extends SubsystemBase {
     private WPI_TalonFX mArmMotor;
     private double velocity;
     private double voltage;
-    private CANCoder armCANCoder = new CANCoder(Constants.HardwarePorts.armCANCoder);
+    private CANCoder armCANCoder = new CANCoder(Constants.HardwarePorts.armCANCoder); // max 420
     CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
     private ArmStates armState = ArmStates.ZERO;
 
     public enum ArmStates {
-        ZERO(0.0),
-        GROUND(300),
-        SUBSTATION(150),
-        L1(250), 
-        L2(0.0),
-        L3(0.0),
-        TEST(0.0),
-        CONE(400.0);
+        ZERO(0.0), //when curled up
+        GROUNDCONE(171), //intaking cone from ground
+        GROUNDCUBE(180), //intaking cube from ground
+        SUBSTATION(150), //not measured yet
+        L1CONE(150), 
+        L2CONE(92.0), //middle scoring thing
+        L3CONE(0.0), //upper scoring thing - not measured yet
+        L1CUBE(150), 
+        L2CUBE(121.0), //middle scoring thing
+        L3CUBE(129.0),
+        TEST(50);
 
         double statePosition = 0.0;
 
@@ -105,12 +108,19 @@ public class Arm extends SubsystemBase {
         return armCANCoder.getPosition();
     }
 
+    public double getCANCoderVoltage(){
+        return armCANCoder.getBusVoltage();
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("armCANpos", getCANCoderPosition());
 		SmartDashboard.putNumber("armPosSet", getCANCoderSetpoint());
-		SmartDashboard.putNumber("arm set velo", getVelocitySetpoint());
+		// SmartDashboard.putNumber("arm set velo", getVelocitySetpoint());
 		SmartDashboard.putNumber("arm set volt", getVoltageSetpoint());
+        SmartDashboard.putNumber("arm CANCoder Voltage", getCANCoderVoltage());
+        // SmartDashboard.putNumber("armMotpos", getMotorPosition());
     }
 }
+
 

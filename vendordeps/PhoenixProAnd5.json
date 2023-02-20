@@ -1,13 +1,13 @@
 {
-    "fileName": "Phoenix.json",
-    "name": "CTRE-Phoenix (v5)",
-    "version": "5.30.4+23.0.8",
+    "fileName": "PhoenixProAnd5.json",
+    "name": "CTRE-Phoenix (Pro And v5)",
+    "version": "23.0.8",
     "frcYear": 2023,
-    "uuid": "ab676553-b602-441f-a38d-f1296eff6537",
+    "uuid": "3fcf3402-e646-4fa6-971e-18afe8173b1a",
     "mavenUrls": [
         "https://maven.ctr-electronics.com/release/"
     ],
-    "jsonUrl": "https://maven.ctr-electronics.com/release/com/ctre/phoenix/Phoenix5-frc2023-latest.json",
+    "jsonUrl": "https://maven.ctr-electronics.com/release/com/ctre/phoenixpro/PhoenixProAnd5-frc2023-latest.json",
     "javaDependencies": [
         {
             "groupId": "com.ctre.phoenix",
@@ -18,6 +18,11 @@
             "groupId": "com.ctre.phoenix",
             "artifactId": "wpiapi-java",
             "version": "5.30.4"
+        },
+        {
+            "groupId": "com.ctre.phoenixpro",
+            "artifactId": "wpiapi-java",
+            "version": "23.0.8"
         }
     ],
     "jniDependencies": [
@@ -409,6 +414,36 @@
             "artifactId": "simProPigeon2",
             "version": "23.0.8",
             "libName": "CTRE_SimProPigeon2",
+            "headerClassifier": "headers",
+            "sharedLibrary": true,
+            "skipInvalidPlatforms": true,
+            "binaryPlatforms": [
+                "windowsx86-64",
+                "linuxx86-64",
+                "osxuniversal"
+            ],
+            "simMode": "swsim"
+        },
+        {
+            "groupId": "com.ctre.phoenixpro",
+            "artifactId": "wpiapi-cpp",
+            "version": "23.0.8",
+            "libName": "CTRE_PhoenixPro_WPI",
+            "headerClassifier": "headers",
+            "sharedLibrary": true,
+            "skipInvalidPlatforms": true,
+            "binaryPlatforms": [
+                "windowsx86-64",
+                "linuxx86-64",
+                "linuxathena"
+            ],
+            "simMode": "hwsim"
+        },
+        {
+            "groupId": "com.ctre.phoenixpro.sim",
+            "artifactId": "wpiapi-cpp-sim",
+            "version": "23.0.8",
+            "libName": "CTRE_PhoenixPro_WPISim",
             "headerClassifier": "headers",
             "sharedLibrary": true,
             "skipInvalidPlatforms": true,

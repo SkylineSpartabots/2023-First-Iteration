@@ -135,6 +135,15 @@ public class Swerve extends SubsystemBase {
         return gyro.getRoll();
     }
 
+    public BooleanSupplier inScoringPosition(Pose2d pose){
+        return new BooleanSupplier() {
+            @Override
+            public boolean getAsBoolean() {
+                return getPose() == pose;
+            }
+        };
+    }
+
     public static double normalize(double deg) {
         double angle = deg % 360;
         if (angle < -180) {

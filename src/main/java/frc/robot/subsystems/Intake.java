@@ -56,7 +56,7 @@ public class Intake extends SubsystemBase {
         OFF_RETRACTED(false, 0),
         ON_RETRACTED(false, 1),
         REV_RETRACTED(false, -1),
-        OFF_DEPLOYED(true, 0),
+        OFF_DEPLOYED(true, 0),//on is intake open - when scoring
         ON_DEPLOYED(true, 1),
         REV_DEPLOYED(true, -1);
 
