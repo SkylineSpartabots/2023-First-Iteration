@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import com.ctre.phoenix.ErrorCode;
+
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -54,9 +56,9 @@ public class SetElevator extends CommandBase {
 
 	@Override
 	public boolean isFinished() {
-		return false;
+		return true;
 	}
-
+		
 	@Override
 	public void end(boolean interrupted) {
 		s_Elevator.setVelocity(0);

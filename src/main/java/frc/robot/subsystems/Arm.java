@@ -1,11 +1,13 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 
+// import edu.wpi.first.networktables.NetworkMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -26,7 +28,7 @@ public class Arm extends SubsystemBase {
     private ArmStates armState = ArmStates.ZERO;
 
     public enum ArmStates {
-        ZERO(0.0), //when curled up
+        ZERO(10.0), //when curled up
         GROUNDCONE(171), //intaking cone from ground
         GROUNDCUBE(180), //intaking cube from ground
         SUBSTATION(150), //not measured yet
@@ -108,13 +110,39 @@ public class Arm extends SubsystemBase {
         return armCANCoder.getPosition();
     }
 
+    public double getCANCoderVoltage() {
+        return armCANCoder.getBusVoltage();
+    }
+
+    public ErrorCode getCANCoderStatus() {
+        return armCANCoder.getLastError();
+    }
+
+    public boolean armError() {
+        if(getCANCoderStatus() != ErrorCode.OK) {
+            mArmMotor.setVoltage(0);
+            return true;
+        }
+        return false;
+    }
+    
+    private boolean inCoast = false;
+    public void toggleNeutral(){
+        inCoast = !inCoast;
+        NeutralMode newNeutral = inCoast ? NeutralMode.Coast : NeutralMode.Brake;
+        mArmMotor.setNeutralMode(newNeutral);
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("armCANpos", getCANCoderPosition());
 		SmartDashboard.putNumber("armPosSet", getCANCoderSetpoint());
 		// SmartDashboard.putNumber("arm set velo", getVelocitySetpoint());
 		SmartDashboard.putNumber("arm set volt", getVoltageSetpoint());
+        SmartDashboard.putNumber("arm CANCoder Voltage", getCANCoderVoltage());
         // SmartDashboard.putNumber("armMotpos", getMotorPosition());
+        SmartDashboard.putBoolean("arm error", armError());
     }
 }
+
 

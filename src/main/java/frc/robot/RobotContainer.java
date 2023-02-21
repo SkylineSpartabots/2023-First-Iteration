@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.*;
 import frc.robot.factories.AutoCommandFactory;
+import frc.robot.factories.ScoringCommandFactory;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Arm.ArmStates;
 import frc.robot.subsystems.CompleteMechanism.MechanismState;
@@ -89,6 +90,8 @@ public class RobotContainer {
     private final Elevator s_Elevator;
     private final Arm s_Arm;
     private final Intake s_Intake;
+    private final ScoringCommandFactory scoreCommandFactory;
+    private boolean currentlyCoast;
 
     /* Commands */
 
@@ -102,6 +105,7 @@ public class RobotContainer {
         s_Elevator = Elevator.getInstance();
         s_Intake = Intake.getInstance();
         s_Arm = Arm.getInstance();
+       scoreCommandFactory = ScoringCommandFactory.getInstance();
 
         // s_Swerve.resetOdometry(new Pose2d());
         s_Swerve.resetOdometry(new Pose2d());
@@ -153,10 +157,10 @@ public class RobotContainer {
         // operatorX.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(-1000)));
         // operatorB.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(1000)));
         // operatorA.onTrue(new SetElevator(ElevatorStates.GROUND));
-        driverA.onTrue(new SetArm(ArmStates.GROUNDCONE));
-        driverX.onTrue(new SetArm(ArmStates.GROUNDCUBE));
-        driverB.onTrue(new SetArm(ArmStates.ZERO));
-        driverY.onTrue(new SetArm(ArmStates.TEST));
+        driverA.onTrue(new InstantCommand(() -> s_Arm.toggleNeutral()));
+        driverB.onTrue(new SetIntake(IntakeStates.REV_DEPLOYED));
+        driverX.onTrue(new SetIntake(IntakeStates.REV_RETRACTED));
+        // driverB.onTrue(scoreCommandFactory.getScoringCommand(null, null))
         // driverX.onTrue(new SetArm(ArmStates.L1));
         // driverY.onTrue(new SetArm(ArmStates.SUBSTATION));
         driverLeftBumper.onTrue(new SetIntake(IntakeStates.OFF_RETRACTED));

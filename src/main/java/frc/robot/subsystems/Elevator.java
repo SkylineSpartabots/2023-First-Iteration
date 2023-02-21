@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -31,7 +32,7 @@ public class Elevator extends SubsystemBase {
         GROUNDCUBE(0.0), //intaking cube from ground
 		SUBSTATION(600), //not measured yet
 		L1CONE(0.0), 
-		L2CONE(1198.0), //middle scoring thing
+		L2CONE(1400.0), //middle scoring thing
 		L3CONE(1200), //upper scoring thing - not measured yet
         L1CUBE(0),
 		L2CUBE(900.0), 
@@ -113,11 +114,28 @@ public class Elevator extends SubsystemBase {
         return elevatorCANCoder.getPosition();
     }
 
+    public double getCANCoderVoltage() {
+        return elevatorCANCoder.getBusVoltage();
+    }
+
+    public ErrorCode getCANCoderStatus() {
+        return elevatorCANCoder.getLastError();
+    }
+
+    public boolean elevatorError() {
+        if(getCANCoderStatus() != ErrorCode.OK) {
+            mLeaderElevatorMotor.setVoltage(0);
+            return true;
+        }
+        return false;
+    }
+   
     @Override
     public void periodic() {
         SmartDashboard.putNumber("eleCANpos", getCANCoderPosition());
         SmartDashboard.putNumber("elePosSet", getCANCoderSetpoint());
 		SmartDashboard.putNumber("ele set velo", getVelocitySetpoint());
 		SmartDashboard.putNumber("ele set volt", getVoltageSetpoint());
+        SmartDashboard.putBoolean("elevator ", elevatorError());
     }
 }
