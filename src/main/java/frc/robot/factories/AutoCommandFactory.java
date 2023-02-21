@@ -4,6 +4,8 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
@@ -64,18 +66,13 @@ public class AutoCommandFactory {
         lastCommand.cancel();
     }
 
-    public static Command followPathCommand(PathPlannerTrajectory path, boolean isFirstPath) {
+    public static Command followPathCommand(PathPlannerTrajectory path) {
         PIDController xController = new PIDController(0, 0, 0);
         PIDController yController = new PIDController(0, 0, 0);
         PIDController thetaController = new PIDController(0, 0, 0);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
         lastCommand = new SequentialCommandGroup(
-                new InstantCommand(() -> {
-                    if (isFirstPath) {
-                        s_Swerve.resetOdometry(new Pose2d());
-                    }
-                }),
                 new PPSwerveControllerCommand(
                         path,
                         s_Swerve.poseSupplier,
@@ -91,16 +88,16 @@ public class AutoCommandFactory {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("path with wait event",
                 new PathConstraints(4, 3));
         return new SequentialCommandGroup(
-                followPathCommand(pathGroup.get(0), true),
+                followPathCommand(pathGroup.get(0)),
                 new WaitCommand(2),
-                followPathCommand(pathGroup.get(1), false));
+                followPathCommand(pathGroup.get(1)));
     }
 
     private static Command oneConeDockMiddle() {
         PathPlannerTrajectory path = PathPlanner.loadPath("1 cone dock middle", new PathConstraints(4, 3));
         return new SequentialCommandGroup(
-            // put cone command
-            followPathCommand(path, true),
+            new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(1.86, 2.71, new Rotation2d(Math.toRadians(180))))),
+            followPathCommand(path),
             new AutoBalance()
         );
     }
@@ -109,10 +106,11 @@ public class AutoCommandFactory {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("2 cone bottom",
         new PathConstraints(4, 3));
         return new SequentialCommandGroup(
+            new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(2.09, 0.56, new Rotation2d(Math.toRadians(180))))),
             // put cone command
-            followPathCommand(pathGroup.get(0), true),
+            followPathCommand(pathGroup.get(0)),
             // pick cone command
-            followPathCommand(pathGroup.get(1), false)
+            followPathCommand(pathGroup.get(1))
             // put cone command
         );
     }
@@ -121,12 +119,13 @@ public class AutoCommandFactory {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("2 cone dock bottom",
         new PathConstraints(4, 3));
         return new SequentialCommandGroup(
+            new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(1.92, 1.05, new Rotation2d(Math.toRadians(180))))),
             // put cone
-            followPathCommand(pathGroup.get(0), true),
+            followPathCommand(pathGroup.get(0)),
             // pick up cone
-            followPathCommand(pathGroup.get(1), false),
+            followPathCommand(pathGroup.get(1)),
             // put cone
-            followPathCommand(pathGroup.get(2), false),
+            followPathCommand(pathGroup.get(2)),
             new AutoBalance()
         );
     }
@@ -135,12 +134,13 @@ public class AutoCommandFactory {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("2 cone dock top",
         new PathConstraints(4, 3));
         return new SequentialCommandGroup(
+            new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(1.83, 4.42, new Rotation2d(Math.toRadians(180))))),
             // put cone
-            followPathCommand(pathGroup.get(0), true),
+            followPathCommand(pathGroup.get(0) ),
             // pick up cone
-            followPathCommand(pathGroup.get(1), false),
+            followPathCommand(pathGroup.get(1) ),
             // put cone
-            followPathCommand(pathGroup.get(2), false),
+            followPathCommand(pathGroup.get(2) ),
             new AutoBalance()
         );
     }
@@ -149,10 +149,11 @@ public class AutoCommandFactory {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("2 cone top",
         new PathConstraints(4, 3));
         return new SequentialCommandGroup(
+            new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(1.83, 4.42, new Rotation2d(Math.toRadians(180))))),
             // put cone
-            followPathCommand(pathGroup.get(0), true),
+            followPathCommand(pathGroup.get(0) ),
             // pick up cone
-            followPathCommand(pathGroup.get(1), false)
+            followPathCommand(pathGroup.get(1) )
             // put cone
 
         );
@@ -161,14 +162,15 @@ public class AutoCommandFactory {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("3 cone top",
         new PathConstraints(4, 3));
         return new SequentialCommandGroup(
+            new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(1.96, 4.42, new Rotation2d(Math.toRadians(180))))),
             // put cone
-            followPathCommand(pathGroup.get(0), true),
+            followPathCommand(pathGroup.get(0) ),
             // pick up cone
-            followPathCommand(pathGroup.get(1), false),
+            followPathCommand(pathGroup.get(1) ),
             // put cone
-            followPathCommand(pathGroup.get(2), false),
+            followPathCommand(pathGroup.get(2) ),
             // pick up cone
-            followPathCommand(pathGroup.get(3), false)
+            followPathCommand(pathGroup.get(3) )
             // put cone
 
         );
@@ -178,14 +180,15 @@ public class AutoCommandFactory {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("3 cone bottom",
         new PathConstraints(4, 3));
         return new SequentialCommandGroup(
+            new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(1.94, 1.07, new Rotation2d(Math.toRadians(180))))),
             // put cone
-            followPathCommand(pathGroup.get(0), true),
+            followPathCommand(pathGroup.get(0) ),
             // pick up cone
-            followPathCommand(pathGroup.get(1), false),
+            followPathCommand(pathGroup.get(1) ),
             // put cone
-            followPathCommand(pathGroup.get(2), false),
+            followPathCommand(pathGroup.get(2) ),
             // pick up cone
-            followPathCommand(pathGroup.get(3), false)
+            followPathCommand(pathGroup.get(3) )
             // put cone
 
         );
