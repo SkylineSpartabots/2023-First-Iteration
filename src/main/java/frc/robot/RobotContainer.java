@@ -132,6 +132,7 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         driverBack.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
+        driverStart.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
         // driverA.onTrue(AutoCommandFactory.getSelectedAuto()); // change based on
         // which auto needs to be tested
         // driverB.onTrue(new ConditionalCommand(
