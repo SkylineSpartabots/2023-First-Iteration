@@ -29,6 +29,12 @@ public class ScoringCommandFactory {
     
     public Command getScoringCommand(ScoreCommandType type, Pose2d targetPose){
         //change the pose2Ds
+        boolean atPosition;
+        if(targetPose == null){
+            atPosition = true;
+        } else {
+            // atPosition = s_Swerve.inScoringPosition(targetPose);
+        }
         switch (type) {
             case Low:
                 return new SequentialCommandGroup(new SetMechanism(MechanismState.LOWCONE),
