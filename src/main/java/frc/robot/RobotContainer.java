@@ -158,6 +158,8 @@ public class RobotContainer {
         // operatorB.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(1000)));
         // operatorA.onTrue(new SetElevator(ElevatorStates.GROUND));
         driverA.onTrue(new InstantCommand(() -> s_Arm.toggleNeutral()));
+        driverB.onTrue(new SetIntake(IntakeStates.REV_DEPLOYED));
+        driverX.onTrue(new SetIntake(IntakeStates.REV_RETRACTED));
         // driverB.onTrue(scoreCommandFactory.getScoringCommand(null, null))
         // driverX.onTrue(new SetArm(ArmStates.L1));
         // driverY.onTrue(new SetArm(ArmStates.SUBSTATION));
