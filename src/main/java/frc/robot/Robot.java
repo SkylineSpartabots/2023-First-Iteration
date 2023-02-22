@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         ctreConfigs = new CTREConfigs();
-        m_chooser.setDefaultOption("3C T", AutoCommandFactory.AutoType.ThreeConeTop);
+        m_chooser.setDefaultOption("1C M Dock", AutoCommandFactory.AutoType.OneConeDockMiddle);
         m_chooser.addOption("Wait Auto", AutoCommandFactory.AutoType.Wait);
         m_chooser.addOption("1C M Dock", AutoCommandFactory.AutoType.OneConeDockMiddle);
         m_chooser.addOption("2C B", AutoCommandFactory.AutoType.TwoConeBottom);

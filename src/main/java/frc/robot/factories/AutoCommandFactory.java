@@ -97,8 +97,8 @@ public class AutoCommandFactory {
         PathPlannerTrajectory path = PathPlanner.loadPath("1 cone dock middle", new PathConstraints(4, 3));
         return new SequentialCommandGroup(
             new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(1.86, 2.71, new Rotation2d(Math.toRadians(180))))),
-            followPathCommand(path),
-            new AutoBalance()
+            followPathCommand(path)
+            // new AutoBalance()
         );
     }
 
