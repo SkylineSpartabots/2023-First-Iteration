@@ -8,13 +8,19 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 import java.util.List;
 
 import com.pathplanner.lib.PathConstraints;
 
 import frc.robot.commands.AutoBalance;
+import frc.robot.commands.SetIntake;
+import frc.robot.commands.SetMechanism;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.CompleteMechanism.MechanismState;
+import frc.robot.subsystems.Intake.IntakeStates;
+
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -67,9 +73,9 @@ public class AutoCommandFactory {
     }
 
     public static Command followPathCommand(PathPlannerTrajectory path) {
-        PIDController xController = new PIDController(0, 0, 0);
-        PIDController yController = new PIDController(0, 0, 0);
-        PIDController thetaController = new PIDController(0, 0, 0);
+        PIDController xController = new PIDController(5, 0, 0);
+        PIDController yController = new PIDController(5, 0, 0);
+        PIDController thetaController = new PIDController(2, 0, 0);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
         lastCommand = new SequentialCommandGroup(
@@ -106,12 +112,23 @@ public class AutoCommandFactory {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("2 cone bottom",
         new PathConstraints(4, 3));
         return new SequentialCommandGroup(
-            new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(2.09, 0.56, new Rotation2d(Math.toRadians(180))))),
-            // put cone command
-            followPathCommand(pathGroup.get(0)),
+            new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(2.09, 0.56, new Rotation2d(Math.toRadians(176.71))))),
+            new SetMechanism(MechanismState.HIGHCUBE),
+            new SetIntake(IntakeStates.REV_RETRACTED),
+            new ParallelCommandGroup(
+                new SequentialCommandGroup(
+                    followPathCommand(pathGroup.get(0)),
+                    new WaitCommand(2)
+                ),
+                new SetMechanism(MechanismState.CUBEINTAKE)
+            ),
             // pick cone command
-            followPathCommand(pathGroup.get(1))
+            new SetIntake(IntakeStates.OFF_RETRACTED),
+            new SetMechanism(MechanismState.MIDCONE),
+            new WaitCommand(5),
+            followPathCommand(pathGroup.get(1)),
             // put cone command
+            new SetIntake(IntakeStates.OFF_DEPLOYED)
         );
     }
 
