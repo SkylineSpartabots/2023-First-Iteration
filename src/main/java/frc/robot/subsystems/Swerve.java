@@ -96,7 +96,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void resetOdometry(Pose2d pose) {
-        swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
+        swerveOdometry.resetPosition(pose.getRotation(), getModulePositions(), pose);
         gyro.setYaw(pose.getRotation().getDegrees());
     }
 
