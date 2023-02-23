@@ -114,7 +114,10 @@ public class AutoCommandFactory {
         return new SequentialCommandGroup(
             new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(2.09, 0.56, new Rotation2d(Math.toRadians(176.71))))),
             new SetMechanism(MechanismState.HIGHCUBE),
+            new WaitCommand(3),
             new SetIntake(IntakeStates.REV_RETRACTED),
+            new WaitCommand(2),
+            new SetIntake(IntakeStates.OFF_RETRACTED),
             new ParallelCommandGroup(
                 new SequentialCommandGroup(
                     followPathCommand(pathGroup.get(0)),
@@ -123,12 +126,14 @@ public class AutoCommandFactory {
                 new SetMechanism(MechanismState.CUBEINTAKE)
             ),
             // pick cone command
-            new SetIntake(IntakeStates.OFF_RETRACTED),
-            new SetMechanism(MechanismState.MIDCONE),
-            new WaitCommand(5),
+            new SetIntake(IntakeStates.OFF_DEPLOYED),
+            new WaitCommand(2),
+            new SetMechanism(MechanismState.ZERO),
             followPathCommand(pathGroup.get(1)),
+            new SetMechanism(MechanismState.MIDCUBE),
+            new WaitCommand(3),
             // put cone command
-            new SetIntake(IntakeStates.OFF_DEPLOYED)
+            new SetIntake(IntakeStates.REV_RETRACTED)
         );
     }
 

@@ -9,6 +9,8 @@ public class CompleteMechanism extends SubsystemBase{
     
     private static CompleteMechanism combScoring;
     private MechanismState currentState;
+    Arm s_Arm = Arm.getInstance();
+    Elevator s_Elevator = Elevator.getInstance();
 
     public static CompleteMechanism getInstance(){
         if(combScoring == null){
@@ -47,5 +49,10 @@ public class CompleteMechanism extends SubsystemBase{
         currentState = state;
         // SetMechanism command = new SetMechanism(state);
         // command.schedule();
+    }
+
+    public boolean inState() {
+        return ((Math.abs(currentState.elevState.statePosition - s_Elevator.getCANCoderPosition()) < 30) && 
+            (Math.abs(currentState.armState.statePosition - s_Arm.getCANCoderPosition()) < 30));
     }
 }

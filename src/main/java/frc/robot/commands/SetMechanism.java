@@ -10,12 +10,12 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 public class SetMechanism extends CommandBase{
 
     private MechanismState state;
-    private CompleteMechanism mech;
+    private CompleteMechanism s_Mechanism;
     
     public SetMechanism(MechanismState state){
         this.state = state;
-        mech = CompleteMechanism.getInstance();
-        mech.setState(state);
+        s_Mechanism = CompleteMechanism.getInstance();
+        s_Mechanism.setState(state);
     }
     
     @Override
@@ -35,6 +35,7 @@ public class SetMechanism extends CommandBase{
 
     @Override
     public boolean isFinished() {
+        // return s_Mechanism.inState();
         return true;
     }
 }
