@@ -161,7 +161,6 @@ public class RobotContainer {
         driverA.onTrue(new InstantCommand(() -> s_Arm.toggleNeutral()));
         driverB.onTrue(new SetIntake(IntakeStates.REV_DEPLOYED));
         driverX.onTrue(new SetIntake(IntakeStates.REV_RETRACTED));
-        driverY.onTrue(new InstantCommand(() -> s_Arm.setPercentOutput(-0.1)));
         // driverB.onTrue(scoreCommandFactory.getScoringCommand(null, null))
         // driverX.onTrue(new SetArm(ArmStates.L1));
         // driverY.onTrue(new SetArm(ArmStates.SUBSTATION));
@@ -180,7 +179,7 @@ public class RobotContainer {
         driverDpadDown.onTrue(new SetMechanism(MechanismState.CUBEINTAKE));
         driverDpadUp.onTrue(new SetMechanism(MechanismState.ZERO));
         driverDpadRight.onTrue(new SetMechanism(MechanismState.CONEINTAKE));
-        driverDpadLeft.onTrue(new SetMechanism(MechanismState.MIDCONE));
+        driverDpadLeft.onTrue(new SetMechanism(MechanismState.MIDCUBE));
 
         // operatorDpadUp.onTrue(new InstantCommand(() -> s_Intake.testVelo(1)));
         // operatorDpadDown.onTrue(new InstantCommand(() -> s_Intake.testVelo(-1)));

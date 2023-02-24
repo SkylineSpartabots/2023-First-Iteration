@@ -32,25 +32,27 @@ public class AutoCommandFactory {
     private static Command selectedAuto;
 
     public static Command getAutoCommand(AutoType auto) {
-        switch (auto) {
-            case Wait:
-                return selectedAuto = pathWithWait();
-            case OneConeDockMiddle:
-                return selectedAuto = oneConeDockMiddle();
-            case TwoConeBottom:
-                return selectedAuto = twoConeBottom();
-            case TwoConeDockBottom:
-                return selectedAuto = twoConeDockBottom();
-            case TwoConeDockTop:
-                return selectedAuto = twoConeDockTop();
-            case TwoConeTop:
-                return selectedAuto = twoConeTop();
-            case ThreeConeTop:
-                return selectedAuto = threeConeTop();
-            case ThreeConeBottom:
-                return selectedAuto = threeConeBottom();
-        }
-        return null;
+        // return testAuto();
+        return twoConeBottom();
+        // switch (auto) {
+        //     case Wait:
+        //         return selectedAuto = pathWithWait();
+        //     case OneConeDockMiddle:
+        //         return selectedAuto = oneConeDockMiddle();
+        //     case TwoConeBottom:
+        //         return selectedAuto = twoConeBottom();
+        //     case TwoConeDockBottom:
+        //         return selectedAuto = twoConeDockBottom();
+        //     case TwoConeDockTop:
+        //         return selectedAuto = twoConeDockTop();
+        //     case TwoConeTop:
+        //         return selectedAuto = twoConeTop();
+        //     case ThreeConeTop:
+        //         return selectedAuto = threeConeTop();
+        //     case ThreeConeBottom:
+        //         return selectedAuto = threeConeBottom();
+        // }
+        // return null;
     }
 
     public enum AutoType {
@@ -90,6 +92,12 @@ public class AutoCommandFactory {
         return lastCommand;
     }
 
+    private static Command testAuto() {
+        PathPlannerTrajectory path = PathPlanner.loadPath("test", new PathConstraints(4, 3));
+        return followPathCommand(path);
+
+    }
+ 
     private static Command pathWithWait() {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("path with wait event",
                 new PathConstraints(4, 3));
@@ -112,28 +120,25 @@ public class AutoCommandFactory {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("2 cone bottom",
         new PathConstraints(4, 3));
         return new SequentialCommandGroup(
-            new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(2.09, 0.56, new Rotation2d(Math.toRadians(176.71))))),
-            new SetMechanism(MechanismState.HIGHCUBE),
-            new WaitCommand(3),
+            new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(2.09, 0.56, new Rotation2d(Math.toRadians(180))))),
+            new SetMechanism(MechanismState.MIDCUBE),
             new SetIntake(IntakeStates.REV_RETRACTED),
-            new WaitCommand(2),
+            new WaitCommand(0.8),
             new SetIntake(IntakeStates.OFF_RETRACTED),
+            new WaitCommand(1.2),
             new ParallelCommandGroup(
-                new SequentialCommandGroup(
-                    followPathCommand(pathGroup.get(0)),
-                    new WaitCommand(2)
-                ),
-                new SetMechanism(MechanismState.CUBEINTAKE)
+                followPathCommand(pathGroup.get(0)),
+                new SetMechanism(MechanismState.ZERO)
             ),
-            // pick cone command
-            new SetIntake(IntakeStates.OFF_DEPLOYED),
-            new WaitCommand(2),
+            new SetMechanism(MechanismState.CUBEINTAKE),
+            new SetIntake(IntakeStates.ON_RETRACTED),
+            new WaitCommand(1.5),
             new SetMechanism(MechanismState.ZERO),
             followPathCommand(pathGroup.get(1)),
-            new SetMechanism(MechanismState.MIDCUBE),
-            new WaitCommand(3),
-            // put cone command
-            new SetIntake(IntakeStates.REV_RETRACTED)
+            new SetMechanism(MechanismState.LOWCUBE),
+            new SetIntake(IntakeStates.REV_RETRACTED),
+            new WaitCommand(0.8),
+            new SetIntake(IntakeStates.OFF_RETRACTED)
         );
     }
 

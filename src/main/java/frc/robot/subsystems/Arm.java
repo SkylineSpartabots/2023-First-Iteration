@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.MagnetFieldStrength;
 
 // import edu.wpi.first.networktables.NetworkMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -114,13 +115,8 @@ public class Arm extends SubsystemBase {
         return armCANCoder.getBusVoltage();
     }
 
-    public ErrorCode getCANCoderStatus() {
-        return armCANCoder.getLastError();
-    }
-
     public boolean armError() {
-        if(getCANCoderStatus() != ErrorCode.OK) {
-            mArmMotor.setVoltage(0);
+        if(armCANCoder.getMagnetFieldStrength() == MagnetFieldStrength.BadRange_RedLED) {
             return true;
         }
         return false;
@@ -133,15 +129,8 @@ public class Arm extends SubsystemBase {
         mArmMotor.setNeutralMode(newNeutral);
     }
 
-    public void setPercentOutput(double percent){
-        mArmMotor.set(ControlMode.PercentOutput, percent);
-    }
-
     @Override
     public void periodic() {
-        if(armError()){
-            mArmMotor.neutralOutput();
-        }
         SmartDashboard.putNumber("armCANpos", getCANCoderPosition());
 		SmartDashboard.putNumber("armPosSet", getCANCoderSetpoint());
 		// SmartDashboard.putNumber("arm set velo", getVelocitySetpoint());

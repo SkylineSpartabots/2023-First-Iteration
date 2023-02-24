@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CompleteMechanism;
 import frc.robot.subsystems.CompleteMechanism.MechanismState;
@@ -35,7 +36,7 @@ public class SetMechanism extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        // return s_Mechanism.inState();
-        return true;
+        return s_Mechanism.inState();
+        // return true;
     }
 }

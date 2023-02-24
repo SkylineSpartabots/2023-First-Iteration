@@ -1,11 +1,12 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Arm.ArmStates;
 import frc.robot.subsystems.Elevator.ElevatorStates;
 
 
-public class CompleteMechanism extends SubsystemBase{
+public class CompleteMechanism extends SubsystemBase {
     
     private static CompleteMechanism combScoring;
     private MechanismState currentState;
@@ -52,7 +53,12 @@ public class CompleteMechanism extends SubsystemBase{
     }
 
     public boolean inState() {
-        return ((Math.abs(currentState.elevState.statePosition - s_Elevator.getCANCoderPosition()) < 30) && 
-            (Math.abs(currentState.armState.statePosition - s_Arm.getCANCoderPosition()) < 30));
+        return ((Math.abs(s_Elevator.getCANCoderSetpoint() - s_Elevator.getCANCoderPosition()) < 30) && 
+            (Math.abs(s_Arm.getCANCoderSetpoint() - s_Arm.getCANCoderPosition()) < 30));
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putBoolean("mech state", inState());
     }
 }

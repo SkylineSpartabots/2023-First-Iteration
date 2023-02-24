@@ -112,5 +112,15 @@ public class Intake extends SubsystemBase {
                 CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED));
             }
         }
+        // if (intakeState == IntakeStates.REV_DEPLOYED) {
+        //     if (!hasGamePiece()) {
+        //         CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_DEPLOYED));
+        //     }
+        // }
+        // if (intakeState == IntakeStates.REV_RETRACTED) {
+        //     if (!hasGamePiece()) {
+        //         CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED));
+        //     }
+        // }
     }
 }
