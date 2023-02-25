@@ -20,6 +20,7 @@ import frc.robot.Constants;
 import frc.robot.factories.AutoCommandFactory;
 import edu.wpi.first.wpilibj.DriverStation;
 // import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SmartPathGenerating extends CommandBase {
     Pose2d startPos;
@@ -107,8 +108,8 @@ public class SmartPathGenerating extends CommandBase {
         // }
 
         // for (int i = 0; i < 6; i++) {
-        // SmartDashboard.putNumber("dist " + i, distance[i]);
-        // SmartDashboard.putNumber("last " + i, last[i]);
+        //     SmartDashboard.putNumber("dist " + i, distance[i]);
+        //     SmartDashboard.putNumber("last " + i, last[i]);
         // }
 
         List<PathPoint> result = new ArrayList<>();

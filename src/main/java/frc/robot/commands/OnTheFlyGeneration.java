@@ -30,7 +30,7 @@ public class OnTheFlyGeneration extends CommandBase {
 
     public OnTheFlyGeneration(Pose2d currentPos, Pose2d targetPos, boolean swervePose) {
         s_Swerve = Swerve.getInstance();
-        this.targetPos = targetPos;
+        this.targetPos = new Pose2d(targetPos.getX(), targetPos.getY(), targetPos.getRotation());
         this.currentPos = currentPos;
         this.swervePose = swervePose;
         addRequirements(s_Swerve);
@@ -61,7 +61,7 @@ public class OnTheFlyGeneration extends CommandBase {
     public void initialize() {
         if(swervePose) {
             currentPos = s_Swerve.getPose();
-            targetPos = new Pose2d(new Translation2d(0, 0), new Rotation2d());
+            // targetPos = new Pose2d(new Translation2d(0, 0), new Rotation2d());
         }
     }
 

@@ -194,6 +194,7 @@ public class RobotContainer {
         operatorDpadLeft.onTrue(new InstantCommand(() -> selector.moveLeft()));
         operatorA.onTrue(new InstantCommand(() -> selector.select()));
         operatorB.onTrue(new SmartPathGenerating(s_Swerve.getPose(), selector.getSelectedPose()));
+        operatorX.onTrue(new OnTheFlyGeneration(s_Swerve.getPose(), selector.getSelectedPose(), true));
 
         // setIntake.onTrue(new InstantCommand(() -> s_Elevator.setPos(0)));
         // -85 bottom
