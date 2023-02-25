@@ -227,8 +227,8 @@ public class Light extends SubsystemBase {
    }
 
    public void runGrab() { 
-    if (s_Intake.getVolts() >= 14) { grabbed = true;} // I got the voltage but idk how much it would jump. 14 is a guess cause the motor opperates at 12v (i think) so 14v is >
-    
+    if (s_Intake.hasGamePiece() ) { grabbed = true;} // i swear i did this on monday but its not there wtf
+
     if (grabbed) {
         for (int i = 0; i < m_ledBuffer.getLength(); i++) {
             if((i-gap)%groupSize==0) { 
