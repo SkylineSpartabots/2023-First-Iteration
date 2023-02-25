@@ -86,6 +86,7 @@ public final class AutomaticScoringSelector {
         isSelected[currRow][currColumn] = false;
         currRow++;
         isSelected[currRow][currColumn] = true;
+        updateShuffleboard();
     }
 
     public void moveDown(){
@@ -95,6 +96,7 @@ public final class AutomaticScoringSelector {
         isSelected[currRow][currColumn] = false;
         currRow--;
         isSelected[currRow][currColumn] = true;
+        updateShuffleboard();
 
     }
 
@@ -105,7 +107,7 @@ public final class AutomaticScoringSelector {
         isSelected[currRow][currColumn] = false;
         currColumn--;
         isSelected[currRow][currColumn] = true;
-
+        updateShuffleboard();
     }
 
     public void moveLeft(){
@@ -115,11 +117,13 @@ public final class AutomaticScoringSelector {
         isSelected[currRow][currColumn] = false;
         currColumn++;
         isSelected[currRow][currColumn] = true;
+        updateShuffleboard();
     }
 
     public void select(){
         selectedRow = currRow;
         selectedColumn = currColumn;
+        updateShuffleboard();
     }
 
     public void createDisplay(){
