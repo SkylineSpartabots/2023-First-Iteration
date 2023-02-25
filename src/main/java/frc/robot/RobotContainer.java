@@ -91,6 +91,7 @@ public class RobotContainer {
     private final Arm s_Arm;
     private final Intake s_Intake;
     private final ScoringCommandFactory scoreCommandFactory;
+    private final AutomaticScoringSelector selector;
     private boolean currentlyCoast;
 
     /* Commands */
@@ -106,6 +107,7 @@ public class RobotContainer {
         s_Intake = Intake.getInstance();
         s_Arm = Arm.getInstance();
        scoreCommandFactory = ScoringCommandFactory.getInstance();
+       selector = AutomaticScoringSelector.getInstance();
 
         // s_Swerve.resetOdometry(new Pose2d());
         s_Swerve.resetOdometry(new Pose2d());
@@ -184,9 +186,12 @@ public class RobotContainer {
         driverDpadRight.onTrue(new SetElevator(ElevatorStates.L2CUBE));
         driverDpadLeft.onTrue(new SetArm(ArmStates.ZERO));
 
-        // operatorDpadUp.onTrue(new InstantCommand(() -> s_Intake.testVelo(1)));
-        // operatorDpadDown.onTrue(new InstantCommand(() -> s_Intake.testVelo(-1)));
-        // operatorDpadRight.onTrue(new InstantCommand(() -> s_Intake.testVelo(0)));
+        operatorDpadUp.onTrue(new InstantCommand(() -> selector.moveUp()));
+        operatorDpadDown.onTrue(new InstantCommand(() -> selector.moveDown()));
+        operatorDpadRight.onTrue(new InstantCommand(() -> selector.moveRight()));
+        operatorDpadLeft.onTrue(new InstantCommand(() -> selector.moveLeft()));
+        operatorA.onTrue(new InstantCommand(() -> selector.select()));
+        operatorB.onTrue(new SmartPathGenerating(s_Swerve.getPose(), selector.getSelectedPose()));
 
         // setIntake.onTrue(new InstantCommand(() -> s_Elevator.setPos(0)));
         // -85 bottom
