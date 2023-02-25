@@ -116,10 +116,7 @@ public class Arm extends SubsystemBase {
     }
 
     public boolean armError() {
-        if(armCANCoder.getMagnetFieldStrength() == MagnetFieldStrength.BadRange_RedLED) {
-            return true;
-        }
-        return false;
+        return armCANCoder.getMagnetFieldStrength() == MagnetFieldStrength.BadRange_RedLED;
     }
     
     private boolean inCoast = false;

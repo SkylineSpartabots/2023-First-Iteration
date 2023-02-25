@@ -29,6 +29,7 @@ public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
     private final SendableChooser<AutoCommandFactory.AutoType> m_chooser = new SendableChooser<>();
     private RobotContainer m_robotContainer;
+    private AutomaticScoringSelector m_selector = AutomaticScoringSelector.getInstance();
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -119,6 +120,7 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
+        m_selector.updateShuffleboard();
     }
 
     @Override
