@@ -19,7 +19,7 @@ public final class AutomaticScoringSelector {
     private ScoringPosition[][] grid = new ScoringPosition[3][9]; //[row][column] 0 row is l1, 0 column is the one farthest from load zone
     private boolean[][] isSelected = new boolean[3][9];
     private GenericEntry[][] selectionDisplay = new GenericEntry[3][9];
-    private GenericEntry currentGridSelected;
+    private GenericEntry currentGridSelected, selectedX, selectedY;
 
     private int currRow = 0, currColumn = 0;
     private int selectedRow, selectedColumn;
@@ -87,7 +87,8 @@ public final class AutomaticScoringSelector {
             }
         }
         currentGridSelected = scoringGridDisplay.add("selection updated", currRow == selectedRow && currColumn == selectedColumn).getEntry();
-
+        selectedX = scoringGridDisplay.add("Selected X", getSelectedPose().getX()).getEntry();
+        selectedY = scoringGridDisplay.add("Selected Y", getSelectedPose().getY()).getEntry();
     }
 
     public void updateShuffleboard(){
@@ -97,6 +98,8 @@ public final class AutomaticScoringSelector {
             }
         }
         currentGridSelected.setBoolean(currRow == selectedRow && currColumn == selectedColumn);
+        selectedX.setDouble(getSelectedPose().getX());
+        selectedY.setDouble(getSelectedPose().getY());
     }
 
     public Pose2d getSelectedPose(){
