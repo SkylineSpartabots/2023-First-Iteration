@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import com.ctre.phoenix.ErrorCode;
+
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -37,28 +39,17 @@ public class SetElevator extends CommandBase {
 
 	@Override
 	public void execute() {
-		// s_Elevator.setVoltage(0.7);
 		elevatorVoltage = elevatorController.calculate(s_Elevator.getCANCoderPosition(), s_Elevator.getCANCoderSetpoint());
-		// elevatorFeedforwardVolage = elevatorFeedforward.calculate(0);
-		// s_Elevator.setVoltage(elevatorVoltage + elevatorFeedforwardVolage);
-		// if (Math.abs(elevatorVoltage) < 0.46718) {
-		// 	elevatorVoltage = 0.46718;
-		// }
-		// if (Math.abs(s_Elevator.getCANCoderPosition() - s_Elevator.getCANCoderSetpoint()) > 10) {
-			s_Elevator.setVoltage( elevatorVoltage);
-		// }
-		// if (Math.abs(s_Elevator.getCANCoderPosition() - s_Elevator.getCANCoderSetpoint()) < 5) {
-		// 	elevatorController.reset();
-		// }
+		s_Elevator.setVoltage( elevatorVoltage);
 	}
 
 	@Override
 	public boolean isFinished() {
-		return false;
+		return s_Elevator.elevatorError();
 	}
-
+		
 	@Override
 	public void end(boolean interrupted) {
-		s_Elevator.setVelocity(0);
+		s_Elevator.setVoltage(0);
 	}
 }

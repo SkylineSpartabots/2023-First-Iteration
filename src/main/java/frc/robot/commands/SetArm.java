@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 // import edu.wpi.first.math.controller.ArmFeedforward;
+import com.ctre.phoenix.ErrorCode;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
@@ -29,17 +30,11 @@ public class SetArm extends CommandBase {
 	public void execute() {
 		armVoltage = armController.calculate(s_Arm.getCANCoderPosition(), s_Arm.getCANCoderSetpoint());
 		s_Arm.setVoltage(armVoltage);
-		// if (Math.abs(s_Arm.getCANCoderPosition() - s_Arm.getCANCoderSetpoint()) < 5) {
-		// 	armController.reset();
-		// }
 	}
 
 	@Override
 	public boolean isFinished() {
-		if(s_Arm.getCANCoderVoltage() < 5){
-			return true;
-		}
-		return false;
+		return s_Arm.armError();
 	}
 
 	@Override

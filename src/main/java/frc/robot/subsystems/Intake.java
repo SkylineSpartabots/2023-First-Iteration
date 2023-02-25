@@ -8,8 +8,10 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.commands.SetIntake;
 
 public class Intake extends SubsystemBase {
     private static Intake instance = null;
@@ -81,7 +83,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void testVelo(int direction) {
-        mIntakeMotor.set(ControlMode.Velocity, 8000 * direction);
+        mIntakeMotor.set(ControlMode.Velocity, 6000 * direction);
     }
 
     public void testSolenoid(boolean b) {
@@ -96,13 +98,36 @@ public class Intake extends SubsystemBase {
         return intakeState.value;
     }
 
-    public double getVolts(){
-        return mIntakeMotor.getMotorOutputVoltage();
+    private double voltThreshold = 20.0;
+    public boolean hasGamePiece(){
+        double currentVolt = mIntakeMotor.getStatorCurrent();
+        return currentVolt > voltThreshold;
     }
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Intake motor voltage", mIntakeMotor.getStatorCurrent());
         SmartDashboard.putBoolean("intake motor deployed", getIntakeDeployed());
         SmartDashboard.putNumber("intake motor direction", getVelocityDirection());
+        if (intakeState == IntakeStates.ON_DEPLOYED) {
+            if (hasGamePiece()) {
+                CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_DEPLOYED));
+            }
+        }
+        if (intakeState == IntakeStates.ON_RETRACTED) {
+            if (hasGamePiece()) {
+                CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED));
+            }
+        }
+        // if (intakeState == IntakeStates.REV_DEPLOYED) {
+        //     if (!hasGamePiece()) {
+        //         CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_DEPLOYED));
+        //     }
+        // }
+        // if (intakeState == IntakeStates.REV_RETRACTED) {
+        //     if (!hasGamePiece()) {
+        //         CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED));
+        //     }
+        // }
     }
 }

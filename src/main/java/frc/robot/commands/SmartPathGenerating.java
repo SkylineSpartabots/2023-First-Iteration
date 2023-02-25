@@ -127,7 +127,7 @@ public class SmartPathGenerating extends CommandBase {
         PathPlannerTrajectory trajectory = PathPlanner.generatePath(
                 new PathConstraints(4, 3),
                 result);
-        CommandScheduler.getInstance().schedule(AutoCommandFactory.followPathCommand(trajectory, false));
+        CommandScheduler.getInstance().schedule(AutoCommandFactory.followPathCommand(trajectory));
     }
 
     @Override

@@ -1,16 +1,17 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.SetMechanism;
 import frc.robot.subsystems.Arm.ArmStates;
 import frc.robot.subsystems.Elevator.ElevatorStates;
-import frc.robot.subsystems.Intake.IntakeStates;
 
 
-public class CompleteMechanism extends SubsystemBase{
+public class CompleteMechanism extends SubsystemBase {
     
     private static CompleteMechanism combScoring;
     private MechanismState currentState;
+    Arm s_Arm = Arm.getInstance();
+    Elevator s_Elevator = Elevator.getInstance();
 
     public static CompleteMechanism getInstance(){
         if(combScoring == null){
@@ -47,7 +48,17 @@ public class CompleteMechanism extends SubsystemBase{
 
     public void setState(MechanismState state){
         currentState = state;
-        SetMechanism command = new SetMechanism(state);
-        command.schedule();
+        // SetMechanism command = new SetMechanism(state);
+        // command.schedule();
+    }
+
+    public boolean inState() {
+        return ((Math.abs(s_Elevator.getCANCoderSetpoint() - s_Elevator.getCANCoderPosition()) < 15) && 
+            (Math.abs(s_Arm.getCANCoderSetpoint() - s_Arm.getCANCoderPosition()) < 15));
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putBoolean("mech state", inState());
     }
 }

@@ -10,7 +10,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.SetMechanism;
 import frc.robot.factories.AutoCommandFactory;
+import frc.robot.subsystems.CompleteMechanism.MechanismState;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -24,9 +26,10 @@ import frc.robot.factories.AutoCommandFactory;
 public class Robot extends TimedRobot {
     public static CTREConfigs ctreConfigs;
 
-  private Command m_autonomousCommand;
+    private Command m_autonomousCommand;
     private final SendableChooser<AutoCommandFactory.AutoType> m_chooser = new SendableChooser<>();
     private RobotContainer m_robotContainer;
+    private AutomaticScoringSelector m_selector = AutomaticScoringSelector.getInstance();
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -36,7 +39,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         ctreConfigs = new CTREConfigs();
-        m_chooser.setDefaultOption("3C T", AutoCommandFactory.AutoType.ThreeConeTop);
+        m_chooser.addOption("1C M Dock", AutoCommandFactory.AutoType.OneConeDockMiddle);
         m_chooser.addOption("Wait Auto", AutoCommandFactory.AutoType.Wait);
         m_chooser.addOption("1C M Dock", AutoCommandFactory.AutoType.OneConeDockMiddle);
         m_chooser.addOption("2C B", AutoCommandFactory.AutoType.TwoConeBottom);
@@ -44,12 +47,12 @@ public class Robot extends TimedRobot {
         m_chooser.addOption("2C T Dock", AutoCommandFactory.AutoType.TwoConeDockTop);
         m_chooser.addOption("2C T", AutoCommandFactory.AutoType.TwoConeTop);
         m_chooser.addOption("3C B", AutoCommandFactory.AutoType.ThreeConeBottom);
-        m_autonomousCommand = AutoCommandFactory.getAutoCommand(m_chooser.getSelected());
         SmartDashboard.putData("Auto choices", m_chooser);
         DriverStation.Alliance a = DriverStation.getAlliance();
         SmartDashboard.putString("Alliance",
                 a == DriverStation.Alliance.Blue ? "Blue" : a == DriverStation.Alliance.Red ? "Red" : "Other");
         m_robotContainer = new RobotContainer();
+        CommandScheduler.getInstance().schedule(new SetMechanism(MechanismState.ZERO));
     }
 
     /**
@@ -91,6 +94,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
+        m_autonomousCommand = AutoCommandFactory.getAutoCommand(m_chooser.getSelected());
         // schedule the autonomous command (example)
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();
@@ -116,6 +120,7 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
+        m_selector.updateShuffleboard();
     }
 
     @Override

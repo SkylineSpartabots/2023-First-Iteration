@@ -75,7 +75,7 @@ public class OnTheFlyGeneration extends CommandBase {
         SmartDashboard.putNumber("OTF-start-y", currentPos.getY());
         SmartDashboard.putNumber("OTF-end-x", targetPos.getX());
         SmartDashboard.putNumber("OTF-end-y", targetPos.getY());
-        CommandScheduler.getInstance().schedule(AutoCommandFactory.followPathCommand(trajectory, false));
+        CommandScheduler.getInstance().schedule(AutoCommandFactory.followPathCommand(trajectory));
     }
 
     @Override
