@@ -118,26 +118,26 @@ public class AutoCommandFactory {
 
     private static Command twoConeBottom() {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("2 cone bottom",
-        new PathConstraints(4, 3));
+        new PathConstraints(3.5, 1.0));
         return new SequentialCommandGroup(
             new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(2.09, 0.56, new Rotation2d(Math.toRadians(180))))),
             new SetMechanism(MechanismState.MIDCUBE),
             new SetIntake(IntakeStates.REV_RETRACTED),
-            new WaitCommand(0.8),
+            new WaitCommand(0.5),
             new SetIntake(IntakeStates.OFF_RETRACTED),
-            new WaitCommand(1.2),
             new ParallelCommandGroup(
                 followPathCommand(pathGroup.get(0)),
-                new SetMechanism(MechanismState.ZERO)
+                new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.CUBEINTAKE))
             ),
-            new SetMechanism(MechanismState.CUBEINTAKE),
             new SetIntake(IntakeStates.ON_RETRACTED),
-            new WaitCommand(1.5),
-            new SetMechanism(MechanismState.ZERO),
-            followPathCommand(pathGroup.get(1)),
-            new SetMechanism(MechanismState.LOWCUBE),
-            new SetIntake(IntakeStates.REV_RETRACTED),
             new WaitCommand(0.8),
+            new SetIntake(IntakeStates.OFF_RETRACTED),
+            new ParallelCommandGroup(
+                followPathCommand(pathGroup.get(1)),
+                new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.LOWCUBE))
+            ),
+            new SetIntake(IntakeStates.REV_RETRACTED),
+            new WaitCommand(0.5),
             new SetIntake(IntakeStates.OFF_RETRACTED)
         );
     }

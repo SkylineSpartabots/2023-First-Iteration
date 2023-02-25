@@ -161,6 +161,7 @@ public class RobotContainer {
         driverA.onTrue(new InstantCommand(() -> s_Arm.toggleNeutral()));
         driverB.onTrue(new SetIntake(IntakeStates.REV_DEPLOYED));
         driverX.onTrue(new SetIntake(IntakeStates.REV_RETRACTED));
+        driverY.onTrue(new SmartResetOdometry());
         // driverB.onTrue(scoreCommandFactory.getScoringCommand(null, null))
         // driverX.onTrue(new SetArm(ArmStates.L1));
         // driverY.onTrue(new SetArm(ArmStates.SUBSTATION));
@@ -178,8 +179,10 @@ public class RobotContainer {
         // driverDpadLeft.onTrue(new SetElevator(ElevatorStates.L3CONE));
         driverDpadDown.onTrue(new SetMechanism(MechanismState.CUBEINTAKE));
         driverDpadUp.onTrue(new SetMechanism(MechanismState.ZERO));
-        driverDpadRight.onTrue(new SetMechanism(MechanismState.CONEINTAKE));
-        driverDpadLeft.onTrue(new SetMechanism(MechanismState.MIDCUBE));
+        // driverDpadRight.onTrue(new SetMechanism(MechanismState.CONEINTAKE));
+        // driverDpadLeft.onTrue(new SetMechanism(MechanismState.MIDCUBE));
+        driverDpadRight.onTrue(new SetElevator(ElevatorStates.L2CUBE));
+        driverDpadLeft.onTrue(new SetArm(ArmStates.ZERO));
 
         // operatorDpadUp.onTrue(new InstantCommand(() -> s_Intake.testVelo(1)));
         // operatorDpadDown.onTrue(new InstantCommand(() -> s_Intake.testVelo(-1)));
