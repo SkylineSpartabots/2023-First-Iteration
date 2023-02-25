@@ -19,7 +19,10 @@ public final class AutomaticScoringSelector {
     private ScoringPosition[][] grid = new ScoringPosition[3][9]; //[row][column] 0 row is l1, 0 column is the one farthest from load zone
     private boolean[][] isSelected = new boolean[3][9];
     private GenericEntry[][] selectionDisplay = new GenericEntry[3][9];
+    private GenericEntry currentGridSelected;
+
     private int currRow = 0, currColumn = 0;
+    private int selectedRow, selectedColumn;
 
     public static AutomaticScoringSelector getInstance(){
         if(instance == null){
@@ -71,6 +74,11 @@ public final class AutomaticScoringSelector {
         isSelected[currRow][currColumn] = true;
     }
 
+    public void select(){
+        selectedRow = currRow;
+        selectedColumn = currColumn;
+    }
+
     public void createDisplay(){
         for(int i = 0; i < 3; i++){
             for(int j = 8; j > -1; j--){
@@ -78,6 +86,8 @@ public final class AutomaticScoringSelector {
                 .getEntry();
             }
         }
+        currentGridSelected = scoringGridDisplay.add("selection updated", currRow == selectedRow && currColumn == selectedColumn).getEntry();
+
     }
 
     public void updateShuffleboard(){
@@ -86,6 +96,19 @@ public final class AutomaticScoringSelector {
                 selectionDisplay[i][j].setBoolean(isSelected[i][j]);
             }
         }
+        currentGridSelected.setBoolean(currRow == selectedRow && currColumn == selectedColumn);
+    }
+
+    public Pose2d getSelectedPose(){
+        return grid[selectedRow][selectedColumn].targetPos;
+    }
+
+    public ArmStates getArmState(){
+        return grid[selectedRow][selectedColumn].armState;
+    }
+    
+    public ElevatorStates getElevStates(){
+        return grid[selectedRow][selectedColumn].elevatorState;
     }
 
     public enum ScoringPositions {
@@ -96,10 +119,10 @@ public final class AutomaticScoringSelector {
         ArrayList<ScoringPosition> cubeStates; //it goes: [botmidL1, botmidL2, botmidL3, midmidL1... ...topmidL3] size: 9
 
         private ScoringPositions(){
-            double x = 0.0; //should be the same for every default scoring position
-            double y = 0.0; //only one that changes
-            double yIncrem = 5.0; //how much each y varies by - currently unmeasured
-            Rotation2d rot = new Rotation2d(0.0); // should be the same for ever default scoring position
+            double x = 2.0; //should be the same for every default scoring position
+            double y = 0.4; //only one that changes
+            double yIncrem = 0.75; //how much each y varies by - currently unmeasured
+            Rotation2d rot = new Rotation2d(180.0); // should be the same for every default scoring position
             ArmStates[] armStatesCone = {ArmStates.L1CONE, ArmStates.L2CONE, ArmStates.L3CONE};
             ArmStates[] armStatesCube = {ArmStates.L1CUBE, ArmStates.L2CUBE, ArmStates.L3CUBE};
             ElevatorStates[] elevStatesCone = {ElevatorStates.L1CONE, ElevatorStates.L2CONE, ElevatorStates.L3CONE};
