@@ -3,6 +3,7 @@ package frc.robot;
 import javax.swing.text.html.Option;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -196,7 +197,7 @@ public class RobotContainer {
         operatorDpadLeft.onTrue(new InstantCommand(() -> selector.moveLeft()));
         operatorA.onTrue(new InstantCommand(() -> selector.select()));
         operatorB.onTrue(new SmartPathGenerating(s_Swerve.getPose(), selector.getSelectedPose()));
-        operatorX.onTrue(new OnTheFlyGeneration(null, true));
+        operatorX.onTrue(new OnTheFlyGeneration(new Pose2d(0, 0, new Rotation2d(0)), true));
 
         // setIntake.onTrue(new InstantCommand(() -> s_Elevator.setPos(0)));
         // -85 bottom

@@ -33,9 +33,8 @@ public class OnTheFlyGeneration extends CommandBase {
     public OnTheFlyGeneration(Pose2d targetPos, boolean autoScoring) {
         s_Swerve = Swerve.getInstance();
         selector = AutomaticScoringSelector.getInstance();
-        if(!autoScoring) {
-            this.targetPos = targetPos;
-        }
+        this.autoScoring = autoScoring;
+        this.targetPos = targetPos;
         addRequirements(s_Swerve);
     }
     
