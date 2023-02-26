@@ -1,7 +1,5 @@
 package frc.robot;
 
-import javax.swing.text.html.Option;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
