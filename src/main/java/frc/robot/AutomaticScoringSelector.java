@@ -41,8 +41,8 @@ public final class AutomaticScoringSelector {
         private ScoringPositions(){
             double x = 2.0; //should be the same for every default scoring position
             double y = 0.4; //only one that changes
-            double yIncrem = 0.75; //how much each y varies by - currently unmeasured
-            Rotation2d rot = new Rotation2d(2*Math.PI); // should be the same for every default scoring position
+            double yIncrem = 0.5; //how much each y varies by - currently unmeasured
+            Rotation2d rot = new Rotation2d(Math.PI); // should be the same for every default scoring position
             ArmStates[] armStatesCone = {ArmStates.L1CONE, ArmStates.L2CONE, ArmStates.L3CONE};
             ArmStates[] armStatesCube = {ArmStates.L1CUBE, ArmStates.L2CUBE, ArmStates.L3CUBE};
             ElevatorStates[] elevStatesCone = {ElevatorStates.L1CONE, ElevatorStates.L2CONE, ElevatorStates.L3CONE};
