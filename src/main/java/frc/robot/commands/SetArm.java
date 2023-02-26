@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 // import edu.wpi.first.math.controller.ArmFeedforward;
-import com.ctre.phoenix.ErrorCode;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
@@ -28,7 +27,7 @@ public class SetArm extends CommandBase {
 
 	@Override
 	public void execute() {
-		armVoltage = armController.calculate(s_Arm.getCANCoderPosition(), s_Arm.getCANCoderSetpoint());
+		armVoltage = armController.calculate(s_Arm.getLampreyPosition(), s_Arm.getLampreySetpoint());
 		s_Arm.setVoltage(armVoltage);
 	}
 

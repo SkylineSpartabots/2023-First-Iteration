@@ -7,8 +7,6 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.Swerve;
 import frc.robot.commands.SetIntake;
 import frc.robot.commands.SetMechanism;
-import frc.robot.subsystems.CompleteMechanism;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.CompleteMechanism.MechanismState;
 import frc.robot.subsystems.Intake.IntakeStates;
 
