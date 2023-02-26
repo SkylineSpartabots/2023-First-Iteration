@@ -19,7 +19,7 @@ public final class AutomaticScoringSelector {
     private ScoringPosition[][] grid = new ScoringPosition[3][9]; //[row][column] 0 row is l1, 0 column is the one farthest from load zone
     private boolean[][] isSelected = new boolean[3][9];
     private GenericEntry[][] selectionDisplay = new GenericEntry[3][9];
-    private GenericEntry currentGridSelected, selectedX, selectedY;
+    private GenericEntry currentGridSelected, selectedX, selectedY, selectedRot;
 
     private int currRow = 0, currColumn = 0;
     private int selectedRow = -1, selectedColumn = -1;
@@ -41,8 +41,8 @@ public final class AutomaticScoringSelector {
         private ScoringPositions(){
             double x = 2.0; //should be the same for every default scoring position
             double y = 0.4; //only one that changes
-            double yIncrem = 0.75; //how much each y varies by - currently unmeasured
-            Rotation2d rot = new Rotation2d(180.0); // should be the same for every default scoring position
+            double yIncrem = 0.5; //how much each y varies by - currently unmeasured
+            Rotation2d rot = new Rotation2d(Math.PI); // should be the same for every default scoring position
             ArmStates[] armStatesCone = {ArmStates.L1CONE, ArmStates.L2CONE, ArmStates.L3CONE};
             ArmStates[] armStatesCube = {ArmStates.L1CUBE, ArmStates.L2CUBE, ArmStates.L3CUBE};
             ElevatorStates[] elevStatesCone = {ElevatorStates.L1CONE, ElevatorStates.L2CONE, ElevatorStates.L3CONE};
@@ -86,6 +86,7 @@ public final class AutomaticScoringSelector {
         isSelected[currRow][currColumn] = false;
         currRow++;
         isSelected[currRow][currColumn] = true;
+        updateShuffleboard();
     }
 
     public void moveDown(){
@@ -95,6 +96,7 @@ public final class AutomaticScoringSelector {
         isSelected[currRow][currColumn] = false;
         currRow--;
         isSelected[currRow][currColumn] = true;
+        updateShuffleboard();
 
     }
 
@@ -105,7 +107,7 @@ public final class AutomaticScoringSelector {
         isSelected[currRow][currColumn] = false;
         currColumn--;
         isSelected[currRow][currColumn] = true;
-
+        updateShuffleboard();
     }
 
     public void moveLeft(){
@@ -115,11 +117,13 @@ public final class AutomaticScoringSelector {
         isSelected[currRow][currColumn] = false;
         currColumn++;
         isSelected[currRow][currColumn] = true;
+        updateShuffleboard();
     }
 
     public void select(){
         selectedRow = currRow;
         selectedColumn = currColumn;
+        updateShuffleboard();
     }
 
     public void createDisplay(){
@@ -132,6 +136,7 @@ public final class AutomaticScoringSelector {
         currentGridSelected = scoringGridDisplay.add("selection updated", currRow == selectedRow && currColumn == selectedColumn).getEntry();
         selectedX = scoringGridDisplay.add("Selected X", getSelectedPose().getX()).getEntry();
         selectedY = scoringGridDisplay.add("Selected Y", getSelectedPose().getY()).getEntry();
+        selectedRot = scoringGridDisplay.add("Selected Rot", getSelectedPose().getRotation().getDegrees()).getEntry();
     }
 
     public void updateShuffleboard(){
@@ -143,6 +148,7 @@ public final class AutomaticScoringSelector {
         currentGridSelected.setBoolean(currRow == selectedRow && currColumn == selectedColumn);
         selectedX.setDouble(getSelectedPose().getX());
         selectedY.setDouble(getSelectedPose().getY());
+        selectedRot.setDouble(getSelectedPose().getRotation().getDegrees());
     }
 
     public Pose2d getSelectedPose(){
@@ -159,7 +165,6 @@ public final class AutomaticScoringSelector {
     public ElevatorStates getElevStates(){
         return grid[selectedRow][selectedColumn].elevatorState;
     }
-
 
 }
 

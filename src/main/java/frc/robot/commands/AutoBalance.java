@@ -36,7 +36,7 @@ public class AutoBalance extends CommandBase {
         driveSpeed = driveController.calculate(robotPitch, 0);
         SmartDashboard.putNumber("drive speed", driveSpeed);
         s_Swerve.drive(
-            new Translation2d(driveSpeed, 0).times(Constants.Swerve.maxSpeed), 
+            new Translation2d(driveSpeed, 0).times(Constants.SwerveConstants.maxSpeed), 
             0, 
             true, 
             true

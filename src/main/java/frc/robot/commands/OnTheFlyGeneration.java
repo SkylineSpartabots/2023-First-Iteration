@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.AutomaticScoringSelector;
 import frc.robot.Constants;
 import frc.robot.factories.AutoCommandFactory;
 import frc.robot.subsystems.Elevator;
@@ -25,32 +26,18 @@ import frc.robot.subsystems.Elevator.ElevatorStates;
 public class OnTheFlyGeneration extends CommandBase {
     Pose2d currentPos;
     Pose2d targetPos;
-    boolean swervePose;
-    private Swerve s_Swerve;
+    Swerve s_Swerve;
+    boolean autoScoring;
+    AutomaticScoringSelector selector;
 
-    public OnTheFlyGeneration(Pose2d currentPos, Pose2d targetPos, boolean swervePose) {
+    public OnTheFlyGeneration(Pose2d targetPos, boolean autoScoring) {
         s_Swerve = Swerve.getInstance();
+        selector = AutomaticScoringSelector.getInstance();
+        this.autoScoring = autoScoring;
         this.targetPos = targetPos;
-        this.currentPos = currentPos;
-        this.swervePose = swervePose;
         addRequirements(s_Swerve);
     }
     
-    public OnTheFlyGeneration(Pose2d currentPos, int targetID, boolean swervePose) {
-        s_Swerve = Swerve.getInstance();
-        this.currentPos = currentPos;
-        this.targetPos = Constants.Limelight.gameAprilTags2d[targetID].plus(new Transform2d(new Translation2d(-0.5, 0), new Rotation2d()));
-        this.swervePose = swervePose;
-        addRequirements(s_Swerve);
-    }
-    
-    public OnTheFlyGeneration(int targetID, boolean swervePose) {
-        s_Swerve = Swerve.getInstance();
-        this.targetPos = Constants.Limelight.gameAprilTags2d[targetID].plus(new Transform2d(new Translation2d(-0.5, 0), new Rotation2d()));
-        this.swervePose = swervePose;
-        addRequirements(s_Swerve);
-    }
-
     private PathPoint getPathPoint(Pose2d pose) {
         return new PathPoint(new Translation2d(pose.getX(), pose.getY()),
                 Rotation2d.fromDegrees(0),
@@ -59,9 +46,9 @@ public class OnTheFlyGeneration extends CommandBase {
 
     @Override
     public void initialize() {
-        if(swervePose) {
-            currentPos = s_Swerve.getPose();
-            targetPos = new Pose2d(new Translation2d(0, 0), new Rotation2d());
+        currentPos = s_Swerve.getPose();
+        if(autoScoring) {
+            targetPos = selector.getSelectedPose();
         }
     }
 

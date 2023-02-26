@@ -120,7 +120,7 @@ public class AutoCommandFactory {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("2 cone bottom",
         new PathConstraints(3.5, 1.0));
         return new SequentialCommandGroup(
-            new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(2.09, 0.56, new Rotation2d(Math.toRadians(180))))),
+            new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(2.07, 1.04, new Rotation2d(Math.toRadians(180))))),
             new SetMechanism(MechanismState.MIDCUBE),
             new SetIntake(IntakeStates.REV_RETRACTED),
             new WaitCommand(0.5),
@@ -130,14 +130,14 @@ public class AutoCommandFactory {
                 new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.CUBEINTAKE))
             ),
             new SetIntake(IntakeStates.ON_RETRACTED),
-            new WaitCommand(0.8),
+            new WaitCommand(1.0),
             new SetIntake(IntakeStates.OFF_RETRACTED),
             new ParallelCommandGroup(
                 followPathCommand(pathGroup.get(1)),
                 new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.LOWCUBE))
             ),
             new SetIntake(IntakeStates.REV_RETRACTED),
-            new WaitCommand(0.5),
+            new WaitCommand(0.8),
             new SetIntake(IntakeStates.OFF_RETRACTED)
         );
     }
