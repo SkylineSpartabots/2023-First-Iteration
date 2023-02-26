@@ -47,8 +47,8 @@ public final class Constants {
         public static final String photonCamName = "OV5647";
         public static final Translation3d cameraOffsets = new Translation3d(
             Units.inchesToMeters(0.0), // x (front-back) offset
-            Units.inchesToMeters(-11), // y (left-right) offset
-            Units.inchesToMeters(-19.5) // z (up-down)
+            Units.inchesToMeters(0.0), // y (left-right) offset
+            Units.inchesToMeters(-25.0) // z (up-down) todo i have no clue what this should be?? someone measure
         );
         public static final Rotation3d cameraAngleOffsets = new Rotation3d(
                 Units.degreesToRadians(0), // x (roll)
