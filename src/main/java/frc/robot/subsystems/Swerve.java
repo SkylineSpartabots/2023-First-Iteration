@@ -42,7 +42,7 @@ public class Swerve extends SubsystemBase {
     public BooleanSupplier isPathRunningSupplier = () -> pathInProgress();
     
     public Swerve() {
-        gyro = new Pigeon2(Constants.SwerveConstants.pigeonID);
+        gyro = new Pigeon2(Constants.SwerveConstants.pigeonID, "2976 CANivore");
         gyro.configFactoryDefault();
 
         mSwerveMods = new SwerveModule[] {
