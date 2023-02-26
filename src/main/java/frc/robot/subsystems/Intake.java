@@ -23,16 +23,20 @@ public class Intake extends SubsystemBase {
     }
 
     // change IDs
-    private Solenoid intakeSolenoid;
+    private Solenoid intakePositionSolenoid, barSolenoid;
     private Compressor compressor;
     private IntakeStates intakeState = IntakeStates.OFF_DEPLOYED;
     private WPI_TalonFX mIntakeMotor;
 
     private Intake() {
-        intakeSolenoid = new Solenoid(
+        intakePositionSolenoid = new Solenoid(
                 Constants.HardwarePorts.pneumaticHub,
                 PneumaticsModuleType.REVPH,
-                Constants.HardwarePorts.intakeSolenoidChannel);
+                Constants.HardwarePorts.intakePositionSolenoidChannel);
+        intakePositionSolenoid = new Solenoid(
+            Constants.HardwarePorts.pneumaticHub,
+            PneumaticsModuleType.REVPH,
+            Constants.HardwarePorts.intakeBarSolenoidChannel);
         compressor = new Compressor(Constants.HardwarePorts.pneumaticHub, PneumaticsModuleType.REVPH);
         compressor.enableDigital();
         mIntakeMotor = new WPI_TalonFX(Constants.HardwarePorts.intakeMotor);
@@ -70,7 +74,7 @@ public class Intake extends SubsystemBase {
 
     public void setState(IntakeStates state) {
         this.intakeState = state;
-        intakeSolenoid.set(intakeState.value);
+        intakePositionSolenoid.set(intakeState.value);
         final double offset = 0.80;
         mIntakeMotor.set(ControlMode.PercentOutput, offset * intakeState.direction);
     }
@@ -80,7 +84,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void testSolenoid(boolean b) {
-        intakeSolenoid.set(b);
+        intakePositionSolenoid.set(b);
     }
 
     public int getVelocityDirection() {
