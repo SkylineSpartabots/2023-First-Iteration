@@ -46,9 +46,9 @@ public final class Constants {
     public static final class Limelight {
         public static final String photonCamName = "OV5647";
         public static final Translation3d cameraOffsets = new Translation3d(
-            Units.inchesToMeters(-14.5), // x (front-back) offset
-            Units.inchesToMeters(0), // y (right-left) offset
-            Units.inchesToMeters(-34) // z (up-down)
+            Units.inchesToMeters(0.0), // x (front-back) offset
+            Units.inchesToMeters(-11), // y (left-right) offset
+            Units.inchesToMeters(-19.5) // z (up-down)
         );
         public static final Rotation3d cameraAngleOffsets = new Rotation3d(
                 Units.degreesToRadians(0), // x (roll)
@@ -57,7 +57,9 @@ public final class Constants {
         );
         public static final Pose3d[] gameAprilTags = {
                 new Pose3d(15.51, 1.07, 0.46, new Rotation3d(0, 0, Math.PI)),
-                new Pose3d(15.51, 2.74, 0.46, new Rotation3d(0, 0, Math.PI)),
+                // new Pose3d(15.51, 2.74, 0.46, new Rotation3d(0, 0, Math.PI)),
+                new Pose3d(0, 0, 0.46, new Rotation3d(0, 0, 0)), // tag 2 to tag 8 temp
+                // new Pose3d(1.03, 1.07, 0.46, new Rotation3d(0, 0, 0)), // tag 2 to tag 8 temp
                 new Pose3d(15.51, 4.42, 0.46, new Rotation3d(0, 0, Math.PI)),
                 new Pose3d(16.18, 6.75, 0.69, new Rotation3d(0, 0, Math.PI)),
                 new Pose3d(0.36, 6.75, 0.69, new Rotation3d(0, 0, 0)),
@@ -68,7 +70,8 @@ public final class Constants {
 
         public static final Pose2d[] gameAprilTags2d = {
             new Pose2d(15.51, 1.07, new Rotation2d(Math.PI)),
-            new Pose2d(15.51, 2.74, new Rotation2d(Math.PI)),
+            // new Pose2d(15.51, 2.74, new Rotation2d(Math.PI)),
+            new Pose2d(1.03, 1.07, new Rotation2d(0)), // tag 2 to tag 8 temp
             new Pose2d(15.51, 4.42, new Rotation2d(Math.PI)),
             new Pose2d(16.18, 6.75, new Rotation2d(Math.PI)),
             new Pose2d(0.36, 6.75, new Rotation2d(0)),
@@ -79,7 +82,7 @@ public final class Constants {
     }
 
 
-    public static final class Swerve {
+    public static final class SwerveConstants {
 
         public static final int pigeonID = 15;
 
@@ -167,7 +170,7 @@ public final class Constants {
             public static final int driveMotorID = 2;
             public static final int angleMotorID = 1;
             public static final int canCoderID = 9;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(177.6);
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(178.2);
             public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
                     canCoderID, angleOffset);
         }
@@ -177,7 +180,7 @@ public final class Constants {
             public static final int driveMotorID = 8;
             public static final int angleMotorID = 7;
             public static final int canCoderID = 12;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(143.66);
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(144.4);
             public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
                     canCoderID, angleOffset);
         }
@@ -187,7 +190,7 @@ public final class Constants {
             public static final int driveMotorID = 4;
             public static final int angleMotorID = 3;
             public static final int canCoderID = 10;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(243.76);
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(243.2);
             public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
                     canCoderID, angleOffset);
         }
@@ -196,7 +199,7 @@ public final class Constants {
             public static final int driveMotorID = 6;
             public static final int angleMotorID = 5;
             public static final int canCoderID = 11;
-            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(120.99);
+            public static final Rotation2d angleOffset = Rotation2d.fromDegrees(121.7);
             public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
                     canCoderID, angleOffset);
         }

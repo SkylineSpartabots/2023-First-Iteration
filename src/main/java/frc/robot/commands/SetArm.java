@@ -30,14 +30,11 @@ public class SetArm extends CommandBase {
 	public void execute() {
 		armVoltage = armController.calculate(s_Arm.getCANCoderPosition(), s_Arm.getCANCoderSetpoint());
 		s_Arm.setVoltage(armVoltage);
-		// if (Math.abs(s_Arm.getCANCoderPosition() - s_Arm.getCANCoderSetpoint()) < 5) {
-		// 	armController.reset();
-		// }
 	}
 
 	@Override
 	public boolean isFinished() {
-		return true;
+		return s_Arm.armError();
 	}
 
 	@Override

@@ -16,18 +16,29 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.AutomaticScoringSelector;
 import frc.robot.Constants;
+import frc.robot.subsystems.Swerve;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.factories.AutoCommandFactory;
 import edu.wpi.first.wpilibj.DriverStation;
 // import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SmartPathGenerating extends CommandBase {
+    private Swerve s_Swerve;
+    private AutomaticScoringSelector selector;
     Pose2d startPos;
     Pose2d endPos;
 
     public SmartPathGenerating(Pose2d startPos, Pose2d endPos) {
         this.startPos = startPos;
         this.endPos = endPos;
+    }
+    public SmartPathGenerating(){
+        s_Swerve = Swerve.getInstance();
+        selector = AutomaticScoringSelector.getInstance();
+        // addRequirements(s_Swerve, selector);
     }
 
     public Translation2d translation(Pose2d x) {
@@ -51,6 +62,8 @@ public class SmartPathGenerating extends CommandBase {
 
     @Override
     public void initialize() {
+        startPos = s_Swerve.getPose();
+        endPos = selector.getSelectedPose();
         var tStart = translation(startPos);
         var tEnd = translation(endPos);
 
@@ -107,8 +120,8 @@ public class SmartPathGenerating extends CommandBase {
         // }
 
         // for (int i = 0; i < 6; i++) {
-        // SmartDashboard.putNumber("dist " + i, distance[i]);
-        // SmartDashboard.putNumber("last " + i, last[i]);
+        //     SmartDashboard.putNumber("dist " + i, distance[i]);
+        //     SmartDashboard.putNumber("last " + i, last[i]);
         // }
 
         List<PathPoint> result = new ArrayList<>();
@@ -127,7 +140,7 @@ public class SmartPathGenerating extends CommandBase {
         PathPlannerTrajectory trajectory = PathPlanner.generatePath(
                 new PathConstraints(4, 3),
                 result);
-        CommandScheduler.getInstance().schedule(AutoCommandFactory.followPathCommand(trajectory, false));
+        CommandScheduler.getInstance().schedule(AutoCommandFactory.followPathCommand(trajectory));
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.MagnetFieldStrength;
 
 // import edu.wpi.first.networktables.NetworkMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,8 +30,8 @@ public class Arm extends SubsystemBase {
 
     public enum ArmStates {
         ZERO(10.0), //when curled up
-        GROUNDCONE(171), //intaking cone from ground
-        GROUNDCUBE(180), //intaking cube from ground
+        GROUNDCONE(155), //intaking cone from ground
+        GROUNDCUBE(165), //intaking cube from ground
         SUBSTATION(150), //not measured yet
         L1CONE(150), 
         L2CONE(92.0), //middle scoring thing
@@ -114,16 +115,8 @@ public class Arm extends SubsystemBase {
         return armCANCoder.getBusVoltage();
     }
 
-    public ErrorCode getCANCoderStatus() {
-        return armCANCoder.getLastError();
-    }
-
     public boolean armError() {
-        if(getCANCoderStatus() != ErrorCode.OK) {
-            mArmMotor.setVoltage(0);
-            return true;
-        }
-        return false;
+        return armCANCoder.getMagnetFieldStrength() == MagnetFieldStrength.BadRange_RedLED;
     }
     
     private boolean inCoast = false;

@@ -1,6 +1,9 @@
 package frc.robot;
 
+import javax.swing.text.html.Option;
+
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -9,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.*;
@@ -91,6 +95,7 @@ public class RobotContainer {
     private final Arm s_Arm;
     private final Intake s_Intake;
     private final ScoringCommandFactory scoreCommandFactory;
+    private final AutomaticScoringSelector selector;
     private boolean currentlyCoast;
 
     /* Commands */
@@ -106,6 +111,8 @@ public class RobotContainer {
         s_Intake = Intake.getInstance();
         s_Arm = Arm.getInstance();
        scoreCommandFactory = ScoringCommandFactory.getInstance();
+       selector = AutomaticScoringSelector.getInstance();
+       selector.createDisplay();
 
         // s_Swerve.resetOdometry(new Pose2d());
         s_Swerve.resetOdometry(new Pose2d());
@@ -161,6 +168,7 @@ public class RobotContainer {
         driverA.onTrue(new InstantCommand(() -> s_Arm.toggleNeutral()));
         driverB.onTrue(new SetIntake(IntakeStates.REV_DEPLOYED));
         driverX.onTrue(new SetIntake(IntakeStates.REV_RETRACTED));
+        driverY.onTrue(new SmartResetOdometry());
         // driverB.onTrue(scoreCommandFactory.getScoringCommand(null, null))
         // driverX.onTrue(new SetArm(ArmStates.L1));
         // driverY.onTrue(new SetArm(ArmStates.SUBSTATION));
@@ -178,12 +186,18 @@ public class RobotContainer {
         // driverDpadLeft.onTrue(new SetElevator(ElevatorStates.L3CONE));
         driverDpadDown.onTrue(new SetMechanism(MechanismState.CUBEINTAKE));
         driverDpadUp.onTrue(new SetMechanism(MechanismState.ZERO));
-        driverDpadRight.onTrue(new SetMechanism(MechanismState.CONEINTAKE));
-        driverDpadLeft.onTrue(new SetMechanism(MechanismState.MIDCONE));
+        // driverDpadRight.onTrue(new SetMechanism(MechanismState.CONEINTAKE));
+        // driverDpadLeft.onTrue(new SetMechanism(MechanismState.MIDCUBE));
+        driverDpadRight.onTrue(new SetElevator(ElevatorStates.L2CUBE));
+        driverDpadLeft.onTrue(new SetArm(ArmStates.ZERO));
 
-        // operatorDpadUp.onTrue(new InstantCommand(() -> s_Intake.testVelo(1)));
-        // operatorDpadDown.onTrue(new InstantCommand(() -> s_Intake.testVelo(-1)));
-        // operatorDpadRight.onTrue(new InstantCommand(() -> s_Intake.testVelo(0)));
+        operatorDpadUp.onTrue(new InstantCommand(() -> selector.moveUp()));
+        operatorDpadDown.onTrue(new InstantCommand(() -> selector.moveDown()));
+        operatorDpadRight.onTrue(new InstantCommand(() -> selector.moveRight()));
+        operatorDpadLeft.onTrue(new InstantCommand(() -> selector.moveLeft()));
+        operatorA.onTrue(new InstantCommand(() -> selector.select()));
+        operatorB.onTrue(new SmartPathGenerating());
+        operatorX.onTrue(new OnTheFlyGeneration(new Pose2d(0, 0, new Rotation2d(0)), true));
 
         // setIntake.onTrue(new InstantCommand(() -> s_Elevator.setPos(0)));
         // -85 bottom

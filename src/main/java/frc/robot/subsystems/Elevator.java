@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.MagnetFieldStrength;
 
 // import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -123,8 +124,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public boolean elevatorError() {
-        if(getCANCoderStatus() != ErrorCode.OK) {
-            mLeaderElevatorMotor.setVoltage(0);
+        if(elevatorCANCoder.getMagnetFieldStrength() == MagnetFieldStrength.BadRange_RedLED) {
             return true;
         }
         return false;
