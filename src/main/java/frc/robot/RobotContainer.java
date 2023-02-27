@@ -188,7 +188,7 @@ public class RobotContainer {
         driverDpadUp.onTrue(new SetMechanism(MechanismState.ZERO));
         // driverDpadRight.onTrue(new SetMechanism(MechanismState.CONEINTAKE));
         // driverDpadLeft.onTrue(new SetMechanism(MechanismState.MIDCUBE));
-        driverDpadRight.onTrue(new SetElevator(ElevatorStates.L2CUBE));
+        driverDpadRight.onTrue(new SetArm(ArmStates.TEST));
         driverDpadLeft.onTrue(new SetArm(ArmStates.ZERO));
 
         operatorDpadUp.onTrue(new InstantCommand(() -> selector.moveUp()));

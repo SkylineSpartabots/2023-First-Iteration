@@ -1,10 +1,13 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.MagnetFieldStrength;
 
-import edu.wpi.first.wpilibj.AnalogEncoder;
 // import edu.wpi.first.networktables.NetworkMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,7 +24,8 @@ public class Arm extends SubsystemBase {
     private WPI_TalonFX mArmMotor;
     private double velocity;
     private double voltage;
-    AnalogEncoder lamprey = new AnalogEncoder(Constants.HardwarePorts.armLamprey);
+    private CANCoder armCANCoder = new CANCoder(Constants.HardwarePorts.armCANCoder); // max 420
+    CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
     private ArmStates armState = ArmStates.ZERO;
 
     public enum ArmStates {
@@ -35,7 +39,7 @@ public class Arm extends SubsystemBase {
         L1CUBE(150), 
         L2CUBE(121.0), //middle scoring thing
         L3CUBE(129.0),
-        TEST(50);
+        TEST(100);
 
         double statePosition = 0.0;
 
@@ -49,14 +53,16 @@ public class Arm extends SubsystemBase {
         mArmMotor = new WPI_TalonFX(Constants.HardwarePorts.armMotor);
         configureMotor(mArmMotor, true);
         mArmMotor.setSelectedSensorPosition(0);
-        lamprey.reset();
+        canCoderConfig.sensorDirection = true;
+        armCANCoder.configAllSettings(canCoderConfig);
+        armCANCoder.setPosition(0);
     }
 
     private void configureMotor(WPI_TalonFX talon, boolean inverted){
         talon.setInverted(inverted);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(false);
-        talon.setNeutralMode(NeutralMode.Brake);
+        talon.setNeutralMode(NeutralMode.Coast);
         talon.config_kF(0, 0.05, Constants.timeOutMs);
         talon.config_kP(0, 0.12, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);
@@ -89,7 +95,7 @@ public class Arm extends SubsystemBase {
         return voltage;
     }
 
-    public double getLampreySetpoint() {
+    public double getCANCoderSetpoint() {
         return armState.statePosition;
     }
 
@@ -97,16 +103,20 @@ public class Arm extends SubsystemBase {
 		return mArmMotor.getSelectedSensorPosition();
 	}
 
-    public void setLampreuyPosition(double position) {
-        lamprey.setPositionOffset(position);
+    public void setCANCoderPosition(double position) {
+        armCANCoder.setPosition(position);
     }
 
-    public double getLampreyPosition() {
-        return lamprey.get();
+    public double getCANCoderPosition() {
+        return armCANCoder.getPosition();
+    }
+
+    public double getCANCoderVoltage() {
+        return armCANCoder.getBusVoltage();
     }
 
     public boolean armError() {
-        return false;
+        return armCANCoder.getMagnetFieldStrength() == MagnetFieldStrength.BadRange_RedLED;
     }
     
     private boolean inCoast = false;
@@ -118,13 +128,13 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("armCANpos", getLampreyPosition());
-		SmartDashboard.putNumber("armPosSet", getLampreySetpoint());
+        SmartDashboard.putNumber("armCANpos", getCANCoderPosition());
+		SmartDashboard.putNumber("armPosSet", getCANCoderSetpoint());
 		// SmartDashboard.putNumber("arm set velo", getVelocitySetpoint());
 		SmartDashboard.putNumber("arm set volt", getVoltageSetpoint());
+        SmartDashboard.putNumber("arm CANCoder Voltage", getCANCoderVoltage());
         // SmartDashboard.putNumber("armMotpos", getMotorPosition());
         SmartDashboard.putBoolean("arm error", armError());
     }
 }
-
 

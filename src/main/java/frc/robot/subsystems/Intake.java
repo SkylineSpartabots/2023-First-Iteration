@@ -33,7 +33,7 @@ public class Intake extends SubsystemBase {
                 Constants.HardwarePorts.pneumaticHub,
                 PneumaticsModuleType.REVPH,
                 Constants.HardwarePorts.intakePositionSolenoidChannel);
-        intakePositionSolenoid = new Solenoid(
+        barSolenoid = new Solenoid(
             Constants.HardwarePorts.pneumaticHub,
             PneumaticsModuleType.REVPH,
             Constants.HardwarePorts.intakeBarSolenoidChannel);
@@ -56,25 +56,33 @@ public class Intake extends SubsystemBase {
     }
 
     public enum IntakeStates {
-        OFF_RETRACTED(false, 0),
-        ON_RETRACTED(false, 1),
-        REV_RETRACTED(false, -1),
-        OFF_DEPLOYED(true, 0),//on is intake open - when scoring
-        ON_DEPLOYED(true, 1),
-        REV_DEPLOYED(true, -1);
+        OFF_RETRACTED(false, false, 0),
+        OFF_RETRACTED_CUBE(false, true, 0),
+        ON_RETRACTED(false, false, 1),
+        ON_RETRACTED_CUBE(false, true, 1),
+        REV_RETRACTED(false, false, -1),
+        OFF_DEPLOYED(true, false, 0),
+        OFF_DEPLOYED_CUBE(true, true, 0),
+        ON_DEPLOYED(true, false, 1),
+        ON_DEPLOYED_CUBE(true, true, 1),
+        REV_DEPLOYED(true, false, -1),
+        REV_DEPLOYED_CUBE(true, true, -1);
 
-        boolean value;
+        boolean deployed;
+        boolean cube;
         int direction;
 
-        private IntakeStates(boolean value, int direction) {
-            this.value = value;
+        private IntakeStates(boolean deployed, boolean cube, int direction) {
+            this.deployed = deployed;
+            this.cube = cube;
             this.direction = direction;
         }
     }
 
     public void setState(IntakeStates state) {
         this.intakeState = state;
-        intakePositionSolenoid.set(intakeState.value);
+        intakePositionSolenoid.set(intakeState.deployed);
+        barSolenoid.set(intakeState.cube);
         final double offset = 0.80;
         mIntakeMotor.set(ControlMode.PercentOutput, offset * intakeState.direction);
     }
@@ -87,12 +95,12 @@ public class Intake extends SubsystemBase {
         intakePositionSolenoid.set(b);
     }
 
-    public int getVelocityDirection() {
-        return intakeState.direction;
-    }
-
     public boolean getIntakeDeployed() {
-        return intakeState.value;
+        return intakeState.deployed;
+    }
+    
+    public boolean getIntakeCube() {
+        return intakeState.cube;
     }
 
     private double voltThreshold = 20.0;
@@ -104,18 +112,18 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Intake motor voltage", mIntakeMotor.getStatorCurrent());
-        SmartDashboard.putBoolean("intake motor deployed", getIntakeDeployed());
-        SmartDashboard.putNumber("intake motor direction", getVelocityDirection());
-        if (intakeState == IntakeStates.ON_DEPLOYED) {
-            if (hasGamePiece()) {
-                CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_DEPLOYED));
-            }
-        }
-        if (intakeState == IntakeStates.ON_RETRACTED) {
-            if (hasGamePiece()) {
-                CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED));
-            }
-        }
+        SmartDashboard.putBoolean("intake deployed", getIntakeDeployed());
+        SmartDashboard.putBoolean("intake cube", getIntakeCube());
+        // if (intakeState == IntakeStates.ON_DEPLOYED) {
+        //     if (hasGamePiece()) {
+        //         CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_DEPLOYED));
+        //     }
+        // }
+        // if (intakeState == IntakeStates.ON_RETRACTED) {
+        //     if (hasGamePiece()) {
+        //         CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED));
+        //     }
+        // }
         // if (intakeState == IntakeStates.REV_DEPLOYED) {
         //     if (!hasGamePiece()) {
         //         CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_DEPLOYED));

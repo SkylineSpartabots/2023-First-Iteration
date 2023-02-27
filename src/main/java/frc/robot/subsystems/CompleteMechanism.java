@@ -54,7 +54,7 @@ public class CompleteMechanism extends SubsystemBase {
 
     public boolean inState() {
         return ((Math.abs(s_Elevator.getCANCoderSetpoint() - s_Elevator.getCANCoderPosition()) < 15) && 
-            (Math.abs(s_Arm.getLampreySetpoint() - s_Arm.getLampreyPosition()) < 15));
+            (Math.abs(s_Arm.getCANCoderSetpoint() - s_Arm.getCANCoderPosition()) < 15));
     }
 
     @Override
