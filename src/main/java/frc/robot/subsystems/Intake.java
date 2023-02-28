@@ -112,12 +112,12 @@ public class Intake extends SubsystemBase {
         SmartDashboard.putBoolean("intake cube", getIntakeCube());
         if (intakeState == IntakeStates.ON_DEPLOYED_CUBE) {
             if (hasGamePiece()) {
-                CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE));
+                CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED_CUBE));
             }
         }
         if (intakeState == IntakeStates.ON_DEPLOYED) {
             if (hasGamePiece()) {
-                CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_DEPLOYED));
+                CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED));
             }
         }
         if (intakeState == IntakeStates.ON_RETRACTED) {
