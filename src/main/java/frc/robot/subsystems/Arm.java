@@ -29,9 +29,9 @@ public class Arm extends SubsystemBase {
     private ArmStates armState = ArmStates.ZERO;
 
     public enum ArmStates {
-        ZERO(10.0), //when curled up
-        GROUNDCONE(155), //intaking cone from ground
-        GROUNDCUBE(165), //intaking cube from ground
+        ZERO(52.0), //when curled up
+        GROUNDCONE(100), //intaking cone from ground
+        GROUNDCUBE(175), //intaking cube from ground
         SUBSTATION(150), //not measured yet
         L1CONE(150), 
         L2CONE(92.0), //middle scoring thing
@@ -39,7 +39,7 @@ public class Arm extends SubsystemBase {
         L1CUBE(150), 
         L2CUBE(121.0), //middle scoring thing
         L3CUBE(129.0),
-        TEST(100);
+        TEST(220);
 
         double statePosition = 0.0;
 
@@ -108,7 +108,7 @@ public class Arm extends SubsystemBase {
     }
 
     public double getCANCoderPosition() {
-        return armCANCoder.getPosition();
+        return (armCANCoder.getAbsolutePosition() - 283 + 360) % 360;
     }
 
     public double getCANCoderVoltage() {

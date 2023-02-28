@@ -23,7 +23,7 @@ public class Elevator extends SubsystemBase {
     private WPI_TalonFX mLeaderElevatorMotor, mFollowerElevatorMotor;
     private double velocity;
     private double voltage;
-    private CANCoder elevatorCANCoder = new CANCoder(Constants.HardwarePorts.elevatorCANCoder); // max 1860
+    private CANCoder elevatorCANCoder = new CANCoder(Constants.HardwarePorts.elevatorCANCoder); // max 2632
     CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
     ElevatorStates elevatorState = ElevatorStates.ZERO;
 
@@ -37,8 +37,8 @@ public class Elevator extends SubsystemBase {
 		L3CONE(1200), //upper scoring thing - not measured yet
         L1CUBE(0),
 		L2CUBE(900.0), 
-		L3CUBE(1849.0),
-		TEST(0.0); 
+		L3CUBE(2200),
+		TEST(1000); 
 
 		double statePosition = 0.0;
 
@@ -49,13 +49,13 @@ public class Elevator extends SubsystemBase {
     
     public Elevator() {
         mLeaderElevatorMotor = new WPI_TalonFX(Constants.HardwarePorts.elevatorLeaderMotor);
-        configureMotor(mLeaderElevatorMotor, false);
+        configureMotor(mLeaderElevatorMotor, true);
         mFollowerElevatorMotor = new WPI_TalonFX(Constants.HardwarePorts.elevatorFollowerMotor);
-        configureMotor(mFollowerElevatorMotor, false);
+        configureMotor(mFollowerElevatorMotor, true);
         mFollowerElevatorMotor.set(ControlMode.Follower, Constants.HardwarePorts.elevatorLeaderMotor);
         mLeaderElevatorMotor.setSelectedSensorPosition(0);
         mFollowerElevatorMotor.setSelectedSensorPosition(0);
-        canCoderConfig.sensorDirection = true;
+        canCoderConfig.sensorDirection = false;
         canCoderConfig.unitString = "centimeters";
         elevatorCANCoder.configAllSettings(canCoderConfig);
         setCANCoderPosition(0);
@@ -65,7 +65,7 @@ public class Elevator extends SubsystemBase {
         talon.setInverted(inverted);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(false);
-        talon.setNeutralMode(NeutralMode.Coast);
+        talon.setNeutralMode(NeutralMode.Brake);
         talon.config_kF(0, 0.05, Constants.timeOutMs);
         talon.config_kP(0, 0.12, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);
@@ -112,6 +112,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public double getCANCoderPosition() {
+        // return (elevatorCANCoder.getAbsolutePosition() - 225) % 360;
         return elevatorCANCoder.getPosition();
     }
 
