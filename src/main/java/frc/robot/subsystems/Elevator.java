@@ -29,6 +29,7 @@ public class Elevator extends SubsystemBase {
 
     public enum ElevatorStates { //all are measured values unless otherwise indicated
 		ZERO(50.0), //bottomed out
+        REALZERO(0),
 		GROUNDCONE(0.0), //intaking cone from ground
         GROUNDCUBE(0.0), //intaking cube from ground
 		SUBSTATION(600), //not measured yet
@@ -129,6 +130,10 @@ public class Elevator extends SubsystemBase {
             return true;
         }
         return false;
+    }
+
+    public double getCurrent() {
+        return mLeaderElevatorMotor.getStatorCurrent();
     }
    
     @Override
