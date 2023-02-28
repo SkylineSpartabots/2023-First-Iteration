@@ -188,10 +188,21 @@ public class RobotContainer {
         // driverDpadUp.onTrue(new SetMechanism(MechanismState.ZERO));
         // driverDpadRight.onTrue(new SetMechanism(MechanismState.CONEINTAKE));
         // driverDpadLeft.onTrue(new SetMechanism(MechanismState.MIDCUBE));
-        driverDpadUp.onTrue(new SetElevator(ElevatorStates.ZERO)); 
-        driverDpadRight.onTrue(new SetElevator(ElevatorStates.SUBSTATION)); 
-        driverDpadDown.onTrue(new SetElevator(ElevatorStates.TEST));
-        driverDpadLeft.onTrue(new SetElevator(ElevatorStates.L3CUBE));
+        // driverDpadUp.onTrue(new SetElevator(ElevatorStates.ZERO)); 
+        // driverDpadRight.onTrue(new SetElevator(ElevatorStates.SUBSTATION)); 
+        // driverDpadDown.onTrue(new SetElevator(ElevatorStates.TEST));
+        // driverDpadLeft.onTrue(new SetElevator(ElevatorStates.L3CUBE));
+        driverA.onTrue(new SetIntake(IntakeStates.OFF_RETRACTED_CUBE));
+        // driverB.onTrue(new SetIntake(IntakeStates.OFF_RETRACTED));
+        driverX.onTrue(new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE));
+        driverY.onTrue(new SetIntake(IntakeStates.ON_DEPLOYED_CUBE));
+        driverB.onTrue(new SetIntake(IntakeStates.REV_DEPLOYED_CUBE));
+        // driverDpadDown.onTrue(new SetArm(ArmStates.GROUNDCUBE));
+        // driverDpadUp.onTrue(new SetArm(ArmStates.GROUNDCONE));
+        // driverDpadRight.onTrue(new SetArm(ArmStates.ZERO));
+        driverDpadDown.onTrue(new SetMechanism(MechanismState.MIDCUBE));
+        driverDpadUp.onTrue(new SetMechanism(MechanismState.HIGHCUBE));
+        driverDpadRight.onTrue(new SetMechanism(MechanismState.ZERO));
 
         // operatorDpadUp.onTrue(new InstantCommand(() -> selector.moveUp()));
         // operatorDpadDown.onTrue(new InstantCommand(() -> selector.moveDown()));

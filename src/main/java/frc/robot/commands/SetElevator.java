@@ -15,11 +15,13 @@ public class SetElevator extends CommandBase {
 	double elevatorVoltage;
 	double elevatorFeedforwardVolage;
 	// PIDController elevatorController = new PIDController(0.028, 10e-3, 0.0); // tune PID
-	ProfiledPIDController elevatorController = new ProfiledPIDController(
-		// 0.050, 1e-2, 0.0,
-		0.015, 9e-3, 0.0,
-
+	ProfiledPIDController downController = new ProfiledPIDController(
+		0.050, 1e-2, 1e-3,
 		new TrapezoidProfile.Constraints(1e9, 1e9)
+	);
+	ProfiledPIDController upController = new ProfiledPIDController(
+		0.050, 1e-2, 1e-3,
+		new TrapezoidProfile.Constraints(3000, 3000)
 	);
 	ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0.083319, 0.46718, 62.909, 3.709);
 
@@ -32,13 +34,17 @@ public class SetElevator extends CommandBase {
 	@Override
 	public void initialize() {
 		s_Elevator.setState(state);
-		elevatorController.reset(s_Elevator.getCANCoderPosition());
+		upController.reset(s_Elevator.getCANCoderPosition());
+		// upController.reset(s_Elevator.getCANCoderPosition());
 		// elevatorController.reset();
 	}
 
 	@Override
 	public void execute() {
-		elevatorVoltage = elevatorController.calculate(s_Elevator.getCANCoderPosition(), s_Elevator.getCANCoderSetpoint());
+		elevatorVoltage = upController.calculate(s_Elevator.getCANCoderPosition(), s_Elevator.getCANCoderSetpoint());
+		if (Math.abs(s_Elevator.getCANCoderPosition() - s_Elevator.getCANCoderSetpoint()) < 20) {
+			elevatorVoltage = 0;
+		}
 		s_Elevator.setVoltage( elevatorVoltage);
 	}
 

@@ -28,16 +28,16 @@ public class Elevator extends SubsystemBase {
     ElevatorStates elevatorState = ElevatorStates.ZERO;
 
     public enum ElevatorStates { //all are measured values unless otherwise indicated
-		ZERO(0.0), //bottomed out
+		ZERO(50.0), //bottomed out
 		GROUNDCONE(0.0), //intaking cone from ground
         GROUNDCUBE(0.0), //intaking cube from ground
 		SUBSTATION(600), //not measured yet
 		L1CONE(0.0), 
-		L2CONE(1400.0), //middle scoring thing
-		L3CONE(1200), //upper scoring thing - not measured yet
-        L1CUBE(0),
-		L2CUBE(900.0), 
-		L3CUBE(2200),
+		L2CONE(1146), //middle scoring thing GOOD
+		L3CONE(2256), //upper scoring thing GOOD 
+        L1CUBE(55),
+		L2CUBE(764), 
+		L3CUBE(1880),
 		TEST(1000); 
 
 		double statePosition = 0.0;
@@ -46,7 +46,7 @@ public class Elevator extends SubsystemBase {
 			this.statePosition = statePosition;
 		}
 	}
-    
+   
     public Elevator() {
         mLeaderElevatorMotor = new WPI_TalonFX(Constants.HardwarePorts.elevatorLeaderMotor);
         configureMotor(mLeaderElevatorMotor, true);
