@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.commands.SetIntake;
 import frc.robot.commands.SetMechanism;
@@ -70,13 +71,17 @@ public class Intake extends SubsystemBase {
         ON_DEPLOYED(true, false, -1),
         ON_DEPLOYED_CUBE(true, true, 1),
         REV_DEPLOYED(true, false, 1),
-        REV_DEPLOYED_CUBE(true, true, -1);
+        REV_DEPLOYED_CUBE(true, true, -1),
+        ON_DEPLOYED_GCONE(true, false, 1.2),
+        OFF_DEPLOYED_GCONE(true, false, 0.075),
+        OFF_RETRACTED_GCONE(false, false, 0.075);
+
 
         public boolean deployed;
         public boolean cube;
-        public int direction;
+        public double direction;
 
-        private IntakeStates(boolean deployed, boolean cube, int direction) {
+        private IntakeStates(boolean deployed, boolean cube, double direction) {
             this.deployed = deployed;
             this.cube = cube;
             this.direction = direction;
@@ -103,10 +108,22 @@ public class Intake extends SubsystemBase {
         return intakeState.cube;
     }
 
-    private double currentThreshold = 39.0;
-    public boolean hasGamePiece(){
+    private double coneThreshold = 53.5;
+    public boolean hasCone(){
         double currentVolt = mIntakeMotor.getStatorCurrent();
-        return currentVolt > currentThreshold;
+        return currentVolt > coneThreshold;
+    }
+
+    public double cubeThreshold = 39;
+    public boolean hasCube(){
+        double currentVolt = mIntakeMotor.getStatorCurrent();
+        return currentVolt > cubeThreshold;
+    }
+
+    private double gConeThreshold = 55;
+    public boolean hasgCone(){
+        double currentVolt = mIntakeMotor.getStatorCurrent();
+        return currentVolt > gConeThreshold;
     }
 
     @Override
@@ -115,23 +132,29 @@ public class Intake extends SubsystemBase {
         SmartDashboard.putBoolean("intake deployed", getIntakeDeployed());
         SmartDashboard.putBoolean("intake cube", getIntakeCube());
         if (intakeState == IntakeStates.ON_DEPLOYED_CUBE) {
-            if (hasGamePiece()) {
+            if (hasCube()) {
                 CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED_CUBE));
             }
         }
         if (intakeState == IntakeStates.ON_DEPLOYED) {
-            if (hasGamePiece()) {
+            if (hasCone()) {
                 CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED));
             }
         }
         if (intakeState == IntakeStates.ON_RETRACTED) {
-            if (hasGamePiece()) {
+            if (hasCone()) {
                 CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED));
             }
         }
         if (intakeState == IntakeStates.ON_RETRACTED_CUBE) {
-            if (hasGamePiece()) {
+            if (hasCube()) {
                 CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED_CUBE));
+            }
+        }
+
+        if (intakeState == IntakeStates.ON_DEPLOYED_GCONE) {
+            if (hasgCone()) {
+                CommandScheduler.getInstance().schedule(new WaitCommand(1.6).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED_GCONE)));
             }
         }
         // if (intakeState == IntakeStates.REV_DEPLOYED) {
@@ -146,16 +169,4 @@ public class Intake extends SubsystemBase {
         // }
     }
 
-    ParallelCommandGroup zeroCone = new ParallelCommandGroup(
-        new SetMechanism(MechanismState.ZERO),
-        new SetIntake(IntakeStates.OFF_RETRACTED)
-    );
-
-    ParallelCommandGroup zeroCube = new ParallelCommandGroup(
-        new SetMechanism(MechanismState.ZERO),
-        new SetIntake(IntakeStates.OFF_RETRACTED_CUBE)
-    );
-    public void zeroCommand() {
-        CommandScheduler.getInstance().schedule(intakeState.cube ? zeroCube : zeroCone);
-    }
 }

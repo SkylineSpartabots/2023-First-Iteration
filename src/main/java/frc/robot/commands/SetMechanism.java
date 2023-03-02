@@ -16,17 +16,30 @@ public class SetMechanism extends CommandBase{
     public SetMechanism(MechanismState state){
         this.state = state;
         s_Mechanism = CompleteMechanism.getInstance();
-        s_Mechanism.setState(state);
+        // s_Mechanism.setState(state);
     }
     
     @Override
     public void initialize() {
-        CommandScheduler.getInstance().schedule(
-            new ParallelCommandGroup(
-                new WaitCommand(0.3).andThen(new SetArm(state.armState)),
-                new SetElevator(state.elevState)
-            ) 
-        );
+        if (s_Mechanism.getState() == MechanismState.HIGHCONE || s_Mechanism.getState() == MechanismState.HIGHCUBE ||
+        s_Mechanism.getState() == MechanismState.MIDCONE || s_Mechanism.getState() == MechanismState.MIDCUBE) {
+            CommandScheduler.getInstance().schedule(
+                new ParallelCommandGroup(
+                    new WaitCommand(0.3).andThen(new SetArm(state.armState)),
+                    new SetElevator(state.elevState)
+                ) 
+            );
+        } else {
+
+            CommandScheduler.getInstance().schedule(
+                new ParallelCommandGroup(
+                    new WaitCommand(0.0).andThen(new SetArm(state.armState)),
+                    new SetElevator(state.elevState)
+                ) 
+            );
+        }
+
+        s_Mechanism.setState(state);
     }
 
     @Override

@@ -30,7 +30,7 @@ public class Arm extends SubsystemBase {
 
     public enum ArmStates {
         ZERO(52.0), //when curled up
-        GROUNDCONE(204), //intaking cone from ground MAY NEED TO CHANGE
+        GROUNDCONE(272), // 210 //intaking cone from ground MAY NEED TO CHANGE
         GROUNDCUBE(215), //intaking cube from ground
         SUBSTATION(150), //not measured yet
         L1CONE(150), 
@@ -39,6 +39,7 @@ public class Arm extends SubsystemBase {
         L1CUBE(55), 
         L2CUBE(111), //middle scoring thing
         L3CUBE(151),
+        LAYEDCONE(271),
         TEST(220);
 
         double statePosition = 0.0;
@@ -73,7 +74,7 @@ public class Arm extends SubsystemBase {
         this.velocity = velocity;
         mArmMotor.set(ControlMode.Velocity, velocity);
     }
-
+// ele 499 intake 271
     public void setVoltage(double voltage) {
         this.voltage = voltage;
         mArmMotor.setVoltage(voltage);
