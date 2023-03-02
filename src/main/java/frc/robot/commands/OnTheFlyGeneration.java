@@ -48,8 +48,10 @@ public class OnTheFlyGeneration extends CommandBase {
 
     @Override
     public void execute() {
+        double maxVel = AutomaticScoringCommand.getMaxVel();
+        double maxAccel = AutomaticScoringCommand.getMaxAccel();
         PathPlannerTrajectory trajectory = PathPlanner.generatePath(
-                new PathConstraints(4, 3),
+                new PathConstraints(maxVel, maxAccel),
                 getPathPoint(currentPos),
                 getPathPoint(targetPos));
         SmartDashboard.putNumber("OTF-start-x", currentPos.getX());
