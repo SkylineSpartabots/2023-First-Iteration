@@ -9,9 +9,13 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.commands.SetIntake;
+import frc.robot.commands.SetMechanism;
+import frc.robot.subsystems.CompleteMechanism.MechanismState;
 
 public class Intake extends SubsystemBase {
     private static Intake instance = null;
@@ -25,7 +29,7 @@ public class Intake extends SubsystemBase {
     // change IDs
     private Solenoid intakePositionSolenoid, barSolenoid;
     private Compressor compressor;
-    private IntakeStates intakeState = IntakeStates.OFF_DEPLOYED;
+    public IntakeStates intakeState = IntakeStates.OFF_DEPLOYED;
     private WPI_TalonFX mIntakeMotor;
 
     private Intake() {
@@ -68,9 +72,9 @@ public class Intake extends SubsystemBase {
         REV_DEPLOYED(true, false, 1),
         REV_DEPLOYED_CUBE(true, true, -1);
 
-        boolean deployed;
-        boolean cube;
-        int direction;
+        public boolean deployed;
+        public boolean cube;
+        public int direction;
 
         private IntakeStates(boolean deployed, boolean cube, int direction) {
             this.deployed = deployed;
@@ -140,5 +144,18 @@ public class Intake extends SubsystemBase {
         //         CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED));
         //     }
         // }
+    }
+
+    ParallelCommandGroup zeroCone = new ParallelCommandGroup(
+        new SetMechanism(MechanismState.ZERO),
+        new SetIntake(IntakeStates.OFF_RETRACTED)
+    );
+
+    ParallelCommandGroup zeroCube = new ParallelCommandGroup(
+        new SetMechanism(MechanismState.ZERO),
+        new SetIntake(IntakeStates.OFF_RETRACTED_CUBE)
+    );
+    public void zeroCommand() {
+        CommandScheduler.getInstance().schedule(intakeState.cube ? zeroCube : zeroCone);
     }
 }

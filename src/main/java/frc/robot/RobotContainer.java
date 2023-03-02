@@ -12,7 +12,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.*;
@@ -192,18 +195,30 @@ public class RobotContainer {
         // driverDpadRight.onTrue(new SetElevator(ElevatorStates.SUBSTATION)); 
         // driverDpadDown.onTrue(new SetElevator(ElevatorStates.TEST));
         // driverDpadLeft.onTrue(new SetElevator(ElevatorStates.L3CUBE));
-        driverA.onTrue(new SetIntake(IntakeStates.OFF_RETRACTED_CUBE));
-        // driverB.onTrue(new SetIntake(IntakeStates.OFF_RETRACTED));
-        driverX.onTrue(new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE));
-        driverY.onTrue(new SetIntake(IntakeStates.ON_DEPLOYED_CUBE));
-        driverB.onTrue(new SetIntake(IntakeStates.REV_DEPLOYED_CUBE));
+        // driverA.onTrue(new SetIntake(IntakeState)s.OFF_RETRACTED_CUBE));
+        // // driverB.onTrue(new SetIntake(IntakeStates.OFF_RETRACTED));
+        // driverX.onTrue(new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE));
+        // driverY.onTrue(new SetIntake(IntakeStates.ON_DEPLOYED_CUBE));
+        // driverB.onTrue(new SetIntake(IntakeStates.REV_DEPLOYED_CUBE));
         // driverDpadDown.onTrue(new SetArm(ArmStates.GROUNDCUBE));
         // driverDpadUp.onTrue(new SetArm(ArmStates.GROUNDCONE));
         // driverDpadRight.onTrue(new SetArm(ArmStates.ZERO));
-        driverDpadDown.onTrue(new SetMechanism(MechanismState.MIDCUBE));
-        driverDpadUp.onTrue(new SetMechanism(MechanismState.HIGHCUBE));
-        driverDpadRight.onTrue(new SetMechanism(MechanismState.ZERO));
-        driverLeftBumper.onTrue(new AutoBalance());
+        // driverDpadDown.onTrue(new SetMechanism(MechanismState.MIDCUBE));
+        // driverDpadUp.onTrue(new SetMechanism(MechanismState.HIGHCUBE));
+        // driverDpadRight.onTrue(new SetMechanism(MechanismState.ZERO));
+        // driverLeftBumper.onTrue(new AutoBalance());
+
+        ParallelCommandGroup coneIntake = new ParallelCommandGroup(
+            new SetMechanism(MechanismState.CONEINTAKE),
+            new SetIntake(IntakeStates.ON_RETRACTED)
+        );
+        ParallelCommandGroup cubeIntake = new ParallelCommandGroup(
+            new SetMechanism(MechanismState.CUBEINTAKE),
+            new SetIntake(IntakeStates.ON_DEPLOYED_CUBE)
+        );
+        driverRightTrigger.onTrue(coneIntake);
+        driverLeftTrigger.onTrue(cubeIntake);
+        driverLeftBumper.onTrue(new InstantCommand(() -> Intake.getInstance().zeroCommand()));
 
         // operatorDpadUp.onTrue(new InstantCommand(() -> selector.moveUp()));
         // operatorDpadDown.onTrue(new InstantCommand(() -> selector.moveDown()));

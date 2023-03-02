@@ -9,7 +9,7 @@ import frc.robot.subsystems.Elevator.ElevatorStates;
 public class CompleteMechanism extends SubsystemBase {
     
     private static CompleteMechanism combScoring;
-    private MechanismState currentState;
+    private MechanismState currentState = MechanismState.REALZERO;
     Arm s_Arm = Arm.getInstance();
     Elevator s_Elevator = Elevator.getInstance();
 
@@ -29,7 +29,8 @@ public class CompleteMechanism extends SubsystemBase {
         LOWCUBE(ElevatorStates.L1CUBE, ArmStates.L1CUBE),
         MIDCUBE(ElevatorStates.L2CUBE, ArmStates.L2CUBE),
         HIGHCUBE(ElevatorStates.L3CUBE, ArmStates.L3CUBE),
-        ZERO(ElevatorStates.ZERO, ArmStates.ZERO);
+        ZERO(ElevatorStates.ZERO, ArmStates.ZERO),
+        REALZERO(ElevatorStates.REALZERO, ArmStates.ZERO);
 
         public ElevatorStates elevState;
         public ArmStates armState;
@@ -39,10 +40,11 @@ public class CompleteMechanism extends SubsystemBase {
         }
     }
 
+
     public MechanismState getState(){
-        if(currentState == null){
-            currentState = MechanismState.ZERO;
-        }
+        // if(currentState == null){
+        //     currentState = MechanismState.ZERO;
+        // }
         return currentState;
     }
 
