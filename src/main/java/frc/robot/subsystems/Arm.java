@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.ResourceBundle.Control;
+
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -30,15 +32,16 @@ public class Arm extends SubsystemBase {
 
     public enum ArmStates {
         ZERO(52.0), //when curled up
-        GROUNDCONE(204), //intaking cone from ground MAY NEED TO CHANGE
+        GROUNDCONE(272), // 210 //intaking cone from ground MAY NEED TO CHANGE
         GROUNDCUBE(215), //intaking cube from ground
         SUBSTATION(150), //not measured yet
         L1CONE(150), 
-        L2CONE(106), //middle scoring thing
+        L2CONE(90), //middle scoring thing
         L3CONE(143), //upper scoring thing - not measured yet
         L1CUBE(55), 
         L2CUBE(111), //middle scoring thing
         L3CUBE(151),
+        LAYEDCONE(271),
         TEST(220);
 
         double statePosition = 0.0;
@@ -73,7 +76,7 @@ public class Arm extends SubsystemBase {
         this.velocity = velocity;
         mArmMotor.set(ControlMode.Velocity, velocity);
     }
-
+// ele 499 intake 271
     public void setVoltage(double voltage) {
         this.voltage = voltage;
         mArmMotor.setVoltage(voltage);
@@ -117,6 +120,10 @@ public class Arm extends SubsystemBase {
 
     public boolean armError() {
         return armCANCoder.getMagnetFieldStrength() == MagnetFieldStrength.BadRange_RedLED;
+    }
+
+    public void setPercent(double percentage){
+        mArmMotor.set(ControlMode.PercentOutput, percentage);
     }
     
     private boolean inCoast = false;

@@ -30,11 +30,12 @@ public class Elevator extends SubsystemBase {
     public enum ElevatorStates { //all are measured values unless otherwise indicated
 		ZERO(50.0), //bottomed out
         REALZERO(0),
-		GROUNDCONE(0.0), //intaking cone from ground
+		GROUNDCONE(656), //0.0 //intaking cone from ground
         GROUNDCUBE(0.0), //intaking cube from ground
+        LAYEDCONE(499),
 		SUBSTATION(600), //not measured yet
 		L1CONE(0.0), 
-		L2CONE(1146), //middle scoring thing GOOD
+		L2CONE(1145), //middle scoring thing GOOD
 		L3CONE(2256), //upper scoring thing GOOD 
         L1CUBE(55),
 		L2CUBE(764), 
@@ -143,5 +144,6 @@ public class Elevator extends SubsystemBase {
 		SmartDashboard.putNumber("ele set velo", getVelocitySetpoint());
 		SmartDashboard.putNumber("ele set volt", getVoltageSetpoint());
         SmartDashboard.putBoolean("elevator ", elevatorError());
+        SmartDashboard.putNumber("eleCurrent", getCurrent());
     }
 }

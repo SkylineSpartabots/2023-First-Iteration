@@ -42,8 +42,8 @@ public class SetElevator extends CommandBase {
 	@Override
 	public void execute() {
 		elevatorVoltage = upController.calculate(s_Elevator.getCANCoderPosition(), s_Elevator.getCANCoderSetpoint());
-		if (Math.abs(s_Elevator.getCANCoderPosition() - s_Elevator.getCANCoderSetpoint()) < 20) {
-			elevatorVoltage = 0;
+		if (Math.abs(s_Elevator.getCANCoderPosition() - s_Elevator.getCANCoderSetpoint()) < 15) {
+			elevatorVoltage = 0.8;
 		}
 		s_Elevator.setVoltage( elevatorVoltage);
 	}
