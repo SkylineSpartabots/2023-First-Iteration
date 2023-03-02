@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.AutomaticScoringSelector;
 import frc.robot.subsystems.CompleteMechanism.MechanismState;
 
-class AutoTeleopScore extends CommandBase {
+public class AutoTeleopScore extends CommandBase {
     Pose2d pose;
     int row;
     int column;

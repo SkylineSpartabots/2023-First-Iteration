@@ -146,8 +146,8 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        driverBack.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
-        driverStart.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
+        // driverBack.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
+        // driverStart.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
         // driverA.onTrue(AutoCommandFactory.getSelectedAuto()); // change based on
         // which auto needs to be tested
         // driverB.onTrue(new ConditionalCommand(
@@ -213,6 +213,9 @@ public class RobotContainer {
         // driverDpadRight.onTrue(new SetMechanism(MechanismState.ZERO));
         // driverLeftBumper.onTrue(new AutoBalance());
 
+        driverStart.onTrue(new SmartResetOdometry());
+        driverBack.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
+
         ParallelCommandGroup coneIntake = new ParallelCommandGroup(
                 new SetMechanism(MechanismState.CONEINTAKE),
                 new SetIntake(IntakeStates.ON_DEPLOYED));
@@ -243,7 +246,7 @@ public class RobotContainer {
         operatorDpadRight.onTrue(new InstantCommand(() -> selector.moveRight()));
         operatorDpadLeft.onTrue(new InstantCommand(() -> selector.moveLeft()));
         operatorA.onTrue(new InstantCommand(() -> selector.select()));
-        operatorB.onTrue(new AutomaticScoringCommand());
+        operatorB.onTrue(new AutoTeleopScore());
 
         // operatorB.onTrue(new SmartPathGenerating());
         // operatorX.onTrue(new OnTheFlyGeneration(new Pose2d(0, 0, new Rotation2d(0)),
@@ -286,13 +289,14 @@ public class RobotContainer {
             new SetIntake(IntakeStates.OFF_RETRACTED_GCONE))    
     ;
     public void zeroCommand() {
-        CommandScheduler.getInstance().schedule(Intake.getInstance().intakeState.direction == 0.075 ? zeroLayed : Intake.getInstance().intakeState.cube ? zeroCube : zeroCone);
+        CommandScheduler.getInstance().schedule(Intake.getInstance().intakeState == IntakeStates.ON_DEPLOYED_GCONE ? zeroLayed : Intake.getInstance().intakeState.cube ? zeroCube : zeroCone);
     }
 
     public void onRobotDisabled() {
         // reset mechanisms so it does not have to be done manually
         CommandScheduler.getInstance().schedule(new SetArm(ArmStates.ZERO));
         CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED));
+
     }
 
 }

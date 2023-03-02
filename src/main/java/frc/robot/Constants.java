@@ -17,19 +17,19 @@ public final class Constants {
     public static final int timeOutMs = 10;
     public static final double stickDeadband = 0.1;
     public static final double triggerDeadzone = 0.2;
-    
+
     public static final class HardwarePorts {
-        public static final int elevatorLeaderMotor = 21; 
-        public static final int elevatorFollowerMotor = 22; 
-        public static final int elevatorCANCoder = 25; 
-        public static final int armMotor = 23; 
-        public static final int armCANCoder = 26; 
-        public static final int intakeMotor = 24; 
+        public static final int elevatorLeaderMotor = 21;
+        public static final int elevatorFollowerMotor = 22;
+        public static final int elevatorCANCoder = 25;
+        public static final int armMotor = 23;
+        public static final int armCANCoder = 26;
+        public static final int intakeMotor = 24;
         public static final int intakePositionSolenoidChannel = 0;
         public static final int intakeBarSolenoidChannel = 1;
         public static final int pneumaticHub = 16;
     }
-    
+
     public static final double FIELD_WIDTH_METERS = 8.02;
 
     // ALL OF THESE ARE ONLY TRUE ON BLUE ALLIANCE
@@ -47,15 +47,16 @@ public final class Constants {
     public static final class Limelight {
         public static final String photonCamName = "OV5647";
         public static final Translation3d cameraOffsets = new Translation3d(
-            Units.inchesToMeters(-12.56), // x (front-back) offset
-            Units.inchesToMeters(0.0), // y (left-right) offset
-            Units.inchesToMeters(-7.71) // z (up-down) offset
+                Units.inchesToMeters(-12.56), // x (front-back) offset
+                Units.inchesToMeters(0.0), // y (left-right) offset
+                Units.inchesToMeters(-7.71) // z (up-down) offset
         );
         public static final Rotation3d cameraAngleOffsets = new Rotation3d(
                 Units.degreesToRadians(0), // x (roll)
                 Units.degreesToRadians(16.85), // y (pitch)
                 Units.degreesToRadians(0) // z (yaw)
         );
+
         public static final Pose3d[] gameAprilTags = {
                 new Pose3d(15.51, 1.07, 0.46, new Rotation3d(0, 0, Math.PI)),
                 new Pose3d(15.51, 2.74, 0.46, new Rotation3d(0, 0, Math.PI)),
@@ -68,17 +69,38 @@ public final class Constants {
         };
 
         public static final Pose2d[] gameAprilTags2d = {
-            new Pose2d(15.51, 1.07, new Rotation2d(Math.PI)),
-            new Pose2d(15.51, 2.74, new Rotation2d(Math.PI)),
-            new Pose2d(15.51, 4.42, new Rotation2d(Math.PI)),
-            new Pose2d(16.18, 6.75, new Rotation2d(Math.PI)),
-            new Pose2d(0.36, 6.75, new Rotation2d(0)),
-            new Pose2d(1.03, 4.42, new Rotation2d(0)),
-            new Pose2d(1.03, 2.74, new Rotation2d(0)),
-            new Pose2d(1.03, 1.07, new Rotation2d(0))
+                new Pose2d(15.51, 1.07, new Rotation2d(Math.PI)),
+                new Pose2d(15.51, 2.74, new Rotation2d(Math.PI)),
+                new Pose2d(15.51, 4.42, new Rotation2d(Math.PI)),
+                new Pose2d(16.18, 6.75, new Rotation2d(Math.PI)),
+                new Pose2d(0.36, 6.75, new Rotation2d(0)),
+                new Pose2d(1.03, 4.42, new Rotation2d(0)),
+                new Pose2d(1.03, 2.74, new Rotation2d(0)),
+                new Pose2d(1.03, 1.07, new Rotation2d(0))
+        };
+
+        public static final Pose3d[] gameAprilTagsRed = {
+                new Pose3d(15.51, 1.07, 0.46, new Rotation3d(0, 0, Math.PI)),
+                new Pose3d(15.51, 2.74, 0.46, new Rotation3d(0, 0, Math.PI)),
+                new Pose3d(15.51, 4.42, 0.46, new Rotation3d(0, 0, Math.PI)),
+                new Pose3d(16.18, 6.75, 0.69, new Rotation3d(0, 0, Math.PI)),
+                new Pose3d(0.36, 6.75, 0.69, new Rotation3d(0, 0, 0)),
+                new Pose3d(1.03, 4.42, 0.46, new Rotation3d(0, 0, 0)),
+                new Pose3d(1.03, 2.74, 0.46, new Rotation3d(0, 0, 0)),
+                new Pose3d(1.03, 1.07, 0.46, new Rotation3d(0, 0, 0))
+        };
+
+        public static final Pose2d[] gameAprilTags2dRed = {
+                new Pose2d(15.51, 1.07, new Rotation2d(Math.PI)),
+                new Pose2d(15.51, 2.74, new Rotation2d(Math.PI)),
+                new Pose2d(15.51, 4.42, new Rotation2d(Math.PI)),
+                new Pose2d(16.18, 6.75, new Rotation2d(Math.PI)),
+                new Pose2d(0.36, 6.75, new Rotation2d(0)),
+                new Pose2d(1.03, 4.42, new Rotation2d(0)),
+                new Pose2d(1.03, 2.74, new Rotation2d(0)),
+                new Pose2d(1.03, 1.07, new Rotation2d(0))
         };
     }
-
 
     public static final class SwerveConstants {
 
@@ -148,7 +170,7 @@ public final class Constants {
          * Drive Motor Characterization Values
          * Divide SYSID values by 12 to convert from volts to percent output for CTRE
          */
-        public static final double driveKS = (0.23217 / 12); 
+        public static final double driveKS = (0.23217 / 12);
         public static final double driveKV = (2.2688 / 12);
         public static final double driveKA = (0.42472 / 12);
 
@@ -182,7 +204,7 @@ public final class Constants {
             public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
                     canCoderID, angleOffset);
         }
-        
+
         /* Back Left Module - Module 2 */
         public static final class Mod2 {
             public static final int driveMotorID = 4;
@@ -192,6 +214,7 @@ public final class Constants {
             public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
                     canCoderID, angleOffset);
         }
+
         /* Back Right Module - Module 3 */
         public static final class Mod3 {
             public static final int driveMotorID = 6;
