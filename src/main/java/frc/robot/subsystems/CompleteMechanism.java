@@ -53,7 +53,7 @@ public class CompleteMechanism extends SubsystemBase {
     }
 
     public boolean inState() {
-        return ((Math.abs(s_Elevator.getCANCoderSetpoint() - s_Elevator.getCANCoderPosition()) < 15) && 
+        return ((Math.abs(s_Elevator.getCANCoderSetpoint() - s_Elevator.getCANCoderPosition()) < 45) && 
             (Math.abs(s_Arm.getCANCoderSetpoint() - s_Arm.getCANCoderPosition()) < 15));
     }
 

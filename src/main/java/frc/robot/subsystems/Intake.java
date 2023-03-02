@@ -50,7 +50,7 @@ public class Intake extends SubsystemBase {
         talon.enableVoltageCompensation(true);
         talon.setNeutralMode(NeutralMode.Brake);
         talon.config_kF(0, 0.05, Constants.timeOutMs);
-        talon.config_kP(0, 0.12, Constants.timeOutMs);
+        talon.config_kP(0, 0.30, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);
         talon.config_kD(0, 0, Constants.timeOutMs);
     }

@@ -11,8 +11,8 @@ public class AutoBalance extends CommandBase {
     Swerve s_Swerve;
     double robotPitch;
     double driveSpeed;
-    PIDController driveController = new PIDController(-0.015, 0, 0);  // tune PID
-
+    PIDController driveController = new PIDController(-0.01, 0, 0);  // tune PID
+    int counter = 0;
     public AutoBalance() {
         s_Swerve = Swerve.getInstance();
         addRequirements(s_Swerve);
@@ -20,6 +20,8 @@ public class AutoBalance extends CommandBase {
 
     @Override
     public void execute() {
+        counter++;
+        if (counter % 5 == 0) {
         robotPitch = s_Swerve.getPitch();
         if (Math.abs(robotPitch) < 0.3) {
             robotPitch = 0;
@@ -32,6 +34,7 @@ public class AutoBalance extends CommandBase {
             true, 
             true
         );
+    }
     }
     
 }

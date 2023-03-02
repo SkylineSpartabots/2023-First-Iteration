@@ -203,6 +203,7 @@ public class RobotContainer {
         driverDpadDown.onTrue(new SetMechanism(MechanismState.MIDCUBE));
         driverDpadUp.onTrue(new SetMechanism(MechanismState.HIGHCUBE));
         driverDpadRight.onTrue(new SetMechanism(MechanismState.ZERO));
+        driverLeftBumper.onTrue(new AutoBalance());
 
         // operatorDpadUp.onTrue(new InstantCommand(() -> selector.moveUp()));
         // operatorDpadDown.onTrue(new InstantCommand(() -> selector.moveDown()));

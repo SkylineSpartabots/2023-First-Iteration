@@ -34,7 +34,7 @@ public class Arm extends SubsystemBase {
         GROUNDCUBE(215), //intaking cube from ground
         SUBSTATION(150), //not measured yet
         L1CONE(150), 
-        L2CONE(106), //middle scoring thing
+        L2CONE(90), //middle scoring thing
         L3CONE(143), //upper scoring thing - not measured yet
         L1CUBE(55), 
         L2CUBE(111), //middle scoring thing

@@ -34,7 +34,7 @@ public class Elevator extends SubsystemBase {
         GROUNDCUBE(0.0), //intaking cube from ground
 		SUBSTATION(600), //not measured yet
 		L1CONE(0.0), 
-		L2CONE(1146), //middle scoring thing GOOD
+		L2CONE(1145), //middle scoring thing GOOD
 		L3CONE(2256), //upper scoring thing GOOD 
         L1CUBE(55),
 		L2CUBE(764), 

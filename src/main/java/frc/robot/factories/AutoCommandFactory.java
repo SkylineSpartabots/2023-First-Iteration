@@ -2,12 +2,18 @@ package frc.robot.factories;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 
 import java.util.List;
 
@@ -87,8 +93,12 @@ public class AutoCommandFactory {
                         yController,
                         thetaController,
                         s_Swerve.chassisConsumer,
+                        true,
                         s_Swerve));
         return lastCommand;
+
+        // SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(null, null, null, null,
+        // null, null, null)
     }
 
     private static Command testAuto() {
@@ -96,11 +106,14 @@ public class AutoCommandFactory {
         return followPathCommand(path);
 
     }
- 
+
     private static Command pathWithWait() {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("path with wait event",
-                new PathConstraints(4, 3));
+                new PathConstraints(2, 0.5));
+        PathPlannerState initState = PathPlannerTrajectory.transformStateForAlliance(pathGroup.get(0).getInitialState(),
+                DriverStation.getAlliance());
         return new SequentialCommandGroup(
+                new InstantCommand(() -> s_Swerve.resetOdometry(initState.poseMeters)),
                 followPathCommand(pathGroup.get(0)),
                 new WaitCommand(2),
                 followPathCommand(pathGroup.get(1)));
@@ -108,191 +121,203 @@ public class AutoCommandFactory {
 
     private static Command oneConeDockMiddle() {
         PathPlannerTrajectory path = PathPlanner.loadPath("1 cone dock middle", new PathConstraints(4, 3));
+        PathPlannerState initState = PathPlannerTrajectory.transformStateForAlliance(path.getInitialState(),
+                DriverStation.getAlliance());
         return new SequentialCommandGroup(
-            new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(1.86, 2.71, new Rotation2d(Math.toRadians(180))))),
-            new SetMechanism(MechanismState.MIDCUBE).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED)),
-            new SetIntake(IntakeStates.REV_DEPLOYED),
-            new WaitCommand(0.5),
-            new SetIntake(IntakeStates.OFF_RETRACTED),
-            new ParallelCommandGroup(
-                followPathCommand(path),
-                new SetMechanism(MechanismState.ZERO)
-            )
-            // new AutoBalance()
+                new InstantCommand(() -> s_Swerve.resetOdometry(initState.poseMeters)),
+                new SetMechanism(MechanismState.MIDCUBE).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED)),
+                new SetIntake(IntakeStates.REV_DEPLOYED),
+                new WaitCommand(0.5),
+                new SetIntake(IntakeStates.OFF_RETRACTED),
+                new ParallelCommandGroup(
+                        followPathCommand(path),
+                        new SetMechanism(MechanismState.ZERO))
+        // new AutoBalance()
         );
     }
 
     private static Command twoConeBottom() {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("2 cone bottom",
-        new PathConstraints(3.5, 1.0));
+                new PathConstraints(3.5, 1.0));
+        PathPlannerState initState = PathPlannerTrajectory.transformStateForAlliance(pathGroup.get(0).getInitialState(),
+                DriverStation.getAlliance());
+
         return new SequentialCommandGroup(
-            new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(1.85, 0.52, new Rotation2d(Math.toRadians(180))))),
-            new SetMechanism(MechanismState.MIDCONE).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED)),
-            new SetIntake(IntakeStates.REV_DEPLOYED),
-            new WaitCommand(0.5),
-            new SetIntake(IntakeStates.OFF_RETRACTED),
-            new ParallelCommandGroup(
-                followPathCommand(pathGroup.get(0)),
-                new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.CUBEINTAKE))
-            ),
-            new SetIntake(IntakeStates.ON_DEPLOYED_CUBE),
-            new WaitCommand(1.0),
-            new SetIntake(IntakeStates.OFF_RETRACTED_CUBE),
-            new ParallelCommandGroup(
-                followPathCommand(pathGroup.get(1)),
-                new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.MIDCUBE)).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE))
-            ),
-            new SetIntake(IntakeStates.REV_DEPLOYED_CUBE),
-            new WaitCommand(0.8),
-            new SetIntake(IntakeStates.OFF_RETRACTED)
-        );
+                new InstantCommand(() -> s_Swerve.resetOdometry(initState.poseMeters)),
+                new SetMechanism(MechanismState.MIDCONE).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED)),
+                new SetIntake(IntakeStates.REV_DEPLOYED),
+                new WaitCommand(0.5),
+                new SetIntake(IntakeStates.OFF_RETRACTED),
+                new ParallelCommandGroup(
+                        followPathCommand(pathGroup.get(0)),
+                        new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.CUBEINTAKE))),
+                new SetIntake(IntakeStates.ON_DEPLOYED_CUBE),
+                new WaitCommand(1.0),
+                new SetIntake(IntakeStates.OFF_RETRACTED_CUBE),
+                new ParallelCommandGroup(
+                        followPathCommand(pathGroup.get(1)),
+                        new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.MIDCUBE))
+                                .andThen(new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE))),
+                new SetIntake(IntakeStates.REV_DEPLOYED_CUBE),
+                new WaitCommand(0.8),
+                new SetIntake(IntakeStates.OFF_RETRACTED));
     }
 
     private static Command twoConeDockBottom() {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("2 cone dock bottom",
-        new PathConstraints(3.5, 1.0));
+                new PathConstraints(3.5, 1.0));
+        PathPlannerState initState = PathPlannerTrajectory.transformStateForAlliance(pathGroup.get(0).getInitialState(),
+                DriverStation.getAlliance());
+
         return new SequentialCommandGroup(
-            new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(1.85, 0.52, new Rotation2d(Math.toRadians(180))))),
-            new SetMechanism(MechanismState.MIDCONE).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED)),
-            new SetIntake(IntakeStates.REV_DEPLOYED),
-            new WaitCommand(0.5),
-            new SetIntake(IntakeStates.OFF_RETRACTED),
-            new ParallelCommandGroup(
-                followPathCommand(pathGroup.get(0)),
-                new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.CUBEINTAKE))
-            ),
-            new SetIntake(IntakeStates.ON_DEPLOYED_CUBE),
-            new WaitCommand(1.0),
-            new SetIntake(IntakeStates.OFF_RETRACTED_CUBE),
-            new ParallelCommandGroup(
-                followPathCommand(pathGroup.get(1)),
-                new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.MIDCUBE)).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE))
-            ),
-            new SetIntake(IntakeStates.REV_DEPLOYED_CUBE),
-            new WaitCommand(0.8),
-            new SetIntake(IntakeStates.OFF_RETRACTED),
-            new ParallelCommandGroup(
-                followPathCommand(pathGroup.get(2)),
-                new SetMechanism(MechanismState.ZERO)
-            )
-            // new AutoBalance()
+                new InstantCommand(() -> s_Swerve.resetOdometry(initState.poseMeters)),
+                new SetMechanism(MechanismState.MIDCONE).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED)),
+                new SetIntake(IntakeStates.REV_DEPLOYED),
+                new WaitCommand(0.5),
+                new SetIntake(IntakeStates.OFF_RETRACTED),
+                new ParallelCommandGroup(
+                        followPathCommand(pathGroup.get(0)),
+                        new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.CUBEINTAKE))),
+                new SetIntake(IntakeStates.ON_DEPLOYED_CUBE),
+                new WaitCommand(1.0),
+                new SetIntake(IntakeStates.OFF_RETRACTED_CUBE),
+                new ParallelCommandGroup(
+                        followPathCommand(pathGroup.get(1)),
+                        new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.MIDCUBE))
+                                .andThen(new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE))),
+                new SetIntake(IntakeStates.REV_DEPLOYED_CUBE),
+                new WaitCommand(0.8),
+                new SetIntake(IntakeStates.OFF_RETRACTED),
+                new ParallelCommandGroup(
+                        followPathCommand(pathGroup.get(2)),
+                        new SetMechanism(MechanismState.ZERO))
+        // new AutoBalance()
         );
     }
 
-    
     private static Command twoConeTop() {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("2 cone top",
-        new PathConstraints(3.5, 1.0));
+                new PathConstraints(5.0, 2.5));
+        PathPlannerState initState = PathPlannerTrajectory.transformStateForAlliance(pathGroup.get(0).getInitialState(),
+                DriverStation.getAlliance());
         return new SequentialCommandGroup(
-            new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(1.85, 4.95, new Rotation2d(Math.toRadians(180))))),
-            new SetMechanism(MechanismState.MIDCONE).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED)),
-            new SetIntake(IntakeStates.REV_DEPLOYED),
-            new WaitCommand(0.5),
-            new SetIntake(IntakeStates.OFF_RETRACTED),
-            new ParallelCommandGroup(
-                followPathCommand(pathGroup.get(0)),
-                new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.CUBEINTAKE))
-            ),
-            new SetIntake(IntakeStates.ON_DEPLOYED_CUBE),
-            new WaitCommand(1.0),
-            new SetIntake(IntakeStates.OFF_RETRACTED_CUBE),
-            new ParallelCommandGroup(
-                followPathCommand(pathGroup.get(1)),
-                new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.MIDCUBE)).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE))
-            ),
-            new SetIntake(IntakeStates.REV_DEPLOYED_CUBE),
-            new WaitCommand(0.8),
-            new SetIntake(IntakeStates.OFF_RETRACTED)
-        );
+                new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(initState.poseMeters.getX(),
+                        initState.poseMeters.getY(), new Rotation2d(Math.toRadians(180))))),
+                new SetMechanism(MechanismState.HIGHCONE),
+                new SetIntake(IntakeStates.OFF_DEPLOYED),
+                new WaitCommand(1),
+                new SetIntake(IntakeStates.REV_DEPLOYED),
+                new WaitCommand(0.5),
+                new SetIntake(IntakeStates.OFF_RETRACTED),
+                new ParallelCommandGroup(
+                        followPathCommand(pathGroup.get(0)).alongWith(new SetIntake(IntakeStates.ON_DEPLOYED_CUBE)),
+                        new ParallelDeadlineGroup(new WaitCommand(1.25), new SetMechanism(MechanismState.ZERO))
+                                .andThen(new SetMechanism(MechanismState.CUBEINTAKE))),
+                new WaitCommand(0.75),
+                new SetIntake(IntakeStates.OFF_RETRACTED_CUBE),
+                new ParallelCommandGroup(
+                        followPathCommand(pathGroup.get(1)),
+                        new SetMechanism(MechanismState.ZERO).alongWith(new SetIntake(IntakeStates.ON_DEPLOYED_CUBE))
+                                .alongWith(new WaitCommand(0.8).andThen(new SetIntake(IntakeStates.OFF_RETRACTED_CUBE)))
+                                .andThen(new WaitCommand(0.8)).andThen(new SetMechanism(MechanismState.HIGHCUBE))),
+                new SetIntake(IntakeStates.REV_DEPLOYED_CUBE),
+                new WaitCommand(0.75),
+                new SetIntake(IntakeStates.OFF_RETRACTED));
     }
 
     private static Command twoConeDockTop() {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("2 cone dock top",
-        new PathConstraints(3.5, 1.0));
+                new PathConstraints(3.5, 1.0));
+        PathPlannerState initState = PathPlannerTrajectory.transformStateForAlliance(pathGroup.get(0).getInitialState(),
+                DriverStation.getAlliance());
+
         return new SequentialCommandGroup(
-            new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(1.85, 4.95, new Rotation2d(Math.toRadians(180))))),
-            new SetMechanism(MechanismState.MIDCONE).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED)),
-            new SetIntake(IntakeStates.REV_DEPLOYED),
-            new WaitCommand(0.5),
-            new SetIntake(IntakeStates.OFF_RETRACTED),
-            new ParallelCommandGroup(
-                followPathCommand(pathGroup.get(0)),
-                new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.CUBEINTAKE))
-            ),
-            new SetIntake(IntakeStates.ON_DEPLOYED_CUBE),
-            new WaitCommand(1.0),
-            new SetIntake(IntakeStates.OFF_RETRACTED_CUBE),
-            new ParallelCommandGroup(
-                followPathCommand(pathGroup.get(1)),
-                new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.MIDCUBE)).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE))
-            ),
-            new SetIntake(IntakeStates.REV_DEPLOYED_CUBE),
-            new WaitCommand(0.8),
-            new SetIntake(IntakeStates.OFF_RETRACTED),
-            new ParallelCommandGroup(
-                followPathCommand(pathGroup.get(2)),
-                new SetMechanism(MechanismState.ZERO)
-            )
-            // new AutoBalance()
+                new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(initState.poseMeters.getX(),
+                        initState.poseMeters.getY(), new Rotation2d(Math.toRadians(180))))),
+                new SetMechanism(MechanismState.HIGHCONE),
+                new SetIntake(IntakeStates.OFF_DEPLOYED),
+                new WaitCommand(1),
+                new SetIntake(IntakeStates.REV_DEPLOYED),
+                new WaitCommand(0.5),
+                new SetIntake(IntakeStates.OFF_RETRACTED),
+                new ParallelCommandGroup(
+                        followPathCommand(pathGroup.get(0)).alongWith(new SetIntake(IntakeStates.ON_DEPLOYED_CUBE)),
+                        new ParallelDeadlineGroup(new WaitCommand(1.25), new SetMechanism(MechanismState.ZERO))
+                                .andThen(new SetMechanism(MechanismState.CUBEINTAKE))),
+                new WaitCommand(0.75),
+                new SetIntake(IntakeStates.OFF_RETRACTED_CUBE),
+                new ParallelCommandGroup(
+                        followPathCommand(pathGroup.get(1)),
+                        new SetMechanism(MechanismState.ZERO).alongWith(new SetIntake(IntakeStates.ON_DEPLOYED_CUBE))
+                                .alongWith(new WaitCommand(0.8).andThen(new SetIntake(IntakeStates.OFF_RETRACTED_CUBE)))
+                                .andThen(new WaitCommand(0.8)).andThen(new SetMechanism(MechanismState.HIGHCUBE))),
+                new SetIntake(IntakeStates.REV_DEPLOYED_CUBE),
+                new WaitCommand(0.75),
+                new SetIntake(IntakeStates.OFF_RETRACTED),
+                new ParallelCommandGroup(
+                        followPathCommand(pathGroup.get(2)),
+                        new SetMechanism(MechanismState.ZERO))
+                // new AutoBalance()
         );
     }
 
     private static Command threeConeTop() {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("3 cone top",
-        new PathConstraints(4, 3));
+                new PathConstraints(4, 3));
         return new SequentialCommandGroup(
-            new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(1.96, 4.42, new Rotation2d(Math.toRadians(180))))),
-            // put cone
-            followPathCommand(pathGroup.get(0) ),
-            // pick up cone
-            followPathCommand(pathGroup.get(1) ),
-            // put cone
-            followPathCommand(pathGroup.get(2) ),
-            // pick up cone
-            followPathCommand(pathGroup.get(3) )
-            // put cone
+                new InstantCommand(
+                        () -> s_Swerve.resetOdometry(new Pose2d(1.96, 4.42, new Rotation2d(Math.toRadians(180))))),
+                // put cone
+                followPathCommand(pathGroup.get(0)),
+                // pick up cone
+                followPathCommand(pathGroup.get(1)),
+                // put cone
+                followPathCommand(pathGroup.get(2)),
+                // pick up cone
+                followPathCommand(pathGroup.get(3))
+        // put cone
 
         );
     }
 
     private static Command threeConeBottom() {
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("3 cone bottom",
-        new PathConstraints(3.5, 1.0));
+                new PathConstraints(3.5, 1.0));
+        PathPlannerState initState = PathPlannerTrajectory.transformStateForAlliance(pathGroup.get(0).getInitialState(),
+                DriverStation.getAlliance());
+
         return new SequentialCommandGroup(
-            new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(1.85, 0.52, new Rotation2d(Math.toRadians(180))))),
-            new SetMechanism(MechanismState.MIDCONE).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED)),
-            new SetIntake(IntakeStates.REV_DEPLOYED),
-            new WaitCommand(0.5),
-            new SetIntake(IntakeStates.OFF_RETRACTED),
-            new ParallelCommandGroup(
-                followPathCommand(pathGroup.get(0)),
-                new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.CUBEINTAKE))
-            ),
-            new SetIntake(IntakeStates.ON_DEPLOYED_CUBE),
-            new WaitCommand(1.0),
-            new SetIntake(IntakeStates.OFF_RETRACTED_CUBE),
-            new ParallelCommandGroup(
-                followPathCommand(pathGroup.get(1)),
-                new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.MIDCUBE)).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE))
-                ),
-            new SetIntake(IntakeStates.REV_DEPLOYED_CUBE),
-            new WaitCommand(0.8),
-            new SetIntake(IntakeStates.OFF_RETRACTED),
-            // third piece - test
-            new ParallelCommandGroup(
-                followPathCommand(pathGroup.get(2)),
-                new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.CUBEINTAKE))
-            ),
-            new SetIntake(IntakeStates.ON_DEPLOYED_CUBE),
-            new WaitCommand(1.0),
-            new SetIntake(IntakeStates.OFF_RETRACTED_CUBE),
-            new ParallelCommandGroup(
-                followPathCommand(pathGroup.get(3)),
-                new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.ZERO)).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE))
-            ),
-            new SetIntake(IntakeStates.REV_DEPLOYED_CUBE),
-            new WaitCommand(0.8),
-            new SetIntake(IntakeStates.OFF_RETRACTED)
-        );
+                new InstantCommand(() -> s_Swerve.resetOdometry(initState.poseMeters)),
+                new SetMechanism(MechanismState.MIDCONE).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED)),
+                new SetIntake(IntakeStates.REV_DEPLOYED),
+                new WaitCommand(0.5),
+                new SetIntake(IntakeStates.OFF_RETRACTED),
+                new ParallelCommandGroup(
+                        followPathCommand(pathGroup.get(0)),
+                        new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.CUBEINTAKE))),
+                new SetIntake(IntakeStates.ON_DEPLOYED_CUBE),
+                new WaitCommand(1.0),
+                new SetIntake(IntakeStates.OFF_RETRACTED_CUBE),
+                new ParallelCommandGroup(
+                        followPathCommand(pathGroup.get(1)),
+                        new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.MIDCUBE))
+                                .andThen(new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE))),
+                new SetIntake(IntakeStates.REV_DEPLOYED_CUBE),
+                new WaitCommand(0.8),
+                new SetIntake(IntakeStates.OFF_RETRACTED),
+                // third piece - test
+                new ParallelCommandGroup(
+                        followPathCommand(pathGroup.get(2)),
+                        new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.CUBEINTAKE))),
+                new SetIntake(IntakeStates.ON_DEPLOYED_CUBE),
+                new WaitCommand(1.0),
+                new SetIntake(IntakeStates.OFF_RETRACTED_CUBE),
+                new ParallelCommandGroup(
+                        followPathCommand(pathGroup.get(3)),
+                        new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.ZERO))
+                                .andThen(new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE))),
+                new SetIntake(IntakeStates.REV_DEPLOYED_CUBE),
+                new WaitCommand(0.8),
+                new SetIntake(IntakeStates.OFF_RETRACTED));
     }
- }
+}
