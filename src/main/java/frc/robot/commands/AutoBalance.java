@@ -4,6 +4,10 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
 
@@ -23,14 +27,15 @@ public class AutoBalance extends CommandBase {
 
     @Override
     public void initialize() {
+        // robotPitch = s_Swerve.getPitch();
         direction = Math.copySign(direction, robotPitch);
     }
 
     @Override
     public void execute() {
         counter++;
-        if (counter % 20 == 0) {
-            if(Math.abs(s_Swerve.getPitch())+3 >= Math.abs(robotPitch)) {
+        if (counter % 1 == 0) {
+            if(Math.abs(s_Swerve.getPitch())+0.15 >= Math.abs(robotPitch)) {
                 driveSpeed = driveController.calculate(s_Swerve.getPitch(), 0);
                 SmartDashboard.putNumber("drive speed", driveSpeed);
                 SmartDashboard.putNumber("last pit", Math.abs(robotPitch));
@@ -63,11 +68,28 @@ public class AutoBalance extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
+        robotPitch = 0;
         s_Swerve.drive(
-                new Translation2d(0, 0).times(Constants.SwerveConstants.maxSpeed),
-                0,
-                true,
-                true);
+            new Translation2d(0, 0).times(Constants.SwerveConstants.maxSpeed),
+            0,
+            true,
+            true);
+        // CommandScheduler.getInstance().schedule(
+        //     new ParallelDeadlineGroup(
+        //         new WaitCommand(1.0),  
+        //         new InstantCommand(() -> s_Swerve.drive(
+        //         new Translation2d(direction*0.3, 0).times(Constants.SwerveConstants.maxSpeed),
+        //         0,
+        //         true,
+        //         true))
+        //     ).andThen(
+        //         new InstantCommand(() ->  s_Swerve.drive(
+        //             new Translation2d(0, 0).times(Constants.SwerveConstants.maxSpeed),
+        //             0,
+        //             true,
+        //             true))
+        //     )
+        // );
     }
 
 }
