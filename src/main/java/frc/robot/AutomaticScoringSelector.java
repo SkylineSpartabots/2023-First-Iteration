@@ -20,6 +20,7 @@ import frc.robot.subsystems.Elevator.ElevatorStates;
 import frc.robot.subsystems.Intake.IntakeStates;
 import frc.lib.util.COTSFalconSwerveConstants.driveGearRatios;
 import frc.robot.ScoringPosition;
+import frc.robot.Constants.Limelight;
 
 public final class AutomaticScoringSelector {
 
@@ -32,7 +33,7 @@ public final class AutomaticScoringSelector {
                                                                   // farthest from load zone
     private boolean[][] isSelected = new boolean[3][9];
     private GenericEntry[][] selectionDisplay = new GenericEntry[3][9];
-    private GenericEntry currentGridSelected, selectedX, selectedY, selectedRot;
+    private GenericEntry currentGridSelected, selectedX, selectedY, selectedRot, currX, currY, seesTarg;
 
     public int currRow = 0;
     public int currColumn = 0;
@@ -121,6 +122,8 @@ public final class AutomaticScoringSelector {
         selectedX = scoringGridDisplay.add("Selected X", getSelectedPose().getX()).getEntry();
         selectedY = scoringGridDisplay.add("Selected Y", getSelectedPose().getY()).getEntry();
         selectedRot = scoringGridDisplay.add("Selected Rot", getSelectedPose().getRotation().getDegrees()).getEntry();
+        // currX = scoringGridDisplay.add("Curr X", Swerve.getInstance().getPose().getX()).getEntry();
+        seesTarg =scoringGridDisplay.add("Has Target", frc.robot.subsystems.Limelight.getInstance().hasTarget()).getEntry();
     }
 
     public void updateShuffleboard() {
@@ -133,6 +136,9 @@ public final class AutomaticScoringSelector {
         selectedX.setDouble(getSelectedPose().getX());
         selectedY.setDouble(getSelectedPose().getY());
         selectedRot.setDouble(getSelectedPose().getRotation().getDegrees());
+        // currX.setDouble(Swerve.getInstance().getPose().getX());
+        // currY.setDouble(Swerve.getInstance().getPose().getY());
+        seesTarg.setBoolean(frc.robot.subsystems.Limelight.getInstance().hasTarget());
     }
 
     public Pose2d convertToRed(Pose2d a) {

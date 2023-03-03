@@ -31,7 +31,7 @@ public class Elevator extends SubsystemBase {
 		ZERO(50.0), //bottomed out
         REALZERO(0),
 		GROUNDCONE(656), //0.0 //intaking cone from ground
-        GROUNDCUBE(0.0), //intaking cube from ground
+        GROUNDCUBE(650), //intaking cube from ground
         LAYEDCONE(499),
 		SUBSTATION(1100), //not measured yet
         DOUBLESUBSTATION(1506),
@@ -68,7 +68,7 @@ public class Elevator extends SubsystemBase {
         talon.setInverted(inverted);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(false);
-        talon.setNeutralMode(NeutralMode.Coast);
+        talon.setNeutralMode(NeutralMode.Brake);
         talon.config_kF(0, 0.05, Constants.timeOutMs);
         talon.config_kP(0, 0.12, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);

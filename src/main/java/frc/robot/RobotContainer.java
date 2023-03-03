@@ -226,14 +226,23 @@ public class RobotContainer {
                 new SetMechanism(MechanismState.LAYEDCONE),
                 new SetIntake(IntakeStates.ON_DEPLOYED_GCONE)
         );
+        ParallelCommandGroup coneSubstation = new ParallelCommandGroup(
+            new SetMechanism(MechanismState.DOUBLESUBSTATION),
+            new SetIntake(IntakeStates.ON_DEPLOYED)
+        );
         driverRightTrigger.onTrue(coneIntake);
         driverLeftTrigger.onTrue(cubeIntake);
-        driverRightBumper.onTrue(layedCone);
+        // driverRightBumper.onTrue(layedCone);
+        driverRightBumper.onTrue(coneSubstation);
         driverLeftBumper.onTrue(new InstantCommand(() -> zeroCommand()));
 
 
         // driverB.onTrue(new SetElevator(ElevatorStates.L2CONE));
         driverA.onTrue(new ZeroElevator());
+        driverB.onTrue(new InstantCommand(() -> {
+            Intake.getInstance().reverseCommand();
+        }));
+
         // driverX.onTrue(new SetMechanism(MechanismState.CONEINTAKE));
         // driverY.onTrue(new InstantCommand(() -> {
         //     var state = Intake.getInstance().intakeState;
@@ -241,12 +250,18 @@ public class RobotContainer {
         //     Intake.getInstance().setState(state);
         // }));
 
-        operatorDpadUp.onTrue(new InstantCommand(() -> selector.moveUp()));
-        operatorDpadDown.onTrue(new InstantCommand(() -> selector.moveDown()));
-        operatorDpadRight.onTrue(new InstantCommand(() -> selector.moveRight()));
-        operatorDpadLeft.onTrue(new InstantCommand(() -> selector.moveLeft()));
-        operatorA.onTrue(new InstantCommand(() -> selector.select()));
-        operatorB.onTrue(new AutoTeleopScore());
+        // operatorDpadUp.onTrue(new InstantCommand(() -> selector.moveUp()));
+        // operatorDpadDown.onTrue(new InstantCommand(() -> selector.moveDown()));
+        // operatorDpadRight.onTrue(new InstantCommand(() -> selector.moveRight()));
+        // operatorDpadLeft.onTrue(new InstantCommand(() -> selector.moveLeft()));
+        // operatorA.onTrue(new InstantCommand(() -> selector.select()));
+        // operatorB.onTrue(new AutoTeleopScore());
+        operatorA.onTrue(new SetMechanism(MechanismState.LOWCONE));
+        operatorB.onTrue(new SetMechanism(MechanismState.LOWCUBE));
+        operatorX.onTrue(new SetMechanism(MechanismState.MIDCONE));
+        operatorY.onTrue(new SetMechanism(MechanismState.MIDCUBE));
+        operatorLeftTrigger.onTrue(new SetMechanism(MechanismState.HIGHCUBE));
+        operatorRightTrigger.onTrue(new SetMechanism(MechanismState.HIGHCONE));
 
         // operatorB.onTrue(new SmartPathGenerating());
         // operatorX.onTrue(new OnTheFlyGeneration(new Pose2d(0, 0, new Rotation2d(0)),
@@ -279,11 +294,11 @@ public class RobotContainer {
 
     ParallelCommandGroup zeroCone = new ParallelCommandGroup(
             new SetMechanism(MechanismState.ZERO),
-            new SetIntake(IntakeStates.OFF_RETRACTED));
+            new SetIntake(IntakeStates.OFF_DEPLOYED));
 
     ParallelCommandGroup zeroCube = new ParallelCommandGroup(
             new SetMechanism(MechanismState.ZERO),
-            new SetIntake(IntakeStates.OFF_RETRACTED_CUBE));
+            new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE));
     ParallelCommandGroup zeroLayed = new ParallelCommandGroup(
             new SetMechanism(MechanismState.ZERO),
             new SetIntake(IntakeStates.OFF_RETRACTED_GCONE))    
@@ -292,9 +307,9 @@ public class RobotContainer {
         CommandScheduler.getInstance().schedule(Intake.getInstance().intakeState == IntakeStates.ON_DEPLOYED_GCONE ? zeroLayed : Intake.getInstance().intakeState.cube ? zeroCube : zeroCone);
     }
 
-    public void deployCommand() {
-        CommandScheduler.getInstance().schedule(Intake.getInstance().intakeState.cube ? new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE) : new SetIntake(IntakeStates.OFF_DEPLOYED));
-    }
+    // public void deployCommand() {
+    //     CommandScheduler.getInstance().schedule(Intake.getInstance().intakeState.cube ? new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE) : new SetIntake(IntakeStates.OFF_DEPLOYED));
+    // }
 
     public void onRobotDisabled() {
         // reset mechanisms so it does not have to be done manually
