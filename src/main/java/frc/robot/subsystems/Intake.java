@@ -8,16 +8,11 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.commands.SetIntake;
-import frc.robot.commands.SetMechanism;
-import frc.robot.subsystems.CompleteMechanism.MechanismState;
 
 public class Intake extends SubsystemBase {
     private static Intake instance = null;
@@ -31,7 +26,7 @@ public class Intake extends SubsystemBase {
     // change IDs
     private Solenoid intakePositionSolenoid, barSolenoid;
     private Compressor compressor;
-    public IntakeStates intakeState = IntakeStates.OFF_DEPLOYED;
+    public IntakeStates intakeState = IntakeStates.OFF_DEPLOYED_CONE;
     private WPI_TalonFX mIntakeMotor;
 
     private Intake() {
@@ -47,7 +42,7 @@ public class Intake extends SubsystemBase {
         compressor.enableDigital();
         mIntakeMotor = new WPI_TalonFX(Constants.HardwarePorts.intakeMotor);
         configureMotor(mIntakeMotor, false);
-        setState(IntakeStates.OFF_RETRACTED);
+        setState(IntakeStates.OFF_RETRACTED_CONE);
     }
 
     private void configureMotor(WPI_TalonFX talon, boolean inverted) {
@@ -62,29 +57,33 @@ public class Intake extends SubsystemBase {
     }
 
     public enum IntakeStates {
-        OFF_RETRACTED(false, false, 0),
-        OFF_RETRACTED_CUBE(false, true, 0),
-        ON_RETRACTED(false, false, -1),
-        ON_RETRACTED_CUBE(false, true, 1),
-        REV_RETRACTED(false, false, 1),
-        OFF_DEPLOYED(true, false, 0),
-        OFF_DEPLOYED_CUBE(true, true, 0),
-        ON_DEPLOYED(true, false, -1),
-        ON_DEPLOYED_CUBE(true, true, 1),
-        REV_DEPLOYED(true, false, 1),
-        REV_DEPLOYED_CUBE(true, true, -1),
-        ON_DEPLOYED_GCONE(true, false, 1.2),
-        OFF_DEPLOYED_GCONE(true, false, 0.075),
-        OFF_RETRACTED_GCONE(false, false, 0.075);
+        ON_DEPLOYED_CONE(true, "cone", -1),
+        OFF_DEPLOYED_CONE(true, "cone", 0),
+        REV_DEPLOYED_CONE(true, "cone", 1),
+        ON_RETRACTED_CONE(false, "cone", -1),
+        OFF_RETRACTED_CONE(false, "cone", 0),
+        REV_RETRACTED_CONE(false, "cone", 1),
+
+        ON_DEPLOYED_CUBE(true, "cube", 1),
+        OFF_DEPLOYED_CUBE(true, "cube", 0),
+        REV_DEPLOYED_CUBE(true, "cube", -1),
+        ON_RETRACTED_CUBE(false, "cube", 1),
+        OFF_RETRACTED_CUBE(false, "cube", 0),
+        REV_RETRACTED_CUBE(false, "cube", -1),
+
+        ON_DEPLOYED_LAYEDCONE(true, "layed", 1.2),
+        OFF_DEPLOYED_LAYEDCONE(true, "layed", 0.075),
+        OFF_RETRACTED_LAYEDCONE(false, "layed", 0.075),
+        REV_RETRACTED_LAYEDCONE(false, "layed", -1.2);
 
 
         public boolean deployed;
-        public boolean cube;
+        public String piece;
         public double direction;
 
-        private IntakeStates(boolean deployed, boolean cube, double direction) {
+        private IntakeStates(boolean deployed, String piece, double direction) {
             this.deployed = deployed;
-            this.cube = cube;
+            this.piece = piece;
             this.direction = direction;
         }
     }
@@ -92,34 +91,17 @@ public class Intake extends SubsystemBase {
     public void setState(IntakeStates state) {
         this.intakeState = state;
         intakePositionSolenoid.set(intakeState.deployed);
-        barSolenoid.set(intakeState.cube);
+        barSolenoid.set(intakeState.piece.equals("cube"));
         final double offset = 0.60;
         mIntakeMotor.set(ControlMode.PercentOutput, offset * intakeState.direction);
-    }
-
-    public void deployCommand() {
-        Command c = Intake.getInstance().intakeState.cube ? new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE) : new SetIntake(IntakeStates.OFF_DEPLOYED);
-        // CommandScheduler.getInstance().schedule(Intake.getInstance().intakeState.cube ? new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE) : new SetIntake(IntakeStates.OFF_DEPLOYED));
-        CommandScheduler.getInstance().schedule(c);
-
-    }
-
-    public void reverseCommand() {
-        Command c = Intake.getInstance().intakeState.cube ? new SetIntake(IntakeStates.REV_DEPLOYED_CUBE) : new SetIntake(IntakeStates.REV_DEPLOYED);
-        // CommandScheduler.getInstance().schedule(Intake.getInstance().intakeState.cube ? new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE) : new SetIntake(IntakeStates.OFF_DEPLOYED));
-        CommandScheduler.getInstance().schedule(c);
-
-    }
-    public void testSolenoid(boolean b) {
-        intakePositionSolenoid.set(b);
     }
 
     public boolean getIntakeDeployed() {
         return intakeState.deployed;
     }
     
-    public boolean getIntakeCube() {
-        return intakeState.cube;
+    public String getIntakePiece() {
+        return intakeState.piece;
     }
 
     private double coneThreshold = 53.5;
@@ -135,42 +117,45 @@ public class Intake extends SubsystemBase {
     }
 
     private double gConeThreshold = 55;
-    public boolean hasgCone(){
+    public boolean hasLayedCone(){
         double currentVolt = mIntakeMotor.getStatorCurrent();
         return currentVolt > gConeThreshold;
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Intake current", mIntakeMotor.getStatorCurrent());
-        SmartDashboard.putBoolean("intake deployed", getIntakeDeployed());
-        SmartDashboard.putBoolean("intake cube", getIntakeCube());
+        SmartDashboard.putString("intake cube", getIntakePiece());
+        // SmartDashboard.putNumber("Intake current", mIntakeMotor.getStatorCurrent());
+        // SmartDashboard.putBoolean("intake deployed", getIntakeDeployed());
+
         if (intakeState == IntakeStates.ON_DEPLOYED_CUBE) {
             if (hasCube()) {
-                CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED_CUBE));
-            }
-        }
-        if (intakeState == IntakeStates.ON_DEPLOYED) {
-            if (hasCone()) {
-                CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED));
-            }
-        }
-        if (intakeState == IntakeStates.ON_RETRACTED) {
-            if (hasCone()) {
-                CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED));
-            }
-        }
-        if (intakeState == IntakeStates.ON_RETRACTED_CUBE) {
-            if (hasCube()) {
-                CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED_CUBE));
+                CommandScheduler.getInstance().schedule(new WaitCommand(1.0).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE)));
             }
         }
 
-        if (intakeState == IntakeStates.ON_DEPLOYED_GCONE) {
-            if (hasgCone()) {
-                CommandScheduler.getInstance().schedule(new WaitCommand(1.6).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED_GCONE)));
+        if (intakeState == IntakeStates.ON_DEPLOYED_CONE) {
+            if (hasCone()) {
+                CommandScheduler.getInstance().schedule(new WaitCommand(1.0).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED_CONE)));
             }
         }
+        
+        if (intakeState == IntakeStates.ON_DEPLOYED_LAYEDCONE) {
+            if (hasLayedCone()) {
+                CommandScheduler.getInstance().schedule(new WaitCommand(1.6).andThen(new SetIntake(IntakeStates.OFF_RETRACTED_LAYEDCONE)));
+            }
+        }
+
+        // if (intakeState == IntakeStates.ON_RETRACTED_CONE) {
+        //     if (hasCone()) {
+        //         CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED_CONE));
+        //     }
+        // }
+        // if (intakeState == IntakeStates.ON_RETRACTED_CUBE) {
+        //     if (hasCube()) {
+        //         CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED_CUBE));
+        //     }
+        // }
         // if (intakeState == IntakeStates.REV_DEPLOYED) {
         //     if (!hasGamePiece()) {
         //         CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_DEPLOYED));

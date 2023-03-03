@@ -3,13 +3,11 @@ package frc.robot.factories;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -125,10 +123,10 @@ public class AutoCommandFactory {
                 DriverStation.getAlliance());
         return new SequentialCommandGroup(
                 new InstantCommand(() -> s_Swerve.resetOdometry(initState.poseMeters)),
-                new SetMechanism(MechanismState.MIDCUBE).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED)),
-                new SetIntake(IntakeStates.REV_DEPLOYED),
+                new SetMechanism(MechanismState.L2CUBE).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED_CONE)),
+                new SetIntake(IntakeStates.REV_DEPLOYED_CONE),
                 new WaitCommand(0.5),
-                new SetIntake(IntakeStates.OFF_RETRACTED),
+                new SetIntake(IntakeStates.OFF_RETRACTED_CONE),
                 new ParallelCommandGroup(
                         followPathCommand(path),
                         new SetMechanism(MechanismState.ZERO))
@@ -144,10 +142,10 @@ public class AutoCommandFactory {
 
         return new SequentialCommandGroup(
                 new InstantCommand(() -> s_Swerve.resetOdometry(initState.poseMeters)),
-                new SetMechanism(MechanismState.MIDCONE).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED)),
-                new SetIntake(IntakeStates.REV_DEPLOYED),
+                new SetMechanism(MechanismState.L2CONE).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED_CONE)),
+                new SetIntake(IntakeStates.REV_DEPLOYED_CONE),
                 new WaitCommand(0.5),
-                new SetIntake(IntakeStates.OFF_RETRACTED),
+                new SetIntake(IntakeStates.OFF_RETRACTED_CONE),
                 new ParallelCommandGroup(
                         followPathCommand(pathGroup.get(0)),
                         new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.CUBEINTAKE))),
@@ -156,11 +154,11 @@ public class AutoCommandFactory {
                 new SetIntake(IntakeStates.OFF_RETRACTED_CUBE),
                 new ParallelCommandGroup(
                         followPathCommand(pathGroup.get(1)),
-                        new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.MIDCUBE))
+                        new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.L2CUBE))
                                 .andThen(new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE))),
                 new SetIntake(IntakeStates.REV_DEPLOYED_CUBE),
                 new WaitCommand(0.8),
-                new SetIntake(IntakeStates.OFF_RETRACTED));
+                new SetIntake(IntakeStates.OFF_RETRACTED_CONE));
     }
 
     private static Command twoConeDockBottom() {
@@ -171,10 +169,10 @@ public class AutoCommandFactory {
 
         return new SequentialCommandGroup(
                 new InstantCommand(() -> s_Swerve.resetOdometry(initState.poseMeters)),
-                new SetMechanism(MechanismState.MIDCONE).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED)),
-                new SetIntake(IntakeStates.REV_DEPLOYED),
+                new SetMechanism(MechanismState.L2CONE).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED_CONE)),
+                new SetIntake(IntakeStates.REV_DEPLOYED_CONE),
                 new WaitCommand(0.5),
-                new SetIntake(IntakeStates.OFF_RETRACTED),
+                new SetIntake(IntakeStates.OFF_RETRACTED_CONE),
                 new ParallelCommandGroup(
                         followPathCommand(pathGroup.get(0)),
                         new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.CUBEINTAKE))),
@@ -183,11 +181,11 @@ public class AutoCommandFactory {
                 new SetIntake(IntakeStates.OFF_RETRACTED_CUBE),
                 new ParallelCommandGroup(
                         followPathCommand(pathGroup.get(1)),
-                        new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.MIDCUBE))
+                        new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.L2CUBE))
                                 .andThen(new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE))),
                 new SetIntake(IntakeStates.REV_DEPLOYED_CUBE),
                 new WaitCommand(0.8),
-                new SetIntake(IntakeStates.OFF_RETRACTED),
+                new SetIntake(IntakeStates.OFF_RETRACTED_CONE),
                 new ParallelCommandGroup(
                         followPathCommand(pathGroup.get(2)),
                         new SetMechanism(MechanismState.ZERO))
@@ -203,12 +201,12 @@ public class AutoCommandFactory {
         return new SequentialCommandGroup(
                 new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(initState.poseMeters.getX(),
                         initState.poseMeters.getY(), new Rotation2d(Math.toRadians(180))))),
-                new SetMechanism(MechanismState.HIGHCONE),
-                new SetIntake(IntakeStates.OFF_DEPLOYED),
+                new SetMechanism(MechanismState.L3CONE),
+                new SetIntake(IntakeStates.OFF_DEPLOYED_CONE),
                 new WaitCommand(1),
-                new SetIntake(IntakeStates.REV_DEPLOYED),
+                new SetIntake(IntakeStates.REV_DEPLOYED_CONE),
                 new WaitCommand(0.5),
-                new SetIntake(IntakeStates.OFF_RETRACTED),
+                new SetIntake(IntakeStates.OFF_RETRACTED_CONE),
                 new ParallelCommandGroup(
                         followPathCommand(pathGroup.get(0)).alongWith(new SetIntake(IntakeStates.ON_DEPLOYED_CUBE)),
                         new ParallelDeadlineGroup(new WaitCommand(1.25), new SetMechanism(MechanismState.ZERO))
@@ -219,10 +217,10 @@ public class AutoCommandFactory {
                         followPathCommand(pathGroup.get(1)),
                         new SetMechanism(MechanismState.ZERO).alongWith(new SetIntake(IntakeStates.ON_DEPLOYED_CUBE))
                                 .alongWith(new WaitCommand(0.8).andThen(new SetIntake(IntakeStates.OFF_RETRACTED_CUBE)))
-                                .andThen(new WaitCommand(0.8)).andThen(new SetMechanism(MechanismState.HIGHCUBE))),
+                                .andThen(new WaitCommand(0.8)).andThen(new SetMechanism(MechanismState.L3CUBE))),
                 new SetIntake(IntakeStates.REV_DEPLOYED_CUBE),
                 new WaitCommand(0.75),
-                new SetIntake(IntakeStates.OFF_RETRACTED));
+                new SetIntake(IntakeStates.OFF_RETRACTED_CONE));
     }
 
     private static Command twoConeDockTop() {
@@ -234,12 +232,12 @@ public class AutoCommandFactory {
         return new SequentialCommandGroup(
                 new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(initState.poseMeters.getX(),
                         initState.poseMeters.getY(), new Rotation2d(Math.toRadians(180))))),
-                new SetMechanism(MechanismState.HIGHCONE),
-                new SetIntake(IntakeStates.OFF_DEPLOYED),
+                new SetMechanism(MechanismState.L3CONE),
+                new SetIntake(IntakeStates.OFF_DEPLOYED_CONE),
                 new WaitCommand(1),
-                new SetIntake(IntakeStates.REV_DEPLOYED),
+                new SetIntake(IntakeStates.REV_DEPLOYED_CONE),
                 new WaitCommand(0.5),
-                new SetIntake(IntakeStates.OFF_RETRACTED),
+                new SetIntake(IntakeStates.OFF_RETRACTED_CONE),
                 new ParallelCommandGroup(
                         followPathCommand(pathGroup.get(0)).alongWith(new SetIntake(IntakeStates.ON_DEPLOYED_CUBE)),
                         new ParallelDeadlineGroup(new WaitCommand(1.25), new SetMechanism(MechanismState.ZERO))
@@ -250,10 +248,10 @@ public class AutoCommandFactory {
                         followPathCommand(pathGroup.get(1)),
                         new SetMechanism(MechanismState.ZERO).alongWith(new SetIntake(IntakeStates.ON_DEPLOYED_CUBE))
                                 .alongWith(new WaitCommand(0.8).andThen(new SetIntake(IntakeStates.OFF_RETRACTED_CUBE)))
-                                .andThen(new WaitCommand(0.8)).andThen(new SetMechanism(MechanismState.HIGHCUBE))),
+                                .andThen(new WaitCommand(0.8)).andThen(new SetMechanism(MechanismState.L3CUBE))),
                 new SetIntake(IntakeStates.REV_DEPLOYED_CUBE),
                 new WaitCommand(0.75),
-                new SetIntake(IntakeStates.OFF_RETRACTED),
+                new SetIntake(IntakeStates.OFF_RETRACTED_CONE),
                 new ParallelCommandGroup(
                         followPathCommand(pathGroup.get(2)),
                         new SetMechanism(MechanismState.ZERO))
@@ -288,10 +286,10 @@ public class AutoCommandFactory {
 
         return new SequentialCommandGroup(
                 new InstantCommand(() -> s_Swerve.resetOdometry(initState.poseMeters)),
-                new SetMechanism(MechanismState.MIDCONE).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED)),
-                new SetIntake(IntakeStates.REV_DEPLOYED),
+                new SetMechanism(MechanismState.L2CONE).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED_CONE)),
+                new SetIntake(IntakeStates.REV_DEPLOYED_CONE),
                 new WaitCommand(0.5),
-                new SetIntake(IntakeStates.OFF_RETRACTED),
+                new SetIntake(IntakeStates.OFF_RETRACTED_CONE),
                 new ParallelCommandGroup(
                         followPathCommand(pathGroup.get(0)),
                         new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.CUBEINTAKE))),
@@ -300,11 +298,11 @@ public class AutoCommandFactory {
                 new SetIntake(IntakeStates.OFF_RETRACTED_CUBE),
                 new ParallelCommandGroup(
                         followPathCommand(pathGroup.get(1)),
-                        new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.MIDCUBE))
+                        new SetMechanism(MechanismState.ZERO).andThen(new SetMechanism(MechanismState.L2CUBE))
                                 .andThen(new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE))),
                 new SetIntake(IntakeStates.REV_DEPLOYED_CUBE),
                 new WaitCommand(0.8),
-                new SetIntake(IntakeStates.OFF_RETRACTED),
+                new SetIntake(IntakeStates.OFF_RETRACTED_CONE),
                 // third piece - test
                 new ParallelCommandGroup(
                         followPathCommand(pathGroup.get(2)),
@@ -318,6 +316,6 @@ public class AutoCommandFactory {
                                 .andThen(new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE))),
                 new SetIntake(IntakeStates.REV_DEPLOYED_CUBE),
                 new WaitCommand(0.8),
-                new SetIntake(IntakeStates.OFF_RETRACTED));
+                new SetIntake(IntakeStates.OFF_RETRACTED_CONE));
     }
 }

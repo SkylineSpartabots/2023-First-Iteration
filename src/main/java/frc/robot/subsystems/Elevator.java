@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -8,7 +7,6 @@ import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.MagnetFieldStrength;
 
-// import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -27,21 +25,27 @@ public class Elevator extends SubsystemBase {
     CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
     ElevatorStates elevatorState = ElevatorStates.ZERO;
 
-    public enum ElevatorStates { //all are measured values unless otherwise indicated
-		ZERO(50.0), //bottomed out
+    public enum ElevatorStates { 
+		ZERO(50.0), 
         REALZERO(0),
-		GROUNDCONE(656), //0.0 //intaking cone from ground
-        GROUNDCUBE(650), //intaking cube from ground
+
+		CONEINTAKE(656), 
+        CUBEINTAKE(650), 
         LAYEDCONE(499),
-		SUBSTATION(1100), //not measured yet
+		SUBSTATION(1100), 
         DOUBLESUBSTATION(1506),
-		L1CONE(0.0), 
-		L2CONE(1145), //middle scoring thing GOOD
-		L3CONE(2256), //upper scoring thing GOOD 
+		
+        L1CONE(0.0), 
+		L2CONE(1145), 
+		L3CONE(2256), 
+        
         L1CUBE(55),
 		L2CUBE(764), 
 		L3CUBE(1880),
-		TEST(1000); 
+
+        L1LAYEDCONE(0.0),
+        L2LAYEDCONE(1145),
+        L3LAYEDCONE(2256);
 
 		double statePosition = 0.0;
 
@@ -56,10 +60,7 @@ public class Elevator extends SubsystemBase {
         mFollowerElevatorMotor = new WPI_TalonFX(Constants.HardwarePorts.elevatorFollowerMotor);
         configureMotor(mFollowerElevatorMotor, true);
         mFollowerElevatorMotor.set(ControlMode.Follower, Constants.HardwarePorts.elevatorLeaderMotor);
-        mLeaderElevatorMotor.setSelectedSensorPosition(0);
-        mFollowerElevatorMotor.setSelectedSensorPosition(0);
         canCoderConfig.sensorDirection = false;
-        canCoderConfig.unitString = "centimeters";
         elevatorCANCoder.configAllSettings(canCoderConfig);
         setCANCoderPosition(0);
     }
@@ -89,11 +90,6 @@ public class Elevator extends SubsystemBase {
         elevatorState = state;
     }
 
-    public void setMotorPosition(double position) {
-        mLeaderElevatorMotor.setSelectedSensorPosition(position);
-        mFollowerElevatorMotor.setSelectedSensorPosition(position);
-    }
-
     public double getVelocitySetpoint() {
         return velocity;
     }
@@ -106,10 +102,6 @@ public class Elevator extends SubsystemBase {
         return elevatorState.statePosition;
     }
 
-    public double getMotorPosition() {
-		return mLeaderElevatorMotor.getSelectedSensorPosition();
-	}
-
     public void setCANCoderPosition(double position) {
         elevatorCANCoder.setPosition(position);
     }
@@ -121,10 +113,6 @@ public class Elevator extends SubsystemBase {
 
     public double getCANCoderVoltage() {
         return elevatorCANCoder.getBusVoltage();
-    }
-
-    public ErrorCode getCANCoderStatus() {
-        return elevatorCANCoder.getLastError();
     }
 
     public boolean elevatorError() {
@@ -142,9 +130,9 @@ public class Elevator extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("eleCANpos", getCANCoderPosition());
         SmartDashboard.putNumber("elePosSet", getCANCoderSetpoint());
-		SmartDashboard.putNumber("ele set velo", getVelocitySetpoint());
-		SmartDashboard.putNumber("ele set volt", getVoltageSetpoint());
-        SmartDashboard.putBoolean("elevator ", elevatorError());
-        SmartDashboard.putNumber("eleCurrent", getCurrent());
+		// SmartDashboard.putNumber("ele set velo", getVelocitySetpoint());
+		// SmartDashboard.putNumber("ele set volt", getVoltageSetpoint());
+        // SmartDashboard.putBoolean("elevator ", elevatorError());
+        // SmartDashboard.putNumber("eleCurrent", getCurrent());
     }
 }

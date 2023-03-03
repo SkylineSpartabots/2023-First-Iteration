@@ -161,21 +161,21 @@ public final class AutomaticScoringSelector {
     public MechanismState getMechState() {
         if (selectedRow == 0) {
             if (selectedColumn % 3 == 1) {
-                return MechanismState.LOWCUBE;
+                return MechanismState.L1CUBE;
             } else {
-                return MechanismState.LOWCONE;
+                return MechanismState.L1CONE;
             }
         } else if (selectedRow == 1) {
             if (selectedColumn % 3 == 1) {
-                return MechanismState.MIDCUBE;
+                return MechanismState.L2CUBE;
             } else {
-                return MechanismState.MIDCONE;
+                return MechanismState.L2CONE;
             }
         } else {
             if (selectedColumn % 3 == 1) {
-                return MechanismState.HIGHCUBE;
+                return MechanismState.L3CUBE;
             } else {
-                return MechanismState.HIGHCONE;
+                return MechanismState.L3CONE;
             }
         }
     }

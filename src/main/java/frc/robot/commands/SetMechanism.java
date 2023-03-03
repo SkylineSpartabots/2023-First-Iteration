@@ -21,8 +21,8 @@ public class SetMechanism extends CommandBase{
     
     @Override
     public void initialize() {
-        if (s_Mechanism.getState() == MechanismState.HIGHCONE || s_Mechanism.getState() == MechanismState.HIGHCUBE ||
-        s_Mechanism.getState() == MechanismState.MIDCONE || s_Mechanism.getState() == MechanismState.MIDCUBE) {
+        if (s_Mechanism.getState() == MechanismState.L3CONE || s_Mechanism.getState() == MechanismState.L3CUBE ||
+        s_Mechanism.getState() == MechanismState.L2CONE || s_Mechanism.getState() == MechanismState.L2CUBE) {
             CommandScheduler.getInstance().schedule(
                 new ParallelCommandGroup(
                     new WaitCommand(0.3).andThen(new SetArm(state.armState)),

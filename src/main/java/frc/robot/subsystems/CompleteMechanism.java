@@ -21,16 +21,23 @@ public class CompleteMechanism extends SubsystemBase {
     }
 
     public enum MechanismState{
-        LOWCONE(ElevatorStates.L1CONE, ArmStates.L1CONE),
-        MIDCONE(ElevatorStates.L2CONE, ArmStates.L2CONE),
-        HIGHCONE(ElevatorStates.L3CONE, ArmStates.L3CONE),
-        CUBEINTAKE(ElevatorStates.GROUNDCUBE, ArmStates.GROUNDCUBE),
-        CONEINTAKE(ElevatorStates.GROUNDCONE, ArmStates.GROUNDCONE),
-        LOWCUBE(ElevatorStates.L1CUBE, ArmStates.L1CUBE),
-        MIDCUBE(ElevatorStates.L2CUBE, ArmStates.L2CUBE),
-        HIGHCUBE(ElevatorStates.L3CUBE, ArmStates.L3CUBE),
-        ZERO(ElevatorStates.ZERO, ArmStates.ZERO),
         REALZERO(ElevatorStates.REALZERO, ArmStates.ZERO),
+        ZERO(ElevatorStates.ZERO, ArmStates.ZERO),
+
+        L1CONE(ElevatorStates.L1CONE, ArmStates.L1CONE),
+        L2CONE(ElevatorStates.L2CONE, ArmStates.L2CONE),
+        L3CONE(ElevatorStates.L3CONE, ArmStates.L3CONE),
+
+        L1CUBE(ElevatorStates.L1CUBE, ArmStates.L1CUBE),
+        L2CUBE(ElevatorStates.L2CUBE, ArmStates.L2CUBE),
+        L3CUBE(ElevatorStates.L3CUBE, ArmStates.L3CUBE),
+
+        L1LAYEDCONE(ElevatorStates.L1LAYEDCONE, ArmStates.L1LAYEDCONE),
+        L2LAYEDCONE(ElevatorStates.L2LAYEDCONE, ArmStates.L2LAYEDCONE),
+        L3LAYEDCONE(ElevatorStates.L3LAYEDCONE, ArmStates.L3LAYEDCONE),
+        
+        CUBEINTAKE(ElevatorStates.CUBEINTAKE, ArmStates.CUBEINTAKE),
+        CONEINTAKE(ElevatorStates.CONEINTAKE, ArmStates.CONEINTAKE),
         LAYEDCONE(ElevatorStates.LAYEDCONE, ArmStates.LAYEDCONE),
         SUBSTATION(ElevatorStates.SUBSTATION, ArmStates.SUBSTATION),
         DOUBLESUBSTATION(ElevatorStates.DOUBLESUBSTATION, ArmStates.DOUBLESUBSTATION);
@@ -64,6 +71,6 @@ public class CompleteMechanism extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("mech state", inState());
+        // SmartDashboard.putBoolean("mech state", inState());
     }
 }
