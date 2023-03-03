@@ -23,6 +23,7 @@ public class OnTheFlyGeneration extends CommandBase {
     Swerve s_Swerve;
     boolean autoScoring;
     AutomaticScoringSelector selector;
+    double heading;
 
     public OnTheFlyGeneration(Pose2d targetPos, boolean autoScoring) {
         s_Swerve = Swerve.getInstance();
@@ -34,7 +35,7 @@ public class OnTheFlyGeneration extends CommandBase {
     
     private PathPoint getPathPoint(Pose2d pose) {
         return new PathPoint(new Translation2d(pose.getX(), pose.getY()),
-                Rotation2d.fromDegrees(0),
+                Rotation2d.fromRadians(heading),
                 pose.getRotation());
     }
 
@@ -44,6 +45,9 @@ public class OnTheFlyGeneration extends CommandBase {
         if(autoScoring) {
             targetPos = selector.getSelectedPose();
         }
+        double x = targetPos.getX() - currentPos.getX();
+        double y = targetPos.getY() - currentPos.getY();
+        heading = Math.atan2(y, x);
     }
 
     @Override

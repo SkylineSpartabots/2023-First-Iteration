@@ -31,6 +31,7 @@ public final class Constants {
     }
 
     public static final double FIELD_WIDTH_METERS = 8.02;
+    public static final double FIELD_HEIGHT_METERS = 16.4846;
 
     // ALL OF THESE ARE ONLY TRUE ON BLUE ALLIANCE
     public static final Translation2d TOP_LEFT_CHARGE = new Translation2d(2.52, 4.35);
@@ -57,7 +58,7 @@ public final class Constants {
                 Units.degreesToRadians(0) // z (yaw)
         );
 
-        public static final Pose3d[] gameAprilTags = {
+        public static final Pose3d[] blueGameAprilTags = {
                 new Pose3d(15.51, 1.07, 0.46, new Rotation3d(0, 0, Math.PI)),
                 new Pose3d(15.51, 2.74, 0.46, new Rotation3d(0, 0, Math.PI)),
                 new Pose3d(15.51, 4.42, 0.46, new Rotation3d(0, 0, Math.PI)),
@@ -68,7 +69,12 @@ public final class Constants {
                 new Pose3d(1.03, 1.07, 0.46, new Rotation3d(0, 0, 0))
         };
 
-        public static final Pose2d[] gameAprilTags2d = {
+        public static Pose3d[] redGameAprilTags = new Pose3d[8];
+        public static Pose2d[] redGameAprilTags2d = new Pose2d[8];
+        public static Pose3d[] gameAprilTags = new Pose3d[8];
+        public static Pose2d[] gameAprilTags2d = new Pose2d[8];
+
+        public static final Pose2d[] blueGameAprilTags2d = {
                 new Pose2d(15.51, 1.07, new Rotation2d(Math.PI)),
                 new Pose2d(15.51, 2.74, new Rotation2d(Math.PI)),
                 new Pose2d(15.51, 4.42, new Rotation2d(Math.PI)),

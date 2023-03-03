@@ -232,14 +232,14 @@ public class RobotContainer {
         driverLeftBumper.onTrue(new InstantCommand(() -> zeroCommand()));
 
 
-        driverB.onTrue(new SetElevator(ElevatorStates.L2CONE));
+        // driverB.onTrue(new SetElevator(ElevatorStates.L2CONE));
         driverA.onTrue(new ZeroElevator());
-        driverX.onTrue(new SetMechanism(MechanismState.CONEINTAKE));
-        driverY.onTrue(new InstantCommand(() -> {
-            var state = Intake.getInstance().intakeState;
-            state.deployed = !state.deployed;
-            Intake.getInstance().setState(state);
-        }));
+        // driverX.onTrue(new SetMechanism(MechanismState.CONEINTAKE));
+        // driverY.onTrue(new InstantCommand(() -> {
+        //     var state = Intake.getInstance().intakeState;
+        //     state.deployed = !state.deployed;
+        //     Intake.getInstance().setState(state);
+        // }));
 
         operatorDpadUp.onTrue(new InstantCommand(() -> selector.moveUp()));
         operatorDpadDown.onTrue(new InstantCommand(() -> selector.moveDown()));
@@ -292,11 +292,16 @@ public class RobotContainer {
         CommandScheduler.getInstance().schedule(Intake.getInstance().intakeState == IntakeStates.ON_DEPLOYED_GCONE ? zeroLayed : Intake.getInstance().intakeState.cube ? zeroCube : zeroCone);
     }
 
+    public void deployCommand() {
+        CommandScheduler.getInstance().schedule(Intake.getInstance().intakeState.cube ? new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE) : new SetIntake(IntakeStates.OFF_DEPLOYED));
+    }
+
     public void onRobotDisabled() {
         // reset mechanisms so it does not have to be done manually
         CommandScheduler.getInstance().schedule(new SetArm(ArmStates.ZERO));
         CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED));
 
     }
+
 
 }

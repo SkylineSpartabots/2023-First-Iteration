@@ -96,6 +96,10 @@ public class Intake extends SubsystemBase {
         mIntakeMotor.set(ControlMode.PercentOutput, offset * intakeState.direction);
     }
 
+    public void deployCommand() {
+        CommandScheduler.getInstance().schedule(Intake.getInstance().intakeState.cube ? new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE) : new SetIntake(IntakeStates.OFF_DEPLOYED));
+    }
+
     public void testSolenoid(boolean b) {
         intakePositionSolenoid.set(b);
     }
