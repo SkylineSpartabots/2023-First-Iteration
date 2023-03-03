@@ -35,7 +35,7 @@ public class AutoBalance extends CommandBase {
     public void execute() {
         counter++;
         if (counter % 1 == 0) {
-            if(Math.abs(s_Swerve.getPitch())+0.15 >= Math.abs(robotPitch) || timer.get() < 1.5) {
+            if(Math.abs(s_Swerve.getPitch())+0.15 >= Math.abs(robotPitch) || timer.get() < 2.0) {
                 driveSpeed = driveController.calculate(s_Swerve.getPitch(), 0);
                 SmartDashboard.putNumber("drive speed", driveSpeed);
                 SmartDashboard.putNumber("last pit", Math.abs(robotPitch));

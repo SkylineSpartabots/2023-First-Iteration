@@ -59,8 +59,8 @@ public class Swerve extends SubsystemBase {
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
         SwerveModuleState[] swerveModuleStates = Constants.SwerveConstants.swerveKinematics.toSwerveModuleStates(
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                        Math.pow(translation.getX(), 2), // square inputs for robert testing
-                        Math.pow(translation.getY(), 2), // square inputs for robert testing
+                        Math.copySign(Math.pow(translation.getX(), 2), translation.getX()), // square inputs for robert testing
+                        Math.copySign(Math.pow(translation.getY(), 2), translation.getY()), // square inputs for robert testing
                         rotation,
                         getYaw())
                         : new ChassisSpeeds(
