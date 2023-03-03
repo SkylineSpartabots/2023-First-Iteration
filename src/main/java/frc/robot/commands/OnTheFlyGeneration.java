@@ -48,8 +48,8 @@ public class OnTheFlyGeneration extends CommandBase {
 
     @Override
     public void execute() {
-        double maxVel = AutomaticScoringCommand.getMaxVel();
-        double maxAccel = AutomaticScoringCommand.getMaxAccel();
+        double maxVel = 3;
+        double maxAccel = 2;
         PathPlannerTrajectory trajectory = PathPlanner.generatePath(
                 new PathConstraints(maxVel, maxAccel),
                 getPathPoint(currentPos),

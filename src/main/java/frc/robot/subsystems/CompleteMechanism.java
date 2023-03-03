@@ -31,7 +31,9 @@ public class CompleteMechanism extends SubsystemBase {
         HIGHCUBE(ElevatorStates.L3CUBE, ArmStates.L3CUBE),
         ZERO(ElevatorStates.ZERO, ArmStates.ZERO),
         REALZERO(ElevatorStates.REALZERO, ArmStates.ZERO),
-        LAYEDCONE(ElevatorStates.LAYEDCONE, ArmStates.LAYEDCONE);
+        LAYEDCONE(ElevatorStates.LAYEDCONE, ArmStates.LAYEDCONE),
+        SUBSTATION(ElevatorStates.SUBSTATION, ArmStates.SUBSTATION),
+        DOUBLESUBSTATION(ElevatorStates.DOUBLESUBSTATION, ArmStates.DOUBLESUBSTATION);
 
         public ElevatorStates elevState;
         public ArmStates armState;
