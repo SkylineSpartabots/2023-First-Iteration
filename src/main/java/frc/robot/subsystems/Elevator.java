@@ -13,8 +13,10 @@ import frc.robot.Constants;
 
 public class Elevator extends SubsystemBase {
     private static Elevator instance;
+
     public static Elevator getInstance() {
-        if (instance == null) instance = new Elevator();
+        if (instance == null)
+            instance = new Elevator();
         return instance;
     }
 
@@ -25,36 +27,35 @@ public class Elevator extends SubsystemBase {
     CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
     ElevatorStates elevatorState = ElevatorStates.ZERO;
 
-    public enum ElevatorStates { 
-		ZERO(50.0), 
+    public enum ElevatorStates {
+        ZERO(50.0),
         REALZERO(0),
 
-		CONEINTAKE(656), 
-        CUBEINTAKE(650), 
+        CONEINTAKE(656),
+        CUBEINTAKE(650),
         LAYEDCONE(499),
-		SUBSTATION(1100), 
+        SUBSTATION(1100),
         DOUBLESUBSTATION(1506),
-		
-        L1CONE(0.0), 
-		L2CONE(1145), 
-		// L3CONE(2256), 
-        L3CONE(1800), // CHANGE THIS ITS NOT RIGHT
-        
+
+        L1CONE(50.0),
+        L2CONE(1145),
+        L3CONE(2250),
+
         L1CUBE(55),
-		L2CUBE(764), 
-		L3CUBE(1880),
+        L2CUBE(764),
+        L3CUBE(1880),
 
         L1LAYEDCONE(0.0),
         L2LAYEDCONE(1145),
         L3LAYEDCONE(2256);
 
-		double statePosition = 0.0;
+        double statePosition = 0.0;
 
-		private ElevatorStates(double statePosition) {
-			this.statePosition = statePosition;
-		}
-	}
-   
+        private ElevatorStates(double statePosition) {
+            this.statePosition = statePosition;
+        }
+    }
+
     public Elevator() {
         mLeaderElevatorMotor = new WPI_TalonFX(Constants.HardwarePorts.elevatorLeaderMotor);
         configureMotor(mLeaderElevatorMotor, true);
@@ -66,7 +67,7 @@ public class Elevator extends SubsystemBase {
         setCANCoderPosition(0);
     }
 
-    private void configureMotor(WPI_TalonFX talon, boolean inverted){
+    private void configureMotor(WPI_TalonFX talon, boolean inverted) {
         talon.setInverted(inverted);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(false);
@@ -83,7 +84,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public void setVoltage(double voltage) {
-       this.voltage = voltage;
+        this.voltage = voltage;
         mLeaderElevatorMotor.setVoltage(voltage);
     }
 
@@ -94,11 +95,11 @@ public class Elevator extends SubsystemBase {
     public double getVelocitySetpoint() {
         return velocity;
     }
-    
+
     public double getVoltageSetpoint() {
         return voltage;
     }
-  
+
     public double getCANCoderSetpoint() {
         return elevatorState.statePosition;
     }
@@ -117,7 +118,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public boolean elevatorError() {
-        if(elevatorCANCoder.getMagnetFieldStrength() == MagnetFieldStrength.BadRange_RedLED) {
+        if (elevatorCANCoder.getMagnetFieldStrength() == MagnetFieldStrength.BadRange_RedLED) {
             return true;
         }
         return false;
@@ -126,13 +127,13 @@ public class Elevator extends SubsystemBase {
     public double getCurrent() {
         return mLeaderElevatorMotor.getStatorCurrent();
     }
-   
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("eleCANpos", getCANCoderPosition());
         SmartDashboard.putNumber("elePosSet", getCANCoderSetpoint());
-		// SmartDashboard.putNumber("ele set velo", getVelocitySetpoint());
-		// SmartDashboard.putNumber("ele set volt", getVoltageSetpoint());
+        // SmartDashboard.putNumber("ele set velo", getVelocitySetpoint());
+        // SmartDashboard.putNumber("ele set volt", getVoltageSetpoint());
         // SmartDashboard.putBoolean("elevator ", elevatorError());
         // SmartDashboard.putNumber("eleCurrent", getCurrent());
     }

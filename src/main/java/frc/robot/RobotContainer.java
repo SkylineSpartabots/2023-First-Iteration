@@ -2,6 +2,8 @@ package frc.robot;
 
 import javax.swing.text.html.Option;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -138,19 +140,31 @@ public class RobotContainer {
     private void configureButtonBindings() {
         driverStart.onTrue(new SmartResetOdometry());
         driverBack.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
-
         driverRightTrigger.onTrue(coneSubstation);
         driverLeftTrigger.onTrue(cubeIntake);
         driverLeftBumper.onTrue(layedCone);
         driverRightBumper.onTrue(coneIntake);
-
         driverB.onTrue(new InstantCommand(() -> zeroCommand()));
         driverA.onTrue(new ZeroElevator());
+        // driverY.onTrue(new AutoBalance());
+        driverX.onTrue(new InstantCommand(() -> reverseCommand()));
 
-        operatorB.onTrue(new InstantCommand(() -> l1State()));
-        operatorA.onTrue(new InstantCommand(() -> l2State()));
-        operatorX.onTrue(new InstantCommand(() -> l3State()));
-        operatorY.onTrue(new InstantCommand(() -> reverseCommand()));
+        operatorA.onTrue(new InstantCommand(() -> l1State()));
+        operatorX.onTrue(new InstantCommand(() -> l2State()));
+        operatorY.onTrue(new InstantCommand(() -> l3State()));
+        operatorB.onTrue(new InstantCommand(() -> reverseCommand()));
+
+        operatorRightTrigger.onTrue(new InstantCommand(() -> {
+                s_Intake.mIntakeMotor.set(ControlMode.PercentOutput, -0.8);
+        }));
+        operatorLeftTrigger.onTrue(new InstantCommand(() -> {
+                s_Intake.mIntakeMotor.set(ControlMode.PercentOutput, 0.8);
+        }));
+
+        driverDpadDown.onTrue(new InstantCommand(() -> l1State()));
+        driverDpadRight.onTrue(new InstantCommand(() -> l2State()));
+        driverDpadUp.onTrue(new InstantCommand(() -> l3State()));
+        
     }
 
     ParallelCommandGroup coneIntake = new ParallelCommandGroup(
@@ -183,7 +197,7 @@ public class RobotContainer {
     public void l3State() {
         CommandScheduler.getInstance().schedule(
                 s_Intake.intakeState.piece.equals("layed") ? new SetMechanism(MechanismState.L3LAYEDCONE)
-                        : s_Intake.intakeState.piece.equals("cube") ? new SetMechanism(MechanismState.L2CUBE)
+                        : s_Intake.intakeState.piece.equals("cube") ? new SetMechanism(MechanismState.L3CUBE)
                                 : new SetMechanism(MechanismState.L3CONE));
     }
 

@@ -86,10 +86,10 @@ public class Limelight extends SubsystemBase {
 		result = camera.getLatestResult();
 		getBestTarget();
 		SmartDashboard.putBoolean("cam has target", hasTarget());
-		SmartDashboard.putNumber("cam last yaw", getYaw());
-		SmartDashboard.putNumber("cam last pitch", getPitch());
-		SmartDashboard.putNumber("cam last distance", getDistance());
 		SmartDashboard.putNumber("Tag id", getID());
+		// SmartDashboard.putNumber("cam last yaw", getYaw());
+		// SmartDashboard.putNumber("cam last pitch", getPitch());
+		// SmartDashboard.putNumber("cam last distance", getDistance());
 		
 		// SmartDashboard.putNumber("Tag x-pos", Constants.Limelight.gameAprilTags2d[getID()-1].getX());
 		// SmartDashboard.putNumber("Tag y-pos", Constants.Limelight.gameAprilTags2d[getID()-1].getY());

@@ -27,7 +27,7 @@ public class Intake extends SubsystemBase {
     private Solenoid intakePositionSolenoid, barSolenoid;
     private Compressor compressor;
     public IntakeStates intakeState = IntakeStates.OFF_DEPLOYED_CONE;
-    private WPI_TalonFX mIntakeMotor;
+    public WPI_TalonFX mIntakeMotor;
 
     private Intake() {
         intakePositionSolenoid = new Solenoid(
@@ -58,7 +58,7 @@ public class Intake extends SubsystemBase {
 
     public enum IntakeStates {
         ON_DEPLOYED_CONE(true, "cone", -1),
-        OFF_DEPLOYED_CONE(true, "cone", 0),
+        OFF_DEPLOYED_CONE(true, "cone", -0.075),
         REV_DEPLOYED_CONE(true, "cone", 1),
         ON_RETRACTED_CONE(false, "cone", -1),
         OFF_RETRACTED_CONE(false, "cone", 0),
@@ -92,7 +92,7 @@ public class Intake extends SubsystemBase {
         this.intakeState = state;
         intakePositionSolenoid.set(intakeState.deployed);
         barSolenoid.set(intakeState.piece.equals("cube"));
-        final double offset = 0.60;
+        final double offset = 1;
         mIntakeMotor.set(ControlMode.PercentOutput, offset * intakeState.direction);
     }
 
@@ -104,7 +104,7 @@ public class Intake extends SubsystemBase {
         return intakeState.piece;
     }
 
-    private double coneThreshold = 53.5;
+    private double coneThreshold = 46.5;
     public boolean hasCone(){
         double currentVolt = mIntakeMotor.getStatorCurrent();
         return currentVolt > coneThreshold;
@@ -124,8 +124,8 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putString("intake cube", getIntakePiece());
-        // SmartDashboard.putNumber("Intake current", mIntakeMotor.getStatorCurrent());
+        SmartDashboard.putString("intake piece", getIntakePiece());
+        SmartDashboard.putNumber("Intake current", mIntakeMotor.getStatorCurrent());
         // SmartDashboard.putBoolean("intake deployed", getIntakeDeployed());
 
         if (intakeState == IntakeStates.ON_DEPLOYED_CUBE) {

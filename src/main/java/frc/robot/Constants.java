@@ -15,7 +15,7 @@ import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
     public static final int timeOutMs = 10;
-    public static final double stickDeadband = 0.1;
+    public static final double stickDeadband = 0.15;
     public static final double triggerDeadzone = 0.2;
 
     public static final class HardwarePorts {
@@ -161,9 +161,9 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double maxSpeed = 4.5; // TODO: This must be tuned to specific robot
+        public static final double maxSpeed = 3.5; // TODO: This must be tuned to specific robot
         /** Radians per Second */
-        public static final double maxAngularVelocity = 10.0; // TODO: This must be tuned to specific robot
+        public static final double maxAngularVelocity = 7.0; // TODO: This must be tuned to specific robot
 
         /* Neutral Modes */
         public static final NeutralMode angleNeutralMode = NeutralMode.Brake;

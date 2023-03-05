@@ -29,11 +29,20 @@ public class SetMechanism extends CommandBase{
                     new SetElevator(state.elevState)
                 ) 
             );
-        } else {
+        } else if (s_Mechanism.getState() == MechanismState.CONEINTAKE || s_Mechanism.getState() == MechanismState.CUBEINTAKE) {
+            CommandScheduler.getInstance().schedule(
+                new ParallelCommandGroup(
+                    new WaitCommand(0.4).andThen(new SetElevator(state.elevState)),
+                    new SetArm(state.armState)
+                ) 
+            );
+        } 
+        
+        else {
 
             CommandScheduler.getInstance().schedule(
                 new ParallelCommandGroup(
-                    new WaitCommand(0.0).andThen(new SetArm(state.armState)),
+                    new WaitCommand(0.3).andThen(new SetArm(state.armState)),
                     new SetElevator(state.elevState)
                 ) 
             );
