@@ -34,21 +34,21 @@ public class ScoringCommandFactory {
             // atPosition = s_Swerve.inScoringPosition(targetPose);
         }
         switch (type) {
-            case Low:
-                return new SequentialCommandGroup(new SetMechanism(MechanismState.L1CONE),
-                 new WaitUntilCommand(s_Swerve.inScoringPosition(targetPose)), new SetIntake(IntakeStates.OFF_DEPLOYED_CONE));
-            case MidCone:
-                return new SequentialCommandGroup(new SetMechanism(MechanismState.L2CONE),
-                 new WaitUntilCommand(s_Swerve.inScoringPosition(targetPose)), new SetIntake(IntakeStates.OFF_DEPLOYED_CONE));
-            case HighCone:
-                return new SequentialCommandGroup(new SetMechanism(MechanismState.L3CONE),
-                 new WaitUntilCommand(s_Swerve.inScoringPosition(targetPose)), new SetIntake(IntakeStates.OFF_DEPLOYED_CONE));
-            case MidCube:
-                return new SequentialCommandGroup(new SetMechanism(MechanismState.L2CUBE),
-                 new WaitUntilCommand(s_Swerve.inScoringPosition(targetPose)), new SetIntake(IntakeStates.OFF_DEPLOYED_CONE));
-            case HighCube:
-                return new SequentialCommandGroup(new SetMechanism(MechanismState.L2CONE),
-                 new WaitUntilCommand(s_Swerve.inScoringPosition(targetPose)), new SetIntake(IntakeStates.OFF_DEPLOYED_CONE));
+        //     case Low:
+        //         return new SequentialCommandGroup(new SetMechanism(MechanismState.L1CONE),
+        //          new WaitUntilCommand(s_Swerve.inScoringPosition(targetPose)), new SetIntake(IntakeStates.OFF_DEPLOYED_CONE));
+        //     case MidCone:
+        //         return new SequentialCommandGroup(new SetMechanism(MechanismState.L2CONE),
+        //          new WaitUntilCommand(s_Swerve.inScoringPosition(targetPose)), new SetIntake(IntakeStates.OFF_DEPLOYED_CONE));
+        //     case HighCone:
+        //         return new SequentialCommandGroup(new SetMechanism(MechanismState.L3CONE),
+        //          new WaitUntilCommand(s_Swerve.inScoringPosition(targetPose)), new SetIntake(IntakeStates.OFF_DEPLOYED_CONE));
+        //     case MidCube:
+        //         return new SequentialCommandGroup(new SetMechanism(MechanismState.L2CUBE),
+        //          new WaitUntilCommand(s_Swerve.inScoringPosition(targetPose)), new SetIntake(IntakeStates.OFF_DEPLOYED_CONE));
+        //     case HighCube:
+        //         return new SequentialCommandGroup(new SetMechanism(MechanismState.L2CONE),
+        //          new WaitUntilCommand(s_Swerve.inScoringPosition(targetPose)), new SetIntake(IntakeStates.OFF_DEPLOYED_CONE));
             default:
                 return null;
         }

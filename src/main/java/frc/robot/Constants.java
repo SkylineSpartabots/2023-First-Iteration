@@ -25,6 +25,7 @@ public final class Constants {
         public static final int armMotor = 23;
         public static final int armCANCoder = 26;
         public static final int intakeMotor = 24;
+        public static final int followerIntakeMotor = 27; //fill in
         public static final int intakePositionSolenoidChannel = 0;
         public static final int intakeBarSolenoidChannel = 1;
         public static final int pneumaticHub = 16;
