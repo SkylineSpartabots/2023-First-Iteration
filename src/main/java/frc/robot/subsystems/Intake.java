@@ -101,7 +101,7 @@ public class Intake extends SubsystemBase{
         return intakeState.piece;
     }
 
-    private double coneThreshold = 53.5;
+    private double coneThreshold = 46.5;
     public boolean hasCone(){
         double currentVolt = leaderMotor.getStatorCurrent();
         return currentVolt > coneThreshold;
