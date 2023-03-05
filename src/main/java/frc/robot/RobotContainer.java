@@ -154,13 +154,6 @@ public class RobotContainer {
         operatorY.onTrue(new InstantCommand(() -> l3State()));
         operatorB.onTrue(new InstantCommand(() -> reverseCommand()));
 
-        operatorRightTrigger.onTrue(new InstantCommand(() -> {
-                s_Intake.mIntakeMotor.set(ControlMode.PercentOutput, -0.8);
-        }));
-        operatorLeftTrigger.onTrue(new InstantCommand(() -> {
-                s_Intake.mIntakeMotor.set(ControlMode.PercentOutput, 0.8);
-        }));
-
         driverDpadDown.onTrue(new InstantCommand(() -> l1State()));
         driverDpadRight.onTrue(new InstantCommand(() -> l2State()));
         driverDpadUp.onTrue(new InstantCommand(() -> l3State()));
