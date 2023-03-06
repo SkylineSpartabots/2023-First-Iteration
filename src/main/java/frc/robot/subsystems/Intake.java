@@ -21,7 +21,7 @@ import frc.robot.commands.SetIntake;
 public class Intake extends SubsystemBase{
     private static Intake instance;
 
-    private WPI_TalonFX leaderMotor, followerMotor;
+    public WPI_TalonFX leaderMotor, followerMotor;
     private Solenoid solenoid;
     public IntakeStates intakeState = IntakeStates.OFF_DEPLOYED_CONE;
 
@@ -44,7 +44,7 @@ public class Intake extends SubsystemBase{
         leaderMotor = new WPI_TalonFX(Constants.HardwarePorts.intakeMotor);
         followerMotor = new WPI_TalonFX(Constants.HardwarePorts.followerIntakeMotor);
         configureMotor(leaderMotor, false);
-        configureMotor(followerMotor, false);
+        configureMotor(followerMotor, true);
         followerMotor.set(ControlMode.Follower, Constants.HardwarePorts.intakeMotor); //inverse later
     }
 
@@ -60,9 +60,9 @@ public class Intake extends SubsystemBase{
     }
 
     public enum IntakeStates {
-        ON_DEPLOYED_CONE(false, "cone", -1), //false
+        ON_DEPLOYED_CONE(false, "cone", 1), //false
         OFF_DEPLOYED_CONE(false, "cone", 0), //when they put the intake down, doesnt need to change because it shouldn't change initial state
-        REV_DEPLOYED_CONE(false, "cone", 1),
+        REV_DEPLOYED_CONE(false, "cone", -1),
         OFF_RETRACTED_CONE(true, "cone", 0),
 
         ON_RETRACTED_CUBE(true, "cube", 1),

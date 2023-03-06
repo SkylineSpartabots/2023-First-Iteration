@@ -146,13 +146,22 @@ public class RobotContainer {
         driverRightBumper.onTrue(coneIntake);
         driverB.onTrue(new InstantCommand(() -> zeroCommand()));
         driverA.onTrue(new ZeroElevator());
-        // driverY.onTrue(new AutoBalance());
         driverX.onTrue(new InstantCommand(() -> reverseCommand()));
+        // driverY.onTrue(new AutoBalance());
 
         operatorA.onTrue(new InstantCommand(() -> l1State()));
         operatorX.onTrue(new InstantCommand(() -> l2State()));
         operatorY.onTrue(new InstantCommand(() -> l3State()));
         operatorB.onTrue(new InstantCommand(() -> reverseCommand()));
+
+        operatorRightTrigger.onTrue(new InstantCommand(() -> s_Intake.leaderMotor.set(ControlMode.PercentOutput, 0.075)));
+        operatorLeftTrigger.onTrue(new InstantCommand(() -> s_Intake.leaderMotor.set(ControlMode.PercentOutput, 0.0)));
+
+        // operatorA.onTrue(new SetIntake(IntakeStates.ON_DEPLOYED_CONE));
+        // operatorX.onTrue(new SetIntake(IntakeStates.OFF_DEPLOYED_CONE));
+        // operatorY.onTrue(new SetIntake(IntakeStates.ON_RETRACTED_CUBE));
+        // operatorB.onTrue(new SetIntake(IntakeStates.OFF_RETRACTED_CUBE));
+
 
         driverDpadDown.onTrue(new InstantCommand(() -> l1State()));
         driverDpadRight.onTrue(new InstantCommand(() -> l2State()));

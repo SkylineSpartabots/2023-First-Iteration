@@ -40,12 +40,12 @@ public class AutoCommandFactory {
                 switch (auto) {
                         // case Wait:
                         //         // return selectedAuto = pathWithWait();
-                        // case OneCone:
-                        //         return selectedAuto = oneCone();
-                        // case OneConeBack:
-                        //         return selectedAuto = oneConeBack();
-                        // case OneConeDockMiddle:
-                        //         return selectedAuto = oneConeDockMiddle();
+                        case OneCone:
+                                return selectedAuto = oneCone();
+                        case OneConeBack:
+                                return selectedAuto = oneConeBack();
+                        case OneConeDockMiddle:
+                                return selectedAuto = oneConeDockMiddle();
                         // case OneHalfConeDockTop:
                         //         return selectedAuto = oneHalfConeDockTop();
                         // case TwoConeBottom:
@@ -129,49 +129,49 @@ public class AutoCommandFactory {
         // followPathCommand(pathGroup.get(1)));
         // }
 
-        // private static Command oneCone() {
-        //         return new SequentialCommandGroup(
-        //                 new SetMechanism(MechanismState.L3CONE),
-        //                 new SetIntake(IntakeStates.OFF_DEPLOYED_CONE),
-        //                 new WaitCommand(1),
-        //                 new SetIntake(IntakeStates.REV_DEPLOYED_CONE));
-        // }
+        private static Command oneCone() {
+                return new SequentialCommandGroup(
+                        new SetMechanism(MechanismState.L2CONE),
+                        new SetIntake(IntakeStates.OFF_DEPLOYED_CONE),
+                        new WaitCommand(1),
+                        new SetIntake(IntakeStates.OFF_RETRACTED_CONE));
+        }
 
-        // private static Command oneConeBack() {
-        //         PathPlannerTrajectory path = PathPlanner.loadPath("1 cone back", new PathConstraints(2.0, 1.5));
-        //         PathPlannerState initState = PathPlannerTrajectory.transformStateForAlliance(path.getInitialState(),
-        //                         DriverStation.getAlliance());
-        //         return new SequentialCommandGroup(
-        //                         new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(initState.poseMeters.getX(),
-        //                                         initState.poseMeters.getY(), new Rotation2d(Math.toRadians(180))))),
-        //                         new SetMechanism(MechanismState.L3CONE),
-        //                         new SetIntake(IntakeStates.OFF_DEPLOYED_CONE),
-        //                         new WaitCommand(1),
-        //                         new SetIntake(IntakeStates.REV_DEPLOYED_CONE),
-        //                         new WaitCommand(0.8),
-        //                         new SetIntake(IntakeStates.OFF_DEPLOYED_CONE),
-        //                         new SetMechanism(MechanismState.ZERO),
-        //                         followPathCommand(path));
-        // }
+        private static Command oneConeBack() {
+                PathPlannerTrajectory path = PathPlanner.loadPath("1 cone back", new PathConstraints(2.0, 1.5));
+                PathPlannerState initState = PathPlannerTrajectory.transformStateForAlliance(path.getInitialState(),
+                                DriverStation.getAlliance());
+                return new SequentialCommandGroup(
+                                new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(initState.poseMeters.getX(),
+                                                initState.poseMeters.getY(), new Rotation2d(Math.toRadians(180))))),
+                                new SetMechanism(MechanismState.L2CONE),
+                                new SetIntake(IntakeStates.OFF_DEPLOYED_CONE),
+                                new WaitCommand(1),
+                                new SetIntake(IntakeStates.OFF_RETRACTED_CONE),
+                                new WaitCommand(0.8),
+                                new SetIntake(IntakeStates.OFF_DEPLOYED_CONE),
+                                new SetMechanism(MechanismState.ZERO),
+                                followPathCommand(path));
+        }
 
-        // private static Command oneConeDockMiddle() {
-        //         PathPlannerTrajectory path = PathPlanner.loadPath("1 cone dock middle", new PathConstraints(2.0, 1.5));
-        //         PathPlannerState initState = PathPlannerTrajectory.transformStateForAlliance(path.getInitialState(),
-        //                         DriverStation.getAlliance());
-        //         return new SequentialCommandGroup(
-        //                         new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(initState.poseMeters.getX(),
-        //                                         initState.poseMeters.getY(), new Rotation2d(Math.toRadians(180))))),
-        //                         new SetMechanism(MechanismState.L3CONE),
-        //                         new SetIntake(IntakeStates.OFF_DEPLOYED_CONE),
-        //                         new WaitCommand(1),
-        //                         new SetIntake(IntakeStates.REV_DEPLOYED_CONE),
-        //                         new WaitCommand(0.8),
-        //                         new SetIntake(IntakeStates.OFF_DEPLOYED_CONE),
-        //                         new SetMechanism(MechanismState.ZERO),
-        //                         followPathCommand(path),
-        //                         new AutoBalance()
-        //         );
-        // }
+        private static Command oneConeDockMiddle() {
+                PathPlannerTrajectory path = PathPlanner.loadPath("1 cone dock middle", new PathConstraints(2.0, 1.5));
+                PathPlannerState initState = PathPlannerTrajectory.transformStateForAlliance(path.getInitialState(),
+                                DriverStation.getAlliance());
+                return new SequentialCommandGroup(
+                                new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(initState.poseMeters.getX(),
+                                                initState.poseMeters.getY(), new Rotation2d(Math.toRadians(180))))),
+                                new SetMechanism(MechanismState.L2CONE),
+                                new SetIntake(IntakeStates.OFF_DEPLOYED_CONE),
+                                new WaitCommand(1),
+                                new SetIntake(IntakeStates.OFF_RETRACTED_CONE),
+                                new WaitCommand(0.8),
+                                new SetIntake(IntakeStates.OFF_DEPLOYED_CONE),
+                                new SetMechanism(MechanismState.ZERO),
+                                followPathCommand(path),
+                                new AutoBalance()
+                );
+        }
 
         // private static Command oneHalfConeDockTop() {
         //         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("1.5 cone dock top",

@@ -32,9 +32,9 @@ public class CompleteMechanism extends SubsystemBase {
         L2CUBE(ElevatorStates.L2CUBE, ArmStates.L2CUBE),
         L3CUBE(ElevatorStates.L3CUBE, ArmStates.L3CUBE),
 
-        L1LAYEDCONE(ElevatorStates.L1LAYEDCONE, ArmStates.L1LAYEDCONE),
-        L2LAYEDCONE(ElevatorStates.L2LAYEDCONE, ArmStates.L2LAYEDCONE),
-        L3LAYEDCONE(ElevatorStates.L3LAYEDCONE, ArmStates.L3LAYEDCONE),
+        // L1LAYEDCONE(ElevatorStates.L1LAYEDCONE, ArmStates.L1LAYEDCONE),
+        // L2LAYEDCONE(ElevatorStates.L2LAYEDCONE, ArmStates.L2LAYEDCONE),
+        // L3LAYEDCONE(ElevatorStates.L3LAYEDCONE, ArmStates.L3LAYEDCONE),
         
         CUBEINTAKE(ElevatorStates.CUBEINTAKE, ArmStates.CUBEINTAKE),
         CONEINTAKE(ElevatorStates.CONEINTAKE, ArmStates.CONEINTAKE),

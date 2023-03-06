@@ -29,23 +29,23 @@ public class Arm extends SubsystemBase {
     public enum ArmStates {
         ZERO(52.0), 
 
-        CONEINTAKE(272), 
+        CONEINTAKE(220), 
         CUBEINTAKE(270), 
         LAYEDCONE(271),
         SUBSTATION(277), 
-        DOUBLESUBSTATION(80),
+        DOUBLESUBSTATION(125),
 
-        L1CONE(55), 
-        L2CONE(90), 
+        L1CONE(183), 
+        L2CONE(148), 
         L3CONE(123), 
 
         L1CUBE(55), 
         L2CUBE(111), 
-        L3CUBE(151),
+        L3CUBE(151);
 
-        L1LAYEDCONE(150),
-        L2LAYEDCONE(90),
-        L3LAYEDCONE(143);
+        // L1LAYEDCONE(150),
+        // L2LAYEDCONE(90),
+        // L3LAYEDCONE(143);
         
 
         double statePosition = 0.0;

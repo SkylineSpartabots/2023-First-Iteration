@@ -31,23 +31,23 @@ public class Elevator extends SubsystemBase {
         ZERO(50.0),
         REALZERO(0),
 
-        CONEINTAKE(656),
+        CONEINTAKE(50.0),
         CUBEINTAKE(650),
         LAYEDCONE(499),
         SUBSTATION(1100),
-        DOUBLESUBSTATION(1506),
+        DOUBLESUBSTATION(920),
 
         L1CONE(50.0),
-        L2CONE(1145),
+        L2CONE(1562),
         L3CONE(2250),
 
         L1CUBE(55),
         L2CUBE(764),
-        L3CUBE(1880),
+        L3CUBE(1880);
 
-        L1LAYEDCONE(0.0),
-        L2LAYEDCONE(1145),
-        L3LAYEDCONE(2256);
+        // L1LAYEDCONE(0.0),
+        // L2LAYEDCONE(1145),
+        // L3LAYEDCONE(2256);
 
         double statePosition = 0.0;
 
