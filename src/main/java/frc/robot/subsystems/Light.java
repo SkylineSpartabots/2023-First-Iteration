@@ -34,6 +34,7 @@ public class Light extends SubsystemBase {
     public AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(Constants.LEDConstants.ledBufferSize);
     Random rand = new Random();
     private int selected = 1;
+    public int matchSelected = rand.nextInt(1,5); //chooses the fun mode to be used for the entire match
     private int time = 0;
     int gap = 1; // subtracted from LED index to get it to be evenly divisible by group size
     int limiter = 13; // limits how often the update() method is called
@@ -97,8 +98,8 @@ public class Light extends SubsystemBase {
         this.selected = selected;
     }
 
-    public void setRandomNormal() { // Picks a random cosmetic state when finished triggers
-        selected = rand.nextInt(1, 5);
+    public void setNormal() { // Picks a random cosmetic state when finished triggers
+        selected = matchSelected;
     }
 
     public void update(int selected) {
@@ -242,7 +243,7 @@ public class Light extends SubsystemBase {
                 finish = 0;
                 isExpired = 0;
                 grabbed = false;
-                setRandomNormal();}
+                setNormal();}
     } 
     else {
 
@@ -257,7 +258,7 @@ public class Light extends SubsystemBase {
             isExpired++;
              if (isExpired==325) {
                 isExpired = 0;
-                setRandomNormal();}
+                setNormal();}
             
         }
     }
@@ -288,7 +289,7 @@ public class Light extends SubsystemBase {
         finish++;
              if (finish==150) {
                 finish = 0;
-                setRandomNormal();}
+                setNormal();}
 
         m_led.setData(m_ledBuffer);
         gapReset();

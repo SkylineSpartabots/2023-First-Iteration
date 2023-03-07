@@ -78,7 +78,7 @@ public class Intake extends SubsystemBase {
         mIntakeMotor.set(ControlMode.PercentOutput, offset * intakeState.direction);
 
         if(state.direction==1) {s_Lights.setSelected(6);}
-        if(state.direction==-1) {s_Lights.grabbed = false; s_Lights.setRandomNormal();} // i think this should work
+        if(state.direction==-1) {s_Lights.grabbed = false; s_Lights.setNormal();} // i think this should work
 
     }
 
