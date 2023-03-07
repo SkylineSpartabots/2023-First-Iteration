@@ -33,23 +33,24 @@ public class AutoBalance extends CommandBase {
 
     @Override
     public void execute() {
-        counter++;
-        if (counter % 1 == 0) {
-            if(Math.abs(s_Swerve.getPitch())+0.15 >= Math.abs(robotPitch) || timer.get() < 2.0) {
-                driveSpeed = driveController.calculate(s_Swerve.getPitch(), 0);
-                SmartDashboard.putNumber("drive speed", driveSpeed);
-                SmartDashboard.putNumber("last pit", Math.abs(robotPitch));
-                SmartDashboard.putNumber("curr pit 3", Math.abs(s_Swerve.getPitch())+3);
-                s_Swerve.drive(
-                    new Translation2d(driveSpeed, 0).times(Constants.SwerveConstants.maxSpeed),
-                    0,
-                    true,
-                    true);
-            } else {
+        if (Math.abs(s_Swerve.getPitch()) > 2) {
+            driveSpeed = driveController.calculate(s_Swerve.getPitch(), 0);
+            s_Swerve.drive(
+                new Translation2d(driveSpeed, 0).times(Constants.SwerveConstants.maxSpeed),
+                0,
+                true,
+                true);
+            if (Math.abs(s_Swerve.getPitch()) + 0.15 < Math.abs(robotPitch)) {
                 finished = true;
             }
-            robotPitch = s_Swerve.getPitch();
         }
+        else {
+            s_Swerve.drive(new Translation2d(0.5, 0).times(Constants.SwerveConstants.maxSpeed), 0, true, true);
+        }
+        SmartDashboard.putNumber("drive speed", driveSpeed);
+        SmartDashboard.putNumber("last pit", Math.abs(robotPitch));
+        SmartDashboard.putNumber("curr pit 3", Math.abs(s_Swerve.getPitch())+3);
+        robotPitch = s_Swerve.getPitch();
         
         // driveSpeed = driveController.calculate(robotPitch, 0);
         // SmartDashboard.putNumber("drive speed", driveSpeed);
