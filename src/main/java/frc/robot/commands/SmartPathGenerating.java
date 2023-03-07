@@ -19,11 +19,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.AutomaticScoringSelector;
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
-import frc.robot.Constants.SwerveConstants;
 import frc.robot.factories.AutoCommandFactory;
 import edu.wpi.first.wpilibj.DriverStation;
-// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SmartPathGenerating extends CommandBase {
     private Swerve s_Swerve;

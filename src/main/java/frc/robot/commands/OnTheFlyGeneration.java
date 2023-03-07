@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 
-import java.util.ArrayList;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -10,18 +9,13 @@ import com.pathplanner.lib.PathPoint;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.AutomaticScoringSelector;
-import frc.robot.Constants;
 import frc.robot.factories.AutoCommandFactory;
-import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.Arm.ArmStates;
-import frc.robot.subsystems.Elevator.ElevatorStates;
 
 public class OnTheFlyGeneration extends CommandBase {
     Pose2d currentPos;
@@ -29,6 +23,7 @@ public class OnTheFlyGeneration extends CommandBase {
     Swerve s_Swerve;
     boolean autoScoring;
     AutomaticScoringSelector selector;
+    double heading;
 
     public OnTheFlyGeneration(Pose2d targetPos, boolean autoScoring) {
         s_Swerve = Swerve.getInstance();
@@ -40,7 +35,7 @@ public class OnTheFlyGeneration extends CommandBase {
     
     private PathPoint getPathPoint(Pose2d pose) {
         return new PathPoint(new Translation2d(pose.getX(), pose.getY()),
-                Rotation2d.fromDegrees(0),
+                Rotation2d.fromRadians(heading),
                 pose.getRotation());
     }
 
@@ -50,12 +45,17 @@ public class OnTheFlyGeneration extends CommandBase {
         if(autoScoring) {
             targetPos = selector.getSelectedPose();
         }
+        double x = targetPos.getX() - currentPos.getX();
+        double y = targetPos.getY() - currentPos.getY();
+        heading = Math.atan2(y, x);
     }
 
     @Override
     public void execute() {
+        double maxVel = 3;
+        double maxAccel = 2;
         PathPlannerTrajectory trajectory = PathPlanner.generatePath(
-                new PathConstraints(4, 3),
+                new PathConstraints(maxVel, maxAccel),
                 getPathPoint(currentPos),
                 getPathPoint(targetPos));
         SmartDashboard.putNumber("OTF-start-x", currentPos.getX());

@@ -22,6 +22,7 @@ import com.ctre.phoenix.sensors.Pigeon2;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+
 public class Swerve extends SubsystemBase {
     private static Swerve instance;
     
@@ -44,7 +45,7 @@ public class Swerve extends SubsystemBase {
     public BooleanSupplier isPathRunningSupplier = () -> pathInProgress();
     
     public Swerve() {
-        gyro = new Pigeon2(Constants.SwerveConstants.pigeonID);
+        gyro = new Pigeon2(Constants.SwerveConstants.pigeonID, "2976 CANivore");
         gyro.configFactoryDefault();
 
         mSwerveMods = new SwerveModule[] {
@@ -60,8 +61,8 @@ public class Swerve extends SubsystemBase {
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
         SwerveModuleState[] swerveModuleStates = Constants.SwerveConstants.swerveKinematics.toSwerveModuleStates(
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                        translation.getX(),
-                        translation.getY(),
+                        Math.copySign(Math.pow(translation.getX(), 2), translation.getX()), // square inputs for robert testing
+                        Math.copySign(Math.pow(translation.getY(), 2), translation.getY()), // square inputs for robert testing
                         rotation,
                         getYaw())
                         : new ChassisSpeeds(
@@ -161,7 +162,7 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic() {
         swerveOdometry.update(getYaw(), getModulePositions());
-
+        // AutomaticScoringSelector.getInstance().updateShuffleboard();
         SmartDashboard.putNumber("gyro-pitch", getPitch());
         SmartDashboard.putNumber("gyro-rot", getYaw().getDegrees());
         SmartDashboard.putNumber("odo-rot", getPose().getRotation().getDegrees());
@@ -169,11 +170,11 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putNumber("y-pos", getPose().getY());
         SmartDashboard.putBoolean("is OTF running", pathInProgress());
 
-        for (SwerveModule mod : mSwerveMods) {
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
-        }
+        // for (SwerveModule mod : mSwerveMods) {
+        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
+        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
+        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+        // }
 
     }
 

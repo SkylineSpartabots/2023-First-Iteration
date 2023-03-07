@@ -7,8 +7,6 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.Swerve;
 import frc.robot.commands.SetIntake;
 import frc.robot.commands.SetMechanism;
-import frc.robot.subsystems.CompleteMechanism;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.CompleteMechanism.MechanismState;
 import frc.robot.subsystems.Intake.IntakeStates;
 
@@ -36,21 +34,21 @@ public class ScoringCommandFactory {
             // atPosition = s_Swerve.inScoringPosition(targetPose);
         }
         switch (type) {
-            case Low:
-                return new SequentialCommandGroup(new SetMechanism(MechanismState.LOWCONE),
-                 new WaitUntilCommand(s_Swerve.inScoringPosition(targetPose)), new SetIntake(IntakeStates.OFF_DEPLOYED));
-            case MidCone:
-                return new SequentialCommandGroup(new SetMechanism(MechanismState.MIDCONE),
-                 new WaitUntilCommand(s_Swerve.inScoringPosition(targetPose)), new SetIntake(IntakeStates.OFF_DEPLOYED));
-            case HighCone:
-                return new SequentialCommandGroup(new SetMechanism(MechanismState.HIGHCONE),
-                 new WaitUntilCommand(s_Swerve.inScoringPosition(targetPose)), new SetIntake(IntakeStates.OFF_DEPLOYED));
-            case MidCube:
-                return new SequentialCommandGroup(new SetMechanism(MechanismState.MIDCUBE),
-                 new WaitUntilCommand(s_Swerve.inScoringPosition(targetPose)), new SetIntake(IntakeStates.OFF_DEPLOYED));
-            case HighCube:
-                return new SequentialCommandGroup(new SetMechanism(MechanismState.MIDCONE),
-                 new WaitUntilCommand(s_Swerve.inScoringPosition(targetPose)), new SetIntake(IntakeStates.OFF_DEPLOYED));
+        //     case Low:
+        //         return new SequentialCommandGroup(new SetMechanism(MechanismState.L1CONE),
+        //          new WaitUntilCommand(s_Swerve.inScoringPosition(targetPose)), new SetIntake(IntakeStates.OFF_DEPLOYED_CONE));
+        //     case MidCone:
+        //         return new SequentialCommandGroup(new SetMechanism(MechanismState.L2CONE),
+        //          new WaitUntilCommand(s_Swerve.inScoringPosition(targetPose)), new SetIntake(IntakeStates.OFF_DEPLOYED_CONE));
+        //     case HighCone:
+        //         return new SequentialCommandGroup(new SetMechanism(MechanismState.L3CONE),
+        //          new WaitUntilCommand(s_Swerve.inScoringPosition(targetPose)), new SetIntake(IntakeStates.OFF_DEPLOYED_CONE));
+        //     case MidCube:
+        //         return new SequentialCommandGroup(new SetMechanism(MechanismState.L2CUBE),
+        //          new WaitUntilCommand(s_Swerve.inScoringPosition(targetPose)), new SetIntake(IntakeStates.OFF_DEPLOYED_CONE));
+        //     case HighCube:
+        //         return new SequentialCommandGroup(new SetMechanism(MechanismState.L2CONE),
+        //          new WaitUntilCommand(s_Swerve.inScoringPosition(targetPose)), new SetIntake(IntakeStates.OFF_DEPLOYED_CONE));
             default:
                 return null;
         }

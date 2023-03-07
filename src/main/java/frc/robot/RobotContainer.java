@@ -1,5 +1,9 @@
 package frc.robot;
 
+import javax.swing.text.html.Option;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -10,7 +14,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.*;
@@ -86,6 +93,11 @@ public class RobotContainer {
         return operator.getRightTriggerAxis() > Constants.triggerDeadzone;
     });
 
+    /* operator joysticks */
+
+    private final int operatorLeftStick = XboxController.Axis.kLeftY.value;
+    private final int operatorRightStick = XboxController.Axis.kRightY.value;
+
     /* Subsystems */
     private final Swerve s_Swerve;
     private final Limelight s_Limelight;
@@ -110,11 +122,10 @@ public class RobotContainer {
         s_Elevator = Elevator.getInstance();
         s_Intake = Intake.getInstance();
         s_Arm = Arm.getInstance();
-       scoreCommandFactory = ScoringCommandFactory.getInstance();
-       selector = AutomaticScoringSelector.getInstance();
-       selector.createDisplay();
+        scoreCommandFactory = ScoringCommandFactory.getInstance();
+        selector = AutomaticScoringSelector.getInstance();
+        selector.createDisplay();
 
-        // s_Swerve.resetOdometry(new Pose2d());
         s_Swerve.resetOdometry(new Pose2d());
         s_Swerve.zeroGyro();
         s_Swerve.setDefaultCommand(
@@ -123,111 +134,104 @@ public class RobotContainer {
                         () -> -driver.getRawAxis(translationAxis),
                         () -> -driver.getRawAxis(strafeAxis),
                         () -> -driver.getRawAxis(rotationAxis)));
-        // () -> robotCentric.getAsBoolean()));
 
         // Configure the button bindings
         configureButtonBindings();
     }
 
-    /**
-     * Use this method to define your button->command mappings. Buttons can be
-     * created by
-     * instantiating a {@link GenericHID} or one of its subclasses ({@link
-     * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
-     * it to a {@link
-     * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-     */
     private void configureButtonBindings() {
+        driverStart.onTrue(new SmartResetOdometry());
         driverBack.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
-        driverStart.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
-        // driverA.onTrue(AutoCommandFactory.getSelectedAuto()); // change based on
-        // which auto needs to be tested
-        // driverB.onTrue(new ConditionalCommand(
-        // new InstantCommand(() -> AutoCommandFactory.cancelLastCommand()),
-        // new InstantCommand(() -> CommandScheduler.getInstance().schedule(new
-        // OnTheFlyGeneration(0, true))),
-        // s_Swerve.isPathRunningSupplier));
-        // driverX.onTrue(new SmartResetOdometry());
-        // Command autoBalanceCommand = new AutoBalance();
-        // driverY.onTrue(new ConditionalCommand(
-        // autoBalanceCommand,
-        // new InstantCommand(() -> autoBalanceCommand.cancel()),
-        // s_Swerve.isPathRunningSupplier));
-        // operatorA.onTrue(new InstantCommand(() -> s_Arm.changePosition(true)));
-        // operatorY.onTrue(new InstantCommand(() -> s_Arm.changePosition(false)));
-        // elevatorUp.onTrue(new InstantCommand(() -> s_Elevator.changePosition(true)));
-        // elevatorDown.onTrue(new InstantCommand(() ->
-        // s_Elevator.changePosition(false)));
-        // setArm.onTrue(new SetArm(Extension.ExtensionStates.ZERO,
-        // Pivot.PivotStates.ZERO));
-        // setPivot.onTrue(new Instant5tCommand(() ->
-        // s_Intake.setState(IntakeStates.ON_DEPLOYED)));
-        // operatorX.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(-1000)));
-        // operatorB.onTrue(new InstantCommand(() -> s_Elevator.setVelocity(1000)));
-        // operatorA.onTrue(new SetElevator(ElevatorStates.GROUND));
-        driverA.onTrue(new InstantCommand(() -> s_Arm.toggleNeutral()));
-        driverB.onTrue(new SetIntake(IntakeStates.REV_DEPLOYED));
-        driverX.onTrue(new SetIntake(IntakeStates.REV_RETRACTED));
-        driverY.onTrue(new SmartResetOdometry());
-        // driverB.onTrue(scoreCommandFactory.getScoringCommand(null, null))
-        // driverX.onTrue(new SetArm(ArmStates.L1));
-        // driverY.onTrue(new SetArm(ArmStates.SUBSTATION));
-        driverLeftBumper.onTrue(new SetIntake(IntakeStates.OFF_RETRACTED));
-        driverLeftTrigger.onTrue(new SetIntake(IntakeStates.OFF_DEPLOYED));
-        driverRightBumper.onTrue(new SetIntake(IntakeStates.ON_RETRACTED));
-        driverRightTrigger.onTrue(new SetIntake(IntakeStates.ON_DEPLOYED));
-        // driverLeftTrigger.onTrue(new SetIntake(IntakeStates.OFF_RETRACTED));
-        // driverRightTrigger.onTrue(new SetIntake(IntakeStates.ON_RETRACTED));
-        // driverA.onTrue(new SetArm(ArmStates.CONE));
-        // driverB.onTrue(new SetArm(ArmStates.ZERO));
-        // driverDpadDown.onTrue(new SetElevator(ElevatorStates.ZERO));
-        // driverDpadUp.onTrue(new SetElevator(ElevatorStates.L1CONE));
-        // driverDpadRight.onTrue(new SetElevator(ElevatorStates.SUBSTATION));
-        // driverDpadLeft.onTrue(new SetElevator(ElevatorStates.L3CONE));
-        driverDpadDown.onTrue(new SetMechanism(MechanismState.CUBEINTAKE));
-        driverDpadUp.onTrue(new SetMechanism(MechanismState.ZERO));
-        // driverDpadRight.onTrue(new SetMechanism(MechanismState.CONEINTAKE));
-        // driverDpadLeft.onTrue(new SetMechanism(MechanismState.MIDCUBE));
-        driverDpadRight.onTrue(new SetElevator(ElevatorStates.L2CUBE));
-        driverDpadLeft.onTrue(new SetArm(ArmStates.ZERO));
+        driverRightTrigger.onTrue(coneSubstation);
+        driverLeftTrigger.onTrue(cubeIntake);
+        // driverLeftBumper.onTrue(layedCone);
+        driverRightBumper.onTrue(coneIntake);
+        driverB.onTrue(new InstantCommand(() -> zeroCommand()));
+        driverA.onTrue(new ZeroElevator());
+        driverX.onTrue(new InstantCommand(() -> reverseCommand()));
+        // driverY.onTrue(new AutoBalance());
 
-        operatorDpadUp.onTrue(new InstantCommand(() -> selector.moveUp()));
-        operatorDpadDown.onTrue(new InstantCommand(() -> selector.moveDown()));
-        operatorDpadRight.onTrue(new InstantCommand(() -> selector.moveRight()));
-        operatorDpadLeft.onTrue(new InstantCommand(() -> selector.moveLeft()));
-        operatorA.onTrue(new InstantCommand(() -> selector.select()));
-        operatorB.onTrue(new SmartPathGenerating());
-        operatorX.onTrue(new OnTheFlyGeneration(new Pose2d(0, 0, new Rotation2d(0)), true));
+        operatorA.onTrue(new InstantCommand(() -> l1State()));
+        operatorX.onTrue(new InstantCommand(() -> l2State()));
+        operatorY.onTrue(new InstantCommand(() -> l3State()));
+        operatorB.onTrue(new InstantCommand(() -> reverseCommand()));
 
-        // setIntake.onTrue(new InstantCommand(() -> s_Elevator.setPos(0)));
-        // -85 bottom
-        // 96 top
+        operatorRightTrigger.onTrue(new InstantCommand(() -> s_Intake.leaderMotor.set(ControlMode.PercentOutput, 0.075)));
+        operatorLeftTrigger.onTrue(new InstantCommand(() -> s_Intake.leaderMotor.set(ControlMode.PercentOutput, 0.0)));
 
-        DriverStation.Alliance alliance = DriverStation.getAlliance();
+        // operatorA.onTrue(new SetIntake(IntakeStates.ON_DEPLOYED_CONE));
+        // operatorX.onTrue(new SetIntake(IntakeStates.OFF_DEPLOYED_CONE));
+        // operatorY.onTrue(new SetIntake(IntakeStates.ON_RETRACTED_CUBE));
+        // operatorB.onTrue(new SetIntake(IntakeStates.OFF_RETRACTED_CUBE));
 
-        final int[] driveTags;
-        {
-            // up gets you to substation, left/down/right will get you to the
-            // left/middle/right grids individually
-            // maybe can be further optimized to shift slightly left or right if bot has
-            // cone
-            if (alliance == DriverStation.Alliance.Red) {
-                driveTags = new int[] { 3, 5, 6, 7 }; // see 5.9.2 in game manual
-            } else { // defaults to blue alliance if alliance is not set for whatever reason
-                driveTags = new int[] { 4, 1, 1, 2 };
-            }
-            // operatorDpadUp.onTrue(new OnTheFlyGeneration(driveTags[0], true)); // fixme
-            // whats the POINT of swervePose why cant we call it in the function itself
-            // operatorDpadLeft.onTrue(new OnTheFlyGeneration(driveTags[1], true));
-            // operatorDpadDown.onTrue(new OnTheFlyGeneration(driveTags[2], true));
-            // operatorDpadRight.onTrue(new OnTheFlyGeneration(driveTags[3], true));
-        }
+
+        driverDpadDown.onTrue(new InstantCommand(() -> l1State()));
+        driverDpadRight.onTrue(new InstantCommand(() -> l2State()));
+        driverDpadUp.onTrue(new InstantCommand(() -> l3State()));
+        
     }
+
+    ParallelCommandGroup coneIntake = new ParallelCommandGroup(
+            new SetMechanism(MechanismState.CONEINTAKE),
+            new SetIntake(IntakeStates.ON_DEPLOYED_CONE));
+    ParallelCommandGroup cubeIntake = new ParallelCommandGroup(
+            new SetMechanism(MechanismState.CUBEINTAKE),
+            new SetIntake(IntakeStates.ON_RETRACTED_CUBE));
+//     ParallelCommandGroup layedCone = new ParallelCommandGroup(
+//             new SetMechanism(MechanismState.LAYEDCONE),
+//             new SetIntake(IntakeStates.ON_DEPLOYED_LAYEDCONE));
+    ParallelCommandGroup coneSubstation = new ParallelCommandGroup(
+            new SetMechanism(MechanismState.DOUBLESUBSTATION),
+            new SetIntake(IntakeStates.ON_DEPLOYED_CONE));
+
+    public void l1State() {
+        CommandScheduler.getInstance().schedule(
+                s_Intake.intakeState.piece.equals("cube") ? new SetMechanism(MechanismState.L1CUBE)
+                                : new SetMechanism(MechanismState.L1CONE));
+    }
+
+    public void l2State() {
+        CommandScheduler.getInstance().schedule(
+                s_Intake.intakeState.piece.equals("cube") ? new SetMechanism(MechanismState.L2CUBE)
+                                : new SetMechanism(MechanismState.L2CONE));
+    }
+
+    public void l3State() {
+        CommandScheduler.getInstance().schedule(
+                s_Intake.intakeState.piece.equals("cube") ? new SetMechanism(MechanismState.L2CUBE)
+                                : new SetMechanism(MechanismState.L3CONE));
+    }
+
+    ParallelCommandGroup zeroCone = new ParallelCommandGroup(
+            new SetMechanism(MechanismState.ZERO),
+            new SetIntake(IntakeStates.OFF_DEPLOYED_CONE));
+    ParallelCommandGroup zeroCube = new ParallelCommandGroup(
+            new SetMechanism(MechanismState.ZERO),
+            new SetIntake(IntakeStates.OFF_RETRACTED_CUBE));
+//     ParallelCommandGroup zeroLayed = new ParallelCommandGroup(
+//             new SetMechanism(MechanismState.ZERO),
+//             new SetIntake(IntakeStates.OFF_RETRACTED_LAYEDCONE));
+
+    public void zeroCommand() {
+        CommandScheduler.getInstance().schedule(
+                s_Intake.intakeState.piece.equals("cube") ? zeroCube : zeroCone);
+    }
+
+    public void reverseCommand() {
+        CommandScheduler.getInstance().schedule(
+                        s_Intake.intakeState.piece.equals("cube") ? new SetIntake(IntakeStates.REV_RETRACTED_CUBE)
+                                : new SetIntake(IntakeStates.OFF_RETRACTED_CONE));
+    }
+
+    // public void deployCommand() {
+    // CommandScheduler.getInstance().schedule(Intake.getInstance().intakeState.cube
+    // ? new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE) : new
+    // SetIntake(IntakeStates.OFF_DEPLOYED));
+    // }
 
     public void onRobotDisabled() {
         // reset mechanisms so it does not have to be done manually
         CommandScheduler.getInstance().schedule(new SetArm(ArmStates.ZERO));
-        CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED));
+        CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED_CONE));
     }
-
 }

@@ -23,7 +23,7 @@ public class SmartResetOdometry extends CommandBase {
 
     public SmartResetOdometry() {
         s_Swerve = Swerve.getInstance();
-        addRequirements(s_Swerve);
+        // addRequirements(s_Swerve);
         s_Limelight = Limelight.getInstance();
         addRequirements(s_Limelight);
     }

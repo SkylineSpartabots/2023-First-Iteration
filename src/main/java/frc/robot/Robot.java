@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -29,7 +31,8 @@ public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
     private final SendableChooser<AutoCommandFactory.AutoType> m_chooser = new SendableChooser<>();
     private RobotContainer m_robotContainer;
-    private AutomaticScoringSelector m_selector = AutomaticScoringSelector.getInstance();
+    // private AutomaticScoringSelector m_selector =
+    // AutomaticScoringSelector.getInstance();
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -38,21 +41,42 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
+        getRedPose();
         ctreConfigs = new CTREConfigs();
+        m_chooser.addOption("1C", AutoCommandFactory.AutoType.OneCone);
+        m_chooser.addOption("1C Back", AutoCommandFactory.AutoType.OneConeBack);
         m_chooser.addOption("1C M Dock", AutoCommandFactory.AutoType.OneConeDockMiddle);
-        m_chooser.addOption("Wait Auto", AutoCommandFactory.AutoType.Wait);
-        m_chooser.addOption("1C M Dock", AutoCommandFactory.AutoType.OneConeDockMiddle);
-        m_chooser.addOption("2C B", AutoCommandFactory.AutoType.TwoConeBottom);
-        m_chooser.addOption("2C B Dock", AutoCommandFactory.AutoType.TwoConeDockBottom);
-        m_chooser.addOption("2C T Dock", AutoCommandFactory.AutoType.TwoConeDockTop);
-        m_chooser.addOption("2C T", AutoCommandFactory.AutoType.TwoConeTop);
-        m_chooser.addOption("3C B", AutoCommandFactory.AutoType.ThreeConeBottom);
+        // m_chooser.addOption("1.5C T Dock", AutoCommandFactory.AutoType.OneHalfConeDockTop);
+        // m_chooser.addOption("Wait Auto", AutoCommandFactory.AutoType.Wait);
+        // m_chooser.addOption("2C B", AutoCommandFactory.AutoType.TwoConeBottom);
+        // m_chooser.addOption("2C B Dock", AutoCommandFactory.AutoType.TwoConeDockBottom);
+        // m_chooser.addOption("2C T Dock", AutoCommandFactory.AutoType.TwoConeDockTop);
+        // m_chooser.addOption("2C T", AutoCommandFactory.AutoType.TwoConeTop);
+        // m_chooser.addOption("3C B", AutoCommandFactory.AutoType.ThreeConeBottom);
         SmartDashboard.putData("Auto choices", m_chooser);
         DriverStation.Alliance a = DriverStation.getAlliance();
         SmartDashboard.putString("Alliance",
                 a == DriverStation.Alliance.Blue ? "Blue" : a == DriverStation.Alliance.Red ? "Red" : "Other");
         m_robotContainer = new RobotContainer();
         CommandScheduler.getInstance().schedule(new SetMechanism(MechanismState.ZERO));
+    }
+
+    public void getRedPose() {
+        for (int i = 0; i < 8; i++) {
+            Pose3d a = Constants.Limelight.blueGameAprilTags[i];
+            Constants.Limelight.redGameAprilTags[i] = new Pose3d(Constants.FIELD_HEIGHT_METERS - a.getX(),
+                    Constants.FIELD_WIDTH_METERS - a.getY(), a.getZ(), a.getRotation().minus(new Rotation3d(0, 0, Math.PI)));
+            Constants.Limelight.redGameAprilTags2d[i] = Constants.Limelight.redGameAprilTags[i].toPose2d();
+        }
+
+        if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
+            Constants.Limelight.gameAprilTags = Constants.Limelight.redGameAprilTags;
+            Constants.Limelight.gameAprilTags2d = Constants.Limelight.redGameAprilTags2d;
+        } else {
+            Constants.Limelight.gameAprilTags = Constants.Limelight.blueGameAprilTags;
+            Constants.Limelight.gameAprilTags2d = Constants.Limelight.blueGameAprilTags2d;
+        }
+
     }
 
     /**
