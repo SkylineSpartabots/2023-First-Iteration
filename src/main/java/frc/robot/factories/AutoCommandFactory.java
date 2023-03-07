@@ -161,14 +161,14 @@ public class AutoCommandFactory {
                 return new SequentialCommandGroup(
                                 new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(initState.poseMeters.getX(),
                                                 initState.poseMeters.getY(), new Rotation2d(Math.toRadians(180))))),
-                                new SetMechanism(MechanismState.L2CONE),
-                                new SetIntake(IntakeStates.OFF_DEPLOYED_CONE),
-                                new WaitCommand(1),
-                                new SetIntake(IntakeStates.OFF_RETRACTED_CONE),
-                                new WaitCommand(0.8),
-                                new SetIntake(IntakeStates.OFF_DEPLOYED_CONE),
-                                new SetMechanism(MechanismState.ZERO),
-                                followPathCommand(path),
+                                // new SetMechanism(MechanismState.L2CONE),
+                                // new SetIntake(IntakeStates.OFF_DEPLOYED_CONE),
+                                // new WaitCommand(1),
+                                // new SetIntake(IntakeStates.OFF_RETRACTED_CONE),
+                                // new WaitCommand(0.8),
+                                // new SetIntake(IntakeStates.OFF_DEPLOYED_CONE),
+                                // new SetMechanism(MechanismState.ZERO),
+                                // followPathCommand(path),
                                 new AutoBalance()
                 );
         }
