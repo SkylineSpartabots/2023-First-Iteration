@@ -47,7 +47,6 @@ public class Robot extends TimedRobot {
         m_chooser.addOption("1C Back", AutoCommandFactory.AutoType.OneConeBack);
         m_chooser.addOption("1C M Dock", AutoCommandFactory.AutoType.OneConeDockMiddle);
         // m_chooser.addOption("1.5C T Dock", AutoCommandFactory.AutoType.OneHalfConeDockTop);
-        // m_chooser.addOption("Wait Auto", AutoCommandFactory.AutoType.Wait);
         // m_chooser.addOption("2C B", AutoCommandFactory.AutoType.TwoConeBottom);
         // m_chooser.addOption("2C B Dock", AutoCommandFactory.AutoType.TwoConeDockBottom);
         // m_chooser.addOption("2C T Dock", AutoCommandFactory.AutoType.TwoConeDockTop);

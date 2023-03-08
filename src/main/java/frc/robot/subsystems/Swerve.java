@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import frc.robot.SwerveModule;
+import frc.robot.AutomaticScoringSelector;
 import frc.robot.Constants;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -129,15 +130,6 @@ public class Swerve extends SubsystemBase {
         return gyro.getRoll();
     }
 
-    public BooleanSupplier inScoringPosition(Pose2d pose){
-        return new BooleanSupplier() {
-            @Override
-            public boolean getAsBoolean() {
-                return getPose() == pose;
-            }
-        };
-    }
-
     public static double normalize(double deg) {
         double angle = deg % 360;
         if (angle < -180) {
@@ -162,6 +154,9 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putNumber("x-pos", getPose().getX());
         SmartDashboard.putNumber("y-pos", getPose().getY());
         SmartDashboard.putBoolean("is OTF running", pathInProgress());
+
+        AutomaticScoringSelector.getInstance().realXEntry.setDouble(getPose().getX());
+        AutomaticScoringSelector.getInstance().realYEntry.setDouble(getPose().getY());
 
         // for (SwerveModule mod : mSwerveMods) {
         //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());

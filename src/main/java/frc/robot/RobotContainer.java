@@ -138,17 +138,19 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
+        // driver buttons
         driverStart.onTrue(new SmartResetOdometry());
         driverBack.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
+
         driverRightTrigger.onTrue(coneSubstation);
         driverLeftTrigger.onTrue(cubeIntake);
         // driverLeftBumper.onTrue(layedCone);
         driverRightBumper.onTrue(coneIntake);
+
         driverB.onTrue(new InstantCommand(() -> zeroCommand()));
         driverA.onTrue(new ZeroElevator());
-        driverX.onTrue(new InstantCommand(() -> reverseCommand()));
-        // driverY.onTrue(new AutoBalance());
 
+        // operator buttons
         operatorA.onTrue(new InstantCommand(() -> l1State()));
         operatorX.onTrue(new InstantCommand(() -> l2State()));
         operatorY.onTrue(new InstantCommand(() -> l3State()));
@@ -156,17 +158,18 @@ public class RobotContainer {
 
         operatorRightTrigger.onTrue(new InstantCommand(() -> s_Intake.leaderMotor.set(ControlMode.PercentOutput, 0.075)));
         operatorLeftTrigger.onTrue(new InstantCommand(() -> s_Intake.leaderMotor.set(ControlMode.PercentOutput, 0.0)));
-
-        // operatorA.onTrue(new SetIntake(IntakeStates.ON_DEPLOYED_CONE));
-        // operatorX.onTrue(new SetIntake(IntakeStates.OFF_DEPLOYED_CONE));
-        // operatorY.onTrue(new SetIntake(IntakeStates.ON_RETRACTED_CUBE));
-        // operatorB.onTrue(new SetIntake(IntakeStates.OFF_RETRACTED_CUBE));
-
-
-        driverDpadDown.onTrue(new InstantCommand(() -> l1State()));
-        driverDpadRight.onTrue(new InstantCommand(() -> l2State()));
-        driverDpadUp.onTrue(new InstantCommand(() -> l3State()));
         
+        operatorDpadRight.onTrue(new InstantCommand(() -> selector.increasePos()));
+        operatorDpadLeft.onTrue(new InstantCommand(() -> selector.decreasePos()));
+        operatorDpadUp.onTrue(new InstantCommand(() -> selector.setLevel(2)));
+        operatorDpadDown.onTrue(new InstantCommand(() -> selector.setLevel(1)));
+        operatorLeftBumper.onTrue(new InstantCommand(() -> selector.setLevel(0)));
+        // operatorDpadUp.onTrue(new InstantCommand(() -> selector.moveUp()));
+        // operatorDpadRight.onTrue(new InstantCommand(() -> selector.moveRight()));
+        // operatorDpadDown.onTrue(new InstantCommand(() -> selector.moveDown()));
+        // operatorDpadLeft.onTrue(new InstantCommand(() -> selector.moveLeft()));
+
+        operatorRightBumper.onTrue(new AutoTeleopScore());
     }
 
     ParallelCommandGroup coneIntake = new ParallelCommandGroup(

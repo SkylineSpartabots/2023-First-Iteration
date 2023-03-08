@@ -35,11 +35,7 @@ public class AutoCommandFactory {
         private static Command selectedAuto;
 
         public static Command getAutoCommand(AutoType auto) {
-                // return testAuto();
-                // return twoConeBottom();
                 switch (auto) {
-                        // case Wait:
-                        //         // return selectedAuto = pathWithWait();
                         case OneCone:
                                 return selectedAuto = oneCone();
                         case OneConeBack:
@@ -65,7 +61,6 @@ public class AutoCommandFactory {
         }
 
         public enum AutoType {
-                Wait,
                 OneCone,
                 OneConeBack,
                 OneConeDockMiddle,
@@ -107,27 +102,6 @@ public class AutoCommandFactory {
                 // SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(null, null, null, null,
                 // null, null, null)
         }
-
-        // private static Command testAuto() {
-        // PathPlannerTrajectory path = PathPlanner.loadPath("test", new
-        // PathConstraints(4, 3));
-        // return followPathCommand(path);
-
-        // }
-
-        // private static Command pathWithWait() {
-        // List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("path with
-        // wait event",
-        // new PathConstraints(2, 0.5));
-        // PathPlannerState initState = PathPlannerTrajectory.transformStateForAlliance(
-        // pathGroup.get(0).getInitialState(),
-        // DriverStation.getAlliance());
-        // return new SequentialCommandGroup(
-        // new InstantCommand(() -> s_Swerve.resetOdometry(initState.poseMeters)),
-        // followPathCommand(pathGroup.get(0)),
-        // new WaitCommand(2),
-        // followPathCommand(pathGroup.get(1)));
-        // }
 
         private static Command oneCone() {
                 return new SequentialCommandGroup(

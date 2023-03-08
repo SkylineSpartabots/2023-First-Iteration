@@ -20,8 +20,8 @@ public class Limelight extends SubsystemBase {
 		return instance;
 	}
 
-	private PhotonCamera camera = new PhotonCamera(Constants.Limelight.photonCamName);
-	private PhotonPipelineResult result = camera.getLatestResult();
+	private PhotonCamera camera;
+	private PhotonPipelineResult result;
 	private double lastYaw;
 	private double lastDistance;
 	private double lastPitch;
@@ -30,6 +30,8 @@ public class Limelight extends SubsystemBase {
 
 	public Limelight() {
 		// might have to put some nt initilizations in here...
+		camera = new PhotonCamera(Constants.Limelight.photonCamName);
+		result = camera.getLatestResult();
 	}
 
 	public boolean hasTarget() {

@@ -1,14 +1,11 @@
 package frc.robot.subsystems;
 
-import javax.print.attribute.standard.Compression;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -38,14 +35,14 @@ public class Intake extends SubsystemBase{
         solenoid = new Solenoid(
             Constants.HardwarePorts.pneumaticHub,
             PneumaticsModuleType.REVPH,
-            Constants.HardwarePorts.intakePositionSolenoidChannel);
+            Constants.HardwarePorts.intakeSolenoidChannel);
         compressor = new Compressor(Constants.HardwarePorts.pneumaticHub, PneumaticsModuleType.REVPH);
         compressor.enableDigital();
         leaderMotor = new WPI_TalonFX(Constants.HardwarePorts.intakeMotor);
         followerMotor = new WPI_TalonFX(Constants.HardwarePorts.followerIntakeMotor);
         configureMotor(leaderMotor, false);
         configureMotor(followerMotor, true);
-        followerMotor.set(ControlMode.Follower, Constants.HardwarePorts.intakeMotor); //inverse later
+        followerMotor.set(ControlMode.Follower, Constants.HardwarePorts.intakeMotor); 
     }
 
     private void configureMotor(WPI_TalonFX talon, boolean inverted) {
@@ -60,8 +57,8 @@ public class Intake extends SubsystemBase{
     }
 
     public enum IntakeStates {
-        ON_DEPLOYED_CONE(false, "cone", 1), //false
-        OFF_DEPLOYED_CONE(false, "cone", 0), //when they put the intake down, doesnt need to change because it shouldn't change initial state
+        ON_DEPLOYED_CONE(false, "cone", 1), 
+        OFF_DEPLOYED_CONE(false, "cone", 0), 
         REV_DEPLOYED_CONE(false, "cone", -1),
         OFF_RETRACTED_CONE(true, "cone", 0),
 
@@ -121,8 +118,8 @@ public class Intake extends SubsystemBase{
 
     @Override
     public void periodic() {
-        SmartDashboard.putString("intake cube", getIntakePiece());
-        // SmartDashboard.putNumber("Intake current", leaderMotor.getStatorCurrent());
+        SmartDashboard.putString("intake piece", getIntakePiece());
+        // SmartDashboard.putNumber("intake current", leaderMotor.getStatorCurrent());
         // SmartDashboard.putBoolean("intake deployed", getIntakeDeployed());
 
         if (intakeState == IntakeStates.ON_RETRACTED_CUBE) {

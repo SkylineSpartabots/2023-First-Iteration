@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.AutomaticScoringSelector;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.CompleteMechanism.MechanismState;
 
@@ -13,6 +14,7 @@ public class AutoTeleopScore extends CommandBase {
     Pose2d pose;
     MechanismState mechanismState;
     Intake s_Intake;
+    Limelight s_Limelight;
 
     public AutoTeleopScore() {
         s_Intake = Intake.getInstance();
@@ -22,22 +24,24 @@ public class AutoTeleopScore extends CommandBase {
     @Override
     public void initialize() {
         pose = AutomaticScoringSelector.getInstance().getSelectedPose();
-        mechanismState = AutomaticScoringSelector.getInstance().getMechState(); 
+        mechanismState = AutomaticScoringSelector.getInstance().getMechState();
     }
 
     @Override
     public void execute() {
-
-
         SmartDashboard.putBoolean("AS in pos", AutomaticScoringSelector.getInstance().inPosition());
 
-        CommandScheduler.getInstance().schedule(
-                new SequentialCommandGroup(
-                        new OnTheFlyGeneration(new Pose2d(), true),
-                        new SetMechanism(mechanismState)
-                        // new WaitUntilCommand(AutomaticScoringSelector.getInstance().inPosition)
-                        //         .andThen(new SetMechanism(mechanismState)),
-        ));
+        if (s_Limelight.hasTarget()) {
+            CommandScheduler.getInstance().schedule(
+                    new SequentialCommandGroup(
+                            new SmartResetOdometry(),
+                            new OnTheFlyGeneration(new Pose2d(), true)
+                            // new SetMechanism(mechanismState)
+                    // new WaitUntilCommand(AutomaticScoringSelector.getInstance().inPosition)
+                    // .andThen(new SetMechanism(mechanismState)),
+                    ));
+        }
+
     }
 
     @Override
