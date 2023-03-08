@@ -29,6 +29,7 @@ public class AutoBalance extends CommandBase {
         direction = Math.copySign(direction, robotPitch);
         timer.reset();
         timer.start();
+        s_Swerve.drive(new Translation2d(0, 0), 180, true, true);
     }
 
     @Override
