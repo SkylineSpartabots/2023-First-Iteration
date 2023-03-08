@@ -37,7 +37,7 @@ public class Limelight extends SubsystemBase {
 	public boolean hasTarget() {
 		if (result.hasTargets()) {
 			if (result.getBestTarget().getFiducialId() > 0 
-			&& result.getBestTarget().getFiducialId() < Constants.Limelight.gameAprilTags.length) {
+			&& result.getBestTarget().getFiducialId() < Constants.Limelight.gameAprilTags.length + 1) {
 				return true;
 			}
 		}

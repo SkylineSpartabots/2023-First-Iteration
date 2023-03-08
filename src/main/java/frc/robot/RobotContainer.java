@@ -174,16 +174,16 @@ public class RobotContainer {
 
     ParallelCommandGroup coneIntake = new ParallelCommandGroup(
             new SetMechanism(MechanismState.CONEINTAKE),
-            new SetIntake(IntakeStates.ON_DEPLOYED_CONE));
+            new SetIntake(IntakeStates.ON_CLOSED_CONE));
     ParallelCommandGroup cubeIntake = new ParallelCommandGroup(
             new SetMechanism(MechanismState.CUBEINTAKE),
-            new SetIntake(IntakeStates.ON_RETRACTED_CUBE));
+            new SetIntake(IntakeStates.ON_OPEN_CUBE));
 //     ParallelCommandGroup layedCone = new ParallelCommandGroup(
 //             new SetMechanism(MechanismState.LAYEDCONE),
 //             new SetIntake(IntakeStates.ON_DEPLOYED_LAYEDCONE));
     ParallelCommandGroup coneSubstation = new ParallelCommandGroup(
             new SetMechanism(MechanismState.DOUBLESUBSTATION),
-            new SetIntake(IntakeStates.ON_DEPLOYED_CONE));
+            new SetIntake(IntakeStates.ON_CLOSED_CONE));
 
     public void l1State() {
         CommandScheduler.getInstance().schedule(
@@ -205,10 +205,10 @@ public class RobotContainer {
 
     ParallelCommandGroup zeroCone = new ParallelCommandGroup(
             new SetMechanism(MechanismState.ZERO),
-            new SetIntake(IntakeStates.OFF_DEPLOYED_CONE));
+            new SetIntake(IntakeStates.OFF_CLOSED_CONE));
     ParallelCommandGroup zeroCube = new ParallelCommandGroup(
             new SetMechanism(MechanismState.ZERO),
-            new SetIntake(IntakeStates.OFF_RETRACTED_CUBE));
+            new SetIntake(IntakeStates.OFF_OPEN_CUBE));
 //     ParallelCommandGroup zeroLayed = new ParallelCommandGroup(
 //             new SetMechanism(MechanismState.ZERO),
 //             new SetIntake(IntakeStates.OFF_RETRACTED_LAYEDCONE));
@@ -220,8 +220,8 @@ public class RobotContainer {
 
     public void reverseCommand() {
         CommandScheduler.getInstance().schedule(
-                        s_Intake.intakeState.piece.equals("cube") ? new SetIntake(IntakeStates.REV_RETRACTED_CUBE)
-                                : new SetIntake(IntakeStates.OFF_RETRACTED_CONE));
+                        s_Intake.intakeState.piece.equals("cube") ? new SetIntake(IntakeStates.REV_OPEN_CUBE)
+                                : new SetIntake(IntakeStates.OFF_OPEN_CONE));
     }
 
     // public void deployCommand() {
@@ -233,6 +233,6 @@ public class RobotContainer {
     public void onRobotDisabled() {
         // reset mechanisms so it does not have to be done manually
         CommandScheduler.getInstance().schedule(new SetArm(ArmStates.ZERO));
-        CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED_CONE));
+        CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_OPEN_CONE));
     }
 }

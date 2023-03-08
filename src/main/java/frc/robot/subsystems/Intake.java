@@ -20,7 +20,7 @@ public class Intake extends SubsystemBase{
 
     public WPI_TalonFX leaderMotor, followerMotor;
     private Solenoid solenoid;
-    public IntakeStates intakeState = IntakeStates.OFF_DEPLOYED_CONE;
+    public IntakeStates intakeState = IntakeStates.OFF_CLOSED_CONE;
 
     private Compressor compressor;
 
@@ -57,14 +57,14 @@ public class Intake extends SubsystemBase{
     }
 
     public enum IntakeStates {
-        ON_DEPLOYED_CONE(false, "cone", 1), 
-        OFF_DEPLOYED_CONE(false, "cone", 0), 
-        REV_DEPLOYED_CONE(false, "cone", -1),
-        OFF_RETRACTED_CONE(true, "cone", 0),
+        ON_CLOSED_CONE(false, "cone", 1), //spinning so we can intake, and then it is closed
+        OFF_CLOSED_CONE(false, "cone", 0), 
+        REV_CLOSED_CONE(false, "cone", -1),
+        OFF_OPEN_CONE(true, "cone", 0),
 
-        ON_RETRACTED_CUBE(true, "cube", 1),
-        OFF_RETRACTED_CUBE(true, "cube", 0),
-        REV_RETRACTED_CUBE(true, "cube", -1);
+        ON_OPEN_CUBE(true, "cube", 1),
+        OFF_OPEN_CUBE(true, "cube", 0),
+        REV_OPEN_CUBE(true, "cube", -1);
 
         // ON_DEPLOYED_LAYEDCONE(true, "layed", 1.2),
         // OFF_DEPLOYED_LAYEDCONE(true, "layed", 0.075),
@@ -122,15 +122,15 @@ public class Intake extends SubsystemBase{
         // SmartDashboard.putNumber("intake current", leaderMotor.getStatorCurrent());
         // SmartDashboard.putBoolean("intake deployed", getIntakeDeployed());
 
-        if (intakeState == IntakeStates.ON_RETRACTED_CUBE) {
+        if (intakeState == IntakeStates.ON_OPEN_CUBE) {
             if (hasCube()) {
-                CommandScheduler.getInstance().schedule(new WaitCommand(1.0).andThen(new SetIntake(IntakeStates.OFF_RETRACTED_CUBE)));
+                CommandScheduler.getInstance().schedule(new WaitCommand(1.0).andThen(new SetIntake(IntakeStates.OFF_OPEN_CUBE)));
             }
         }
 
-        if (intakeState == IntakeStates.ON_DEPLOYED_CONE) {
+        if (intakeState == IntakeStates.ON_CLOSED_CONE) {
             if (hasCone()) {
-                CommandScheduler.getInstance().schedule(new WaitCommand(1.0).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED_CONE)));
+                CommandScheduler.getInstance().schedule(new WaitCommand(1.0).andThen(new SetIntake(IntakeStates.OFF_CLOSED_CONE)));
             }
         }
         

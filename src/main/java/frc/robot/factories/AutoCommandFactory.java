@@ -7,17 +7,22 @@ import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 
+import java.sql.DriverAction;
 import java.util.List;
 
 import com.pathplanner.lib.PathConstraints;
 
+import frc.robot.Constants;
 import frc.robot.commands.AutoBalance;
+import frc.robot.commands.OnTheFlyGeneration;
 import frc.robot.commands.SetIntake;
 import frc.robot.commands.SetMechanism;
 import frc.robot.subsystems.*;
@@ -27,6 +32,7 @@ import frc.robot.subsystems.Intake.IntakeStates;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 public class AutoCommandFactory {
 
@@ -50,8 +56,8 @@ public class AutoCommandFactory {
                         //         // return selectedAuto = twoConeDockBottom();
                         // case TwoConeDockTop:
                         //         // return selectedAuto = twoConeDockTop();
-                        // case TwoConeTop:
-                        //         return selectedAuto = twoConeTop();
+                        case TwoConeTop:
+                                return selectedAuto = twoConeTop();
                         // case ThreeConeTop:
                         //         // return selectedAuto = threeConeTop();
                         // case ThreeConeBottom:
@@ -103,12 +109,25 @@ public class AutoCommandFactory {
                 // null, null, null)
         }
 
+        public static void forwardUntilCommand(){
+                double driveSpeed = 0.2;
+                s_Swerve.drive(
+                        new Translation2d(driveSpeed, 0).times(Constants.SwerveConstants.maxSpeed), 
+                        0, 
+                        true, 
+                        true);
+                while(!Intake.getInstance().hasCone() && s_Swerve.getPose().getX() < 7.6){
+                }
+                CommandScheduler.getInstance().schedule(new InstantCommand(() -> s_Swerve.drive(
+                        new Translation2d(0,0), 0, true, true)));
+        }
+
         private static Command oneCone() {
                 return new SequentialCommandGroup(
                         new SetMechanism(MechanismState.L2CONE),
-                        new SetIntake(IntakeStates.OFF_DEPLOYED_CONE),
+                        new SetIntake(IntakeStates.OFF_CLOSED_CONE),
                         new WaitCommand(1),
-                        new SetIntake(IntakeStates.OFF_RETRACTED_CONE));
+                        new SetIntake(IntakeStates.OFF_OPEN_CONE));
         }
 
         private static Command oneConeBack() {
@@ -119,11 +138,11 @@ public class AutoCommandFactory {
                                 new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(initState.poseMeters.getX(),
                                                 initState.poseMeters.getY(), new Rotation2d(Math.toRadians(180))))),
                                 new SetMechanism(MechanismState.L2CONE),
-                                new SetIntake(IntakeStates.OFF_DEPLOYED_CONE),
+                                new SetIntake(IntakeStates.OFF_CLOSED_CONE),
                                 new WaitCommand(1),
-                                new SetIntake(IntakeStates.OFF_RETRACTED_CONE),
+                                new SetIntake(IntakeStates.OFF_OPEN_CONE),
                                 new WaitCommand(0.8),
-                                new SetIntake(IntakeStates.OFF_DEPLOYED_CONE),
+                                new SetIntake(IntakeStates.OFF_CLOSED_CONE),
                                 new SetMechanism(MechanismState.ZERO),
                                 followPathCommand(path));
         }
@@ -136,15 +155,44 @@ public class AutoCommandFactory {
                                 new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(initState.poseMeters.getX(),
                                                 initState.poseMeters.getY(), new Rotation2d(Math.toRadians(180))))),
                                 new SetMechanism(MechanismState.L2CONE),
-                                new SetIntake(IntakeStates.OFF_DEPLOYED_CONE),
+                                new SetIntake(IntakeStates.OFF_CLOSED_CONE),
                                 new WaitCommand(1),
-                                new SetIntake(IntakeStates.OFF_RETRACTED_CONE),
+                                new SetIntake(IntakeStates.OFF_OPEN_CONE),
                                 new WaitCommand(0.8),
-                                new SetIntake(IntakeStates.OFF_DEPLOYED_CONE),
+                                new SetIntake(IntakeStates.OFF_CLOSED_CONE),
                                 new SetMechanism(MechanismState.ZERO),
                                 followPathCommand(path),
                                 new AutoBalance()
                 );
+        }
+
+        private static Command twoConeTop(){//slow moving + stops smartly when current spikes
+        List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("2 cone top",
+                        new PathConstraints(2, 1.5));
+        PathPlannerState initState = PathPlannerTrajectory.transformStateForAlliance(
+                        pathGroup.get(0).getInitialState(),
+                        DriverStation.getAlliance());
+        return new SequentialCommandGroup(
+                new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(initState.poseMeters.getX(),
+                                initState.poseMeters.getY(), new Rotation2d(Math.toRadians(180))))),
+                new SetMechanism(MechanismState.L2CONE),
+                new SetIntake(IntakeStates.OFF_OPEN_CONE),
+                new WaitCommand(1),
+                new SetIntake(IntakeStates.OFF_CLOSED_CONE),
+                new SetMechanism(MechanismState.ZERO),
+                new ParallelCommandGroup(
+                        followPathCommand(pathGroup.get(0)).alongWith(
+                                        new SetIntake(IntakeStates.ON_OPEN_CUBE)),
+                        new ParallelDeadlineGroup(new WaitCommand(1.1),
+                                        new SetMechanism(MechanismState.ZERO))
+                                        .andThen(new SetMechanism(MechanismState.CONEINTAKE))),
+                new InstantCommand(() -> forwardUntilCommand()),
+                new SetIntake(IntakeStates.OFF_OPEN_CUBE),
+                new ParallelCommandGroup(
+                        new OnTheFlyGeneration(pathGroup.get(1).getEndState().poseMeters, false),
+                        new SetMechanism(MechanismState.ZERO).andThen(new WaitCommand(0.8)).andThen(new SetMechanism(MechanismState.L3CUBE))),
+                new SetIntake(IntakeStates.REV_CLOSED_CONE)
+            );
         }
 
         // private static Command oneHalfConeDockTop() {
