@@ -229,6 +229,7 @@ public class RobotContainer {
 
     public void onRobotDisabled() {
         // reset mechanisms so it does not have to be done manually
+        // CommandScheduler.getInstance().schedule(new);
         CommandScheduler.getInstance().schedule(new SetArm(ArmStates.ZERO));
         CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED_CONE));
     }

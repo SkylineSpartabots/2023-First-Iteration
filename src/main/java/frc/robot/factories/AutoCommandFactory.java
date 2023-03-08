@@ -290,7 +290,7 @@ public class AutoCommandFactory {
         //                         new SetIntake(IntakeStates.OFF_DEPLOYED_CONE),
         //                         new ParallelCommandGroup(
         //                                         followPathCommand(pathGroup.get(0)).alongWith(
-        //                                                         new SetIntake(IntakeStates.ON_DEPLOYED_CUBE)),
+        //                                                         new SetIntake(IntakeStates.ON_DEPLOYED_CONE)),
         //                                         new ParallelDeadlineGroup(new WaitCommand(1.1),
         //                                                         new SetMechanism(MechanismState.ZERO))
         //                                                         .andThen(new SetMechanism(MechanismState.CUBEINTAKE))),
