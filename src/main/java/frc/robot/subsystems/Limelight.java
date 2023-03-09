@@ -29,7 +29,6 @@ public class Limelight extends SubsystemBase {
 	private PhotonTrackedTarget lastTarget;
 
 	public Limelight() {
-		// might have to put some nt initilizations in here...
 		camera = new PhotonCamera(Constants.Limelight.photonCamName);
 		result = camera.getLatestResult();
 	}

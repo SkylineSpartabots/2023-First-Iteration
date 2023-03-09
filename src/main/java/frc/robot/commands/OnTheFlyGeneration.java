@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-
-
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -13,6 +11,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.AutomaticScoringSelector;
 import frc.robot.factories.AutoCommandFactory;
 import frc.robot.subsystems.Swerve;
@@ -32,7 +31,7 @@ public class OnTheFlyGeneration extends CommandBase {
         this.targetPos = targetPos;
         addRequirements(s_Swerve);
     }
-    
+
     private PathPoint getPathPoint(Pose2d pose) {
         return new PathPoint(new Translation2d(pose.getX(), pose.getY()),
                 Rotation2d.fromRadians(heading),
@@ -42,32 +41,36 @@ public class OnTheFlyGeneration extends CommandBase {
     @Override
     public void initialize() {
         currentPos = s_Swerve.getPose();
-        if(autoScoring) {
+        if (autoScoring) {
             targetPos = selector.getSelectedPose();
         }
         double x = targetPos.getX() - currentPos.getX();
         double y = targetPos.getY() - currentPos.getY();
         heading = Math.atan2(y, x);
-    }
-
-    @Override
-    public void execute() {
         double maxVel = 3;
         double maxAccel = 2;
         PathPlannerTrajectory trajectory = PathPlanner.generatePath(
                 new PathConstraints(maxVel, maxAccel),
                 getPathPoint(currentPos),
                 getPathPoint(targetPos));
-        SmartDashboard.putNumber("OTF-start-x", currentPos.getX());
-        SmartDashboard.putNumber("OTF-start-y", currentPos.getY());
-        SmartDashboard.putNumber("OTF-end-x", targetPos.getX());
-        SmartDashboard.putNumber("OTF-end-y", targetPos.getY());
-        CommandScheduler.getInstance().schedule(AutoCommandFactory.followPathCommand(trajectory));
+        // SmartDashboard.putNumber("OTF-start-x", currentPos.getX());
+        // SmartDashboard.putNumber("OTF-start-y", currentPos.getY());
+        // SmartDashboard.putNumber("OTF-end-x", targetPos.getX());
+        // SmartDashboard.putNumber("OTF-end-y", targetPos.getY());
+        CommandScheduler.getInstance().schedule(
+                AutoCommandFactory.followPathCommand(trajectory));
     }
 
     @Override
+    public void execute() {
+        counter++;
+    }
+    int counter = 0;
+
+    @Override
     public boolean isFinished() {
-        return true;
+        SmartDashboard.putNumber("FUCK", counter);
+        return AutomaticScoringSelector.getInstance().inPosition();
     }
 
 }

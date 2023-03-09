@@ -104,6 +104,7 @@ public class RobotContainer {
     private final Elevator s_Elevator;
     private final Arm s_Arm;
     private final Intake s_Intake;
+    private final CompleteMechanism s_CompleteMechanism;
     private final ScoringCommandFactory scoreCommandFactory;
     private final AutomaticScoringSelector selector;
     private boolean currentlyCoast;
@@ -120,6 +121,7 @@ public class RobotContainer {
         s_Elevator = Elevator.getInstance();
         s_Intake = Intake.getInstance();
         s_Arm = Arm.getInstance();
+        s_CompleteMechanism = CompleteMechanism.getInstance();
         scoreCommandFactory = ScoringCommandFactory.getInstance();
         selector = AutomaticScoringSelector.getInstance();
         selector.createDisplay();
@@ -151,9 +153,9 @@ public class RobotContainer {
         driverA.onTrue(new ZeroElevator());
 
         // operator buttons
-        operatorA.onTrue(new InstantCommand(() -> l1State()));
-        operatorX.onTrue(new InstantCommand(() -> l2State()));
-        operatorY.onTrue(new InstantCommand(() -> l3State()));
+        operatorA.onTrue(new InstantCommand(() -> s_CompleteMechanism.l1State()));
+        operatorX.onTrue(new InstantCommand(() -> s_CompleteMechanism.l2State()));
+        operatorY.onTrue(new InstantCommand(() -> s_CompleteMechanism.l3State()));
         operatorB.onTrue(new InstantCommand(() -> reverseCommand()));
 
         operatorRightTrigger.onTrue(new InstantCommand(() -> s_Intake.leaderMotor.set(ControlMode.PercentOutput, 0.075)));
@@ -184,24 +186,6 @@ public class RobotContainer {
     ParallelCommandGroup coneSubstation = new ParallelCommandGroup(
             new SetMechanism(MechanismState.DOUBLESUBSTATION),
             new SetIntake(IntakeStates.ON_CLOSED_CONE));
-
-    public void l1State() {
-        CommandScheduler.getInstance().schedule(
-                s_Intake.intakeState.piece.equals("cube") ? new SetMechanism(MechanismState.L1CUBE)
-                                : new SetMechanism(MechanismState.L1CONE));
-    }
-
-    public void l2State() {
-        CommandScheduler.getInstance().schedule(
-                s_Intake.intakeState.piece.equals("cube") ? new SetMechanism(MechanismState.L2CUBE)
-                                : new SetMechanism(MechanismState.L2CONE));
-    }
-
-    public void l3State() {
-        CommandScheduler.getInstance().schedule(
-                s_Intake.intakeState.piece.equals("cube") ? new SetMechanism(MechanismState.L2CUBE)
-                                : new SetMechanism(MechanismState.L3CONE));
-    }
 
     ParallelCommandGroup zeroCone = new ParallelCommandGroup(
             new SetMechanism(MechanismState.ZERO),

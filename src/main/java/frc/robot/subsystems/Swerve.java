@@ -154,6 +154,7 @@ public class Swerve extends SubsystemBase {
         SmartDashboard.putNumber("x-pos", getPose().getX());
         SmartDashboard.putNumber("y-pos", getPose().getY());
         SmartDashboard.putBoolean("is OTF running", pathInProgress());
+        SmartDashboard.putBoolean("AS in pos", AutomaticScoringSelector.getInstance().inPosition());
 
         AutomaticScoringSelector.getInstance().realXEntry.setDouble(getPose().getX());
         AutomaticScoringSelector.getInstance().realYEntry.setDouble(getPose().getY());

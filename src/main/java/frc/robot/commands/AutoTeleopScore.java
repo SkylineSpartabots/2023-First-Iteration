@@ -4,9 +4,11 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.AutomaticScoringSelector;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.CompleteMechanism;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.CompleteMechanism.MechanismState;
 
@@ -15,38 +17,41 @@ public class AutoTeleopScore extends CommandBase {
     MechanismState mechanismState;
     Intake s_Intake;
     Limelight s_Limelight;
+    CompleteMechanism s_CompleteMechanism;
+    AutomaticScoringSelector s_AutomaticScoringSelector;
+    boolean finished = false;
 
     public AutoTeleopScore() {
         s_Intake = Intake.getInstance();
-        // Pose2d currentPose = AutomaticScoringSelector.
+        s_Limelight = Limelight.getInstance();
+        s_CompleteMechanism = CompleteMechanism.getInstance();
+        s_AutomaticScoringSelector = AutomaticScoringSelector.getInstance();
     }
 
     @Override
     public void initialize() {
-        pose = AutomaticScoringSelector.getInstance().getSelectedPose();
-        mechanismState = AutomaticScoringSelector.getInstance().getMechState();
-    }
-
-    @Override
-    public void execute() {
-        SmartDashboard.putBoolean("AS in pos", AutomaticScoringSelector.getInstance().inPosition());
-
         if (s_Limelight.hasTarget()) {
             CommandScheduler.getInstance().schedule(
                     new SequentialCommandGroup(
                             new SmartResetOdometry(),
-                            new OnTheFlyGeneration(new Pose2d(), true)
-                            // new SetMechanism(mechanismState)
-                    // new WaitUntilCommand(AutomaticScoringSelector.getInstance().inPosition)
+                            new OnTheFlyGeneration(new Pose2d(), true),
+                            new SetMechanism(MechanismState.L2CONE),
+                            // new SetMechanism(s_AutomaticScoringSelector.getMechState()),
+                            new InstantCommand(() -> finished = true)
+                    // new WaitUntilCommand(s_AutomaticScoringSelector.inPosition)
                     // .andThen(new SetMechanism(mechanismState)),
                     ));
         }
+    }
+
+    @Override
+    public void execute() {
 
     }
 
     @Override
     public boolean isFinished() {
-        return true;
+        return finished;
     }
 
 }

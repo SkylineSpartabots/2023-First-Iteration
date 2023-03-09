@@ -8,11 +8,13 @@ import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Arm.ArmStates;
 import frc.robot.subsystems.CompleteMechanism.MechanismState;
@@ -52,9 +54,9 @@ public final class AutomaticScoringSelector {
 
     public AutomaticScoringSelector() {
         s_Swerve = Swerve.getInstance();
-        double x = 1.9; //should be the same for every default scoring position
-        double y = 0.59; //only one that changes
-        double yIncrem = 0.56; //how much each y varies by - currently unmeasured
+        double x = 1.8025; //should be the same for every default scoring position
+        double y = 0.59 - 0.1; //only one that changes
+        double yIncrem = Units.inchesToMeters(22); //how much each y varies by - currently unmeasured
 
         
         for (int i = 0; i < 9; i++) {
@@ -95,8 +97,8 @@ public final class AutomaticScoringSelector {
     public void updateShuffleboard() {
         currPosEntry.setDouble(currPos);
         currLevelEntry.setDouble(currLevel);
-        currentXpos = allPoses[currPos].getX();
-        currentYpos = allPoses[currPos].getY();    
+        currentXpos = convertToRed(allPoses[currPos]).getX();
+        currentYpos = convertToRed(allPoses[currPos]).getY();    
         currentXPosEntry.setDouble(currentXpos);
         currentYPosEntry.setDouble(currentYpos);
 
@@ -153,15 +155,19 @@ public final class AutomaticScoringSelector {
 
     
     public boolean inPosition() {
-        return (Math.abs(s_Swerve.getPose().getX() - getSelectedPose().getX()) < 0.5)
-                && (Math.abs(s_Swerve.getPose().getX() - getSelectedPose().getX()) < 0.5)
+        return (Math.abs(s_Swerve.getPose().getX() - getSelectedPose().getX()) < 0.3)
+                && (Math.abs(s_Swerve.getPose().getY() - getSelectedPose().getY()) < 0.3)
                 && (Math.abs(s_Swerve.getPose().getRotation().getDegrees()
-                        - getSelectedPose().getRotation().getDegrees()) < 30);
+                        - getSelectedPose().getRotation().getDegrees()) < 20);
     }
 
     public void setLevel(int level) {
         currLevel = level;
         updateShuffleboard();
+    }
+
+    public int getLevel() {
+        return currLevel;
     }
 
     public void increasePos() {
