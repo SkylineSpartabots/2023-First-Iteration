@@ -48,8 +48,7 @@ public final class Constants {
     public static final class Limelight {
         public static final String photonCamName = "lime";
         public static final Translation3d cameraOffsets = new Translation3d(
-                Units.inchesToMeters(0.0), // x (front-back) offset
-                                           // TODO should there be an offset here? shouldnt it be changed
+                Units.inchesToMeters(-12.56), // x (front-back) offset
                 Units.inchesToMeters(0.0), // y (left-right) offset
                 Units.inchesToMeters(-7.71) // z (up-down) offset
         );
