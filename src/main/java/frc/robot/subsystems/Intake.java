@@ -5,10 +5,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -23,7 +21,6 @@ public class Intake extends SubsystemBase{
     public WPI_TalonFX leaderMotor, followerMotor;
     private Solenoid solenoid;
     public IntakeStates intakeState = IntakeStates.OFF_CLOSED_CONE;
-    private final AnalogInput ultrasonic = new AnalogInput(0);
 
     private Compressor compressor;
 
@@ -119,14 +116,6 @@ public class Intake extends SubsystemBase{
         return currentVolt > gConeThreshold;
     }
 
-    public double getDistance() {
-        double raw_value = ultrasonic.getValue();
-        double voltage_scale_factor = 5;
-        RobotController.getVoltage5V();
-        double currentDistanceCentimeters = raw_value * voltage_scale_factor * 0.125;
-        return currentDistanceCentimeters;
-    }
-
     @Override
     public void periodic() {
         SmartDashboard.putString("intake piece", getIntakePiece());
@@ -144,7 +133,7 @@ public class Intake extends SubsystemBase{
                 CommandScheduler.getInstance().schedule(new WaitCommand(1.0).andThen(new SetIntake(IntakeStates.OFF_CLOSED_CONE)));
             }
         }
-        SmartDashboard.putNumber("sensordist", getDistance());
+        
         // if (intakeState == IntakeStates.ON_DEPLOYED_LAYEDCONE) {
         //     if (hasLayedCone()) {
         //         CommandScheduler.getInstance().schedule(new WaitCommand(1.6).andThen(new SetIntake(IntakeStates.OFF_RETRACTED_LAYEDCONE)));
