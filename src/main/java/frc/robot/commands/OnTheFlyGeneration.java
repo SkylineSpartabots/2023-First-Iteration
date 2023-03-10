@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.AutomaticScoringSelector;
 import frc.robot.factories.AutoCommandFactory;
 import frc.robot.subsystems.Swerve;
@@ -23,6 +24,7 @@ public class OnTheFlyGeneration extends CommandBase {
     boolean autoScoring;
     AutomaticScoringSelector selector;
     double heading;
+    boolean done;
 
     public OnTheFlyGeneration(Pose2d targetPos, boolean autoScoring) {
         s_Swerve = Swerve.getInstance();
@@ -30,6 +32,7 @@ public class OnTheFlyGeneration extends CommandBase {
         this.autoScoring = autoScoring;
         this.targetPos = targetPos;
         addRequirements(s_Swerve);
+        done = false;
     }
 
     private PathPoint getPathPoint(Pose2d pose) {
@@ -58,7 +61,13 @@ public class OnTheFlyGeneration extends CommandBase {
         // SmartDashboard.putNumber("OTF-end-x", targetPos.getX());
         // SmartDashboard.putNumber("OTF-end-y", targetPos.getY());
         CommandScheduler.getInstance().schedule(
-                AutoCommandFactory.followPathCommand(trajectory));
+            new SequentialCommandGroup(
+                AutoCommandFactory.followPathCommand(trajectory),
+                new InstantCommand(() -> {
+                    done = true;
+                })
+            )
+        );
     }
 
     @Override
@@ -69,8 +78,9 @@ public class OnTheFlyGeneration extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        SmartDashboard.putNumber("FUCK", counter);
-        return AutomaticScoringSelector.getInstance().inPosition();
+        // SmartDashboard.putNumber("FUCK", counter);
+        // return AutomaticScoringSelector.getInstance().inPosition();
+        return done;
     }
 
 }

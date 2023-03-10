@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.AutomaticScoringSelector;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.CompleteMechanism;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.CompleteMechanism.MechanismState;
@@ -26,6 +27,7 @@ public class AutoTeleopScore extends CommandBase {
         s_Limelight = Limelight.getInstance();
         s_CompleteMechanism = CompleteMechanism.getInstance();
         s_AutomaticScoringSelector = AutomaticScoringSelector.getInstance();
+        addRequirements(Swerve.getInstance());
     }
 
     @Override

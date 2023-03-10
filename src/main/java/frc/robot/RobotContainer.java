@@ -143,24 +143,26 @@ public class RobotContainer {
         // driver buttons
         driverStart.onTrue(new SmartResetOdometry());
         driverBack.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
-
         driverRightTrigger.onTrue(coneSubstation);
         driverLeftTrigger.onTrue(cubeIntake);
-        // driverLeftBumper.onTrue(layedCone);
         driverRightBumper.onTrue(coneIntake);
-
         driverB.onTrue(new InstantCommand(() -> zeroCommand()));
         driverA.onTrue(new ZeroElevator());
+        // temporary commands (should be on operator)
+        driverDpadRight.onTrue(new InstantCommand(() -> selector.increasePos()));
+        driverDpadLeft.onTrue(new InstantCommand(() -> selector.decreasePos()));
+        driverDpadUp.onTrue(new InstantCommand(() -> selector.setLevel(2)));
+        driverDpadDown.onTrue(new InstantCommand(() -> selector.setLevel(0)));
+        driverX.onTrue(new InstantCommand(() -> selector.setLevel(1)));
+        driverY.onTrue(new AutoTeleopScore());
 
         // operator buttons
         operatorA.onTrue(new InstantCommand(() -> s_CompleteMechanism.l1State()));
         operatorX.onTrue(new InstantCommand(() -> s_CompleteMechanism.l2State()));
         operatorY.onTrue(new InstantCommand(() -> s_CompleteMechanism.l3State()));
         operatorB.onTrue(new InstantCommand(() -> reverseCommand()));
-
         operatorRightTrigger.onTrue(new InstantCommand(() -> s_Intake.leaderMotor.set(ControlMode.PercentOutput, 0.075)));
         operatorLeftTrigger.onTrue(new InstantCommand(() -> s_Intake.leaderMotor.set(ControlMode.PercentOutput, 0.0)));
-        
         operatorDpadRight.onTrue(new InstantCommand(() -> selector.increasePos()));
         operatorDpadLeft.onTrue(new InstantCommand(() -> selector.decreasePos()));
         operatorDpadUp.onTrue(new InstantCommand(() -> selector.setLevel(2)));
@@ -202,7 +204,7 @@ public class RobotContainer {
                 s_Intake.intakeState.piece.equals("cube") ? zeroCube : zeroCone);
     }
 
-    public void reverseCommand() {
+    public void reverseCommand() {  
         CommandScheduler.getInstance().schedule(
                         s_Intake.intakeState.piece.equals("cube") ? new SetIntake(IntakeStates.REV_OPEN_CUBE)
                                 : new SetIntake(IntakeStates.OFF_OPEN_CONE));
