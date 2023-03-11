@@ -69,7 +69,7 @@ public class Arm extends SubsystemBase {
         talon.setInverted(inverted);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(false);
-        talon.setNeutralMode(NeutralMode.Brake);
+        talon.setNeutralMode(NeutralMode.Coast);
         talon.config_kF(0, 0.05, Constants.timeOutMs);
         talon.config_kP(0, 0.12, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);
@@ -107,7 +107,8 @@ public class Arm extends SubsystemBase {
     }
 
     public double getCANCoderPosition() {
-        return (armCANCoder.getAbsolutePosition() - 283 + 360) % 360;
+        return (armCANCoder.getAbsolutePosition() - 40 + 360) % 360;
+        // return armCANCoder.getAbsolutePosition();
     }
 
     public double getCANCoderVoltage() {
