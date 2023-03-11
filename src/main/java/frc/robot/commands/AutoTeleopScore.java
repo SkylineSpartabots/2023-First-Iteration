@@ -40,9 +40,9 @@ public class AutoTeleopScore extends CommandBase {
             CommandScheduler.getInstance().schedule(
                     new SequentialCommandGroup(
                             new SmartResetOdometry(),
-                            new OnTheFlyGeneration(new Pose2d(), true),
-                            // new WaitUntilCommand(s_AutomaticScoringSelector.inPosition).andThen(new SetMechanism(MechanismState.L2CONE)),
-                            new SetMechanism(MechanismState.L2CONE),
+                            new OnTheFlyGeneration(s_AutomaticScoringSelector.getSelectedPose()),
+                            new WaitUntilCommand(s_AutomaticScoringSelector.inPosition).andThen(new SetMechanism(s_AutomaticScoringSelector.getMechState())),
+                            //new SetMechanism(MechanismState.L2CONE),
                             // new SetElevator(ElevatorStates.L2CONE),
                             // new SetMechanism(s_AutomaticScoringSelector.getMechState()),
                             new InstantCommand(() -> finished = true)

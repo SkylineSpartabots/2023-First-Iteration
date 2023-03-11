@@ -22,14 +22,14 @@ public class OnTheFlyGeneration extends CommandBase {
     Pose2d targetPos;
     Swerve s_Swerve;
     boolean autoScoring;
-    AutomaticScoringSelector selector;
+    // AutomaticScoringSelector selector;
     double heading;
     boolean done;
 
-    public OnTheFlyGeneration(Pose2d targetPos, boolean autoScoring) {
+    public OnTheFlyGeneration(Pose2d targetPos) {
         s_Swerve = Swerve.getInstance();
-        selector = AutomaticScoringSelector.getInstance();
-        this.autoScoring = autoScoring;
+        // selector = AutomaticScoringSelector.getInstance();
+        // this.autoScoring = autoScoring;
         this.targetPos = targetPos;
         // addRequirements(s_Swerve);
         done = false;
@@ -44,9 +44,9 @@ public class OnTheFlyGeneration extends CommandBase {
     @Override
     public void initialize() {
         currentPos = s_Swerve.getPose();
-        if (autoScoring) {
-            targetPos = selector.getSelectedPose();
-        }
+        // if (autoScoring) {
+        //     targetPos = selector.getSelectedPose();
+        // }
         double x = targetPos.getX() - currentPos.getX();
         double y = targetPos.getY() - currentPos.getY();
         heading = Math.atan2(y, x);
@@ -72,9 +72,7 @@ public class OnTheFlyGeneration extends CommandBase {
 
     @Override
     public void execute() {
-        counter++;
     }
-    int counter = 0;
 
     @Override
     public boolean isFinished() {

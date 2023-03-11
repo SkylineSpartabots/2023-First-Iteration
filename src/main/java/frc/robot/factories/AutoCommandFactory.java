@@ -111,15 +111,15 @@ public class AutoCommandFactory {
 
         public static void forwardUntilCommand(){
                 double driveSpeed = 0.2;
-                s_Swerve.drive(
-                        new Translation2d(driveSpeed, 0).times(Constants.SwerveConstants.maxSpeed), 
-                        0, 
-                        true, 
-                        true);
                 while(!Intake.getInstance().hasCone() && s_Swerve.getPose().getX() < 7.6){
+                        s_Swerve.drive(
+                                new Translation2d(driveSpeed, 0).times(Constants.SwerveConstants.maxSpeed), 
+                                0, 
+                                true, 
+                                true);
                 }
-                CommandScheduler.getInstance().schedule(new InstantCommand(() -> s_Swerve.drive(
-                        new Translation2d(0,0), 0, true, true)));
+                s_Swerve.drive(
+                        new Translation2d(0,0), 0, true, true);
         }
 
         private static Command oneCone() {
@@ -175,7 +175,7 @@ public class AutoCommandFactory {
         return new SequentialCommandGroup(
                 new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(initState.poseMeters.getX(),
                                 initState.poseMeters.getY(), new Rotation2d(Math.toRadians(180))))),
-                new SetMechanism(MechanismState.L2CONE),
+                new SetMechanism(MechanismState.L3CONE),
                 new SetIntake(IntakeStates.OFF_OPEN_CONE),
                 new WaitCommand(1),
                 new SetIntake(IntakeStates.OFF_CLOSED_CONE),
@@ -185,13 +185,13 @@ public class AutoCommandFactory {
                                         new SetIntake(IntakeStates.ON_OPEN_CUBE)),
                         new ParallelDeadlineGroup(new WaitCommand(1.1),
                                         new SetMechanism(MechanismState.ZERO))
-                                        .andThen(new SetMechanism(MechanismState.CONEINTAKE))),
+                                        .andThen(new SetMechanism(MechanismState.CUBEINTAKE))),
                 new InstantCommand(() -> forwardUntilCommand()),
                 new SetIntake(IntakeStates.OFF_OPEN_CUBE),
                 new ParallelCommandGroup(
-                        new OnTheFlyGeneration(pathGroup.get(1).getEndState().poseMeters, false),
+                        new OnTheFlyGeneration(pathGroup.get(1).getEndState().poseMeters),
                         new SetMechanism(MechanismState.ZERO).andThen(new WaitCommand(0.8)).andThen(new SetMechanism(MechanismState.L3CUBE))),
-                new SetIntake(IntakeStates.REV_CLOSED_CONE)
+                new SetIntake(IntakeStates.REV_OPEN_CUBE)
             );
         }
 
