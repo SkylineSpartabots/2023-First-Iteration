@@ -1,9 +1,7 @@
 package frc.robot.subsystems;
 
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -15,45 +13,31 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.commands.SetIntake;
 
-public class Intake extends SubsystemBase{
+public class Intake extends SubsystemBase {
+    
     private static Intake instance;
-
-    public WPI_TalonFX leaderMotor, followerMotor;
-    private Solenoid solenoid;
+    CANSparkMax m_leaderMotor, m_followerMotor;
+    Solenoid m_solenoid;
+    Compressor m_compressor;
     public IntakeStates intakeState = IntakeStates.OFF_CLOSED_CONE;
 
-    private Compressor compressor;
-
-    public static Intake getInstance(){
-        if(instance == null){
+    public static Intake getInstance() {
+        if (instance == null) {
             instance = new Intake();
         }
         return instance;
     }
 
-    public Intake(){
-        solenoid = new Solenoid(
+    Intake() {
+        m_solenoid = new Solenoid(
             Constants.HardwarePorts.pneumaticHub,
             PneumaticsModuleType.REVPH,
             Constants.HardwarePorts.intakeSolenoidChannel);
-        compressor = new Compressor(Constants.HardwarePorts.pneumaticHub, PneumaticsModuleType.REVPH);
-        compressor.enableDigital();
-        leaderMotor = new WPI_TalonFX(Constants.HardwarePorts.intakeMotor);
-        followerMotor = new WPI_TalonFX(Constants.HardwarePorts.followerIntakeMotor);
-        configureMotor(leaderMotor, false);
-        configureMotor(followerMotor, true);
-        followerMotor.set(ControlMode.Follower, Constants.HardwarePorts.intakeMotor); 
-    }
-
-    private void configureMotor(WPI_TalonFX talon, boolean inverted) {
-        talon.setInverted(inverted);
-        talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
-        talon.enableVoltageCompensation(true);
-        talon.setNeutralMode(NeutralMode.Brake);
-        talon.config_kF(0, 0.05, Constants.timeOutMs);
-        talon.config_kP(0, 0.30, Constants.timeOutMs);
-        talon.config_kI(0, 0, Constants.timeOutMs);
-        talon.config_kD(0, 0, Constants.timeOutMs);
+        m_compressor = new Compressor(Constants.HardwarePorts.pneumaticHub, PneumaticsModuleType.REVPH);
+        m_compressor.enableDigital();
+        m_leaderMotor = new CANSparkMax(Constants.HardwarePorts.intakeLeaderMotor, MotorType.kBrushless);
+        m_followerMotor = new CANSparkMax(Constants.HardwarePorts.intakeFollowerMotor, MotorType.kBrushless);
+        m_followerMotor.follow(m_leaderMotor, true);
     }
 
     public enum IntakeStates {
@@ -85,9 +69,13 @@ public class Intake extends SubsystemBase{
 
     public void setState(IntakeStates state) {
         this.intakeState = state;
-        solenoid.set(intakeState.deployed);
+        m_solenoid.set(intakeState.deployed);
         final double offset = 0.75;
-        leaderMotor.set(ControlMode.PercentOutput, offset * intakeState.direction);
+        setSpeed(offset * intakeState.direction);
+    }
+
+    public void setSpeed(double speed) {
+        m_leaderMotor.set(speed);
     }
 
     public boolean getIntakeDeployed() {
@@ -100,19 +88,19 @@ public class Intake extends SubsystemBase{
 
     private double coneThreshold = 46.5;
     public boolean hasCone(){
-        double currentVolt = leaderMotor.getStatorCurrent();
+        double currentVolt = m_leaderMotor.getOutputCurrent();
         return currentVolt > coneThreshold;
     }
 
     public double cubeThreshold = 39;
     public boolean hasCube(){
-        double currentVolt = leaderMotor.getStatorCurrent();
+        double currentVolt = m_leaderMotor.getOutputCurrent();
         return currentVolt > cubeThreshold;
     }
 
     private double gConeThreshold = 55;
     public boolean hasLayedCone(){
-        double currentVolt = leaderMotor.getStatorCurrent();
+        double currentVolt = m_leaderMotor.getOutputCurrent();
         return currentVolt > gConeThreshold;
     }
 

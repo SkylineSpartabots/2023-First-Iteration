@@ -161,8 +161,8 @@ public class RobotContainer {
         operatorX.onTrue(new InstantCommand(() -> s_CompleteMechanism.l2State()));
         operatorY.onTrue(new InstantCommand(() -> s_CompleteMechanism.l3State()));
         operatorB.onTrue(new InstantCommand(() -> reverseCommand()));
-        operatorRightTrigger.onTrue(new InstantCommand(() -> s_Intake.leaderMotor.set(ControlMode.PercentOutput, 0.075)));
-        operatorLeftTrigger.onTrue(new InstantCommand(() -> s_Intake.leaderMotor.set(ControlMode.PercentOutput, 0.0)));
+        operatorRightTrigger.onTrue(new InstantCommand(() -> s_Intake.setSpeed(0.75)));
+        operatorLeftTrigger.onTrue(new InstantCommand(() -> s_Intake.setSpeed(0)));
         operatorDpadRight.onTrue(new InstantCommand(() -> selector.increasePos()));
         operatorDpadLeft.onTrue(new InstantCommand(() -> selector.decreasePos()));
         operatorDpadUp.onTrue(new InstantCommand(() -> selector.setLevel(2)));
@@ -172,6 +172,11 @@ public class RobotContainer {
         // operatorDpadRight.onTrue(new InstantCommand(() -> selector.moveRight()));
         // operatorDpadDown.onTrue(new InstantCommand(() -> selector.moveDown()));
         // operatorDpadLeft.onTrue(new InstantCommand(() -> selector.moveLeft()));
+
+        operatorA.onTrue(new SetIntake(IntakeStates.OFF_CLOSED_CONE));
+        operatorB.onTrue(new SetIntake(IntakeStates.ON_CLOSED_CONE));
+        operatorX.onTrue(new SetIntake(IntakeStates.REV_CLOSED_CONE));
+        operatorY.onTrue(new SetIntake(IntakeStates.OFF_OPEN_CONE));
 
         operatorRightBumper.onTrue(new AutoTeleopScore());
     }
