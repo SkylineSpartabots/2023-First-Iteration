@@ -36,20 +36,20 @@ public class AutoTeleopScore extends CommandBase {
     @Override
     public void initialize() {
         finished = false;
-        // if (s_Limelight.hasTarget()) {
+        if (s_Limelight.hasTarget()) {
             CommandScheduler.getInstance().schedule(
                     new SequentialCommandGroup(
                             new SmartResetOdometry(),
                             new OnTheFlyGeneration(s_AutomaticScoringSelector.getSelectedPose()),
-                            new WaitUntilCommand(s_AutomaticScoringSelector.inPosition).andThen(new SetMechanism(s_AutomaticScoringSelector.getMechState())),
-                            //new SetMechanism(MechanismState.L2CONE),
+                            // new WaitUntilCommand(s_AutomaticScoringSelector.inPosition).andThen(new SetMechanism(s_AutomaticScoringSelector.getMechState())),
+                            new SetMechanism(MechanismState.L2CONE),
                             // new SetElevator(ElevatorStates.L2CONE),
                             // new SetMechanism(s_AutomaticScoringSelector.getMechState()),
                             new InstantCommand(() -> finished = true)
                     // new WaitUntilCommand(s_AutomaticScoringSelector.inPosition)
                     // .andThen(new SetMechanism(mechanismState)),
                     ));
-        // }
+        }
     }
 
     @Override

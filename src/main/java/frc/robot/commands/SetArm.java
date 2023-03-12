@@ -10,9 +10,11 @@ public class SetArm extends CommandBase {
 	Arm s_Arm;
 	Arm.ArmStates state;
 	double armVoltage;
-	// PIDController armController = new PIDController(0.09, 7e-3, 2.5e-3); // tune PID
+	// PIDController armController = new PIDController(0.09, 7e-3, 2.5e-3); // tune
+	// PID
 	PIDController armController = new PIDController(0.12, 4e-3, 0); // tune PID
-	// ArmFeedforward armFeedforward = new ArmFeedforward(0.2782, 0.13793, 0.0025705, 0.00053547);
+	// ArmFeedforward armFeedforward = new ArmFeedforward(0.2782, 0.13793,
+	// 0.0025705, 0.00053547);
 
 	public SetArm(ArmStates state) {
 		s_Arm = Arm.getInstance();
@@ -20,10 +22,10 @@ public class SetArm extends CommandBase {
 		this.state = state;
 	}
 
-	@Override
-	public InterruptionBehavior getInterruptionBehavior() {
-		return InterruptionBehavior.kCancelSelf;
-	}
+	// @Override
+	// public InterruptionBehavior getInterruptionBehavior() {
+	// 	return InterruptionBehavior.kCancelSelf;
+	// }
 
 	@Override
 	public void initialize() {
@@ -34,7 +36,8 @@ public class SetArm extends CommandBase {
 	@Override
 	public void execute() {
 		armVoltage = armController.calculate(s_Arm.getCANCoderPosition(), s_Arm.getCANCoderSetpoint());
-		s_Arm.setVoltage(armVoltage);
+		// DO NOT MOVE THE ARM RIGHT NOW
+		// s_Arm.setVoltage(armVoltage);
 	}
 
 	@Override

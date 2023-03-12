@@ -75,7 +75,8 @@ public class Intake extends SubsystemBase {
     }
 
     public void setSpeed(double speed) {
-        m_leaderMotor.set(speed);
+        // DO NOT RUN THE INTAKE MOTOR RIGHT NOW
+        // m_leaderMotor.set(speed);
     }
 
     public boolean getIntakeDeployed() {
