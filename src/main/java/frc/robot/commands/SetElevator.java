@@ -32,11 +32,6 @@ public class SetElevator extends CommandBase {
 	}
 
 	@Override
-	public InterruptionBehavior getInterruptionBehavior() {
-		return InterruptionBehavior.kCancelSelf;
-	}
-
-	@Override
 	public void initialize() {
 		s_Elevator.setState(state);
 		upController.reset(s_Elevator.getCANCoderPosition());

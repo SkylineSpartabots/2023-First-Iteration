@@ -157,10 +157,10 @@ public class RobotContainer {
         driverY.onTrue(new AutoTeleopScore());
 
         // operator buttons
-        operatorA.onTrue(new InstantCommand(() -> s_CompleteMechanism.l1State()));
-        operatorX.onTrue(new InstantCommand(() -> s_CompleteMechanism.l2State()));
-        operatorY.onTrue(new InstantCommand(() -> s_CompleteMechanism.l3State()));
-        operatorB.onTrue(new InstantCommand(() -> reverseCommand()));
+        // operatorA.onTrue(new InstantCommand(() -> s_CompleteMechanism.l1State()));
+        // operatorX.onTrue(new InstantCommand(() -> s_CompleteMechanism.l2State()));
+        // operatorY.onTrue(new InstantCommand(() -> s_CompleteMechanism.l3State()));
+        // operatorB.onTrue(new InstantCommand(() -> reverseCommand()));
         operatorRightTrigger.onTrue(new InstantCommand(() -> s_Intake.setSpeed(0.75)));
         operatorLeftTrigger.onTrue(new InstantCommand(() -> s_Intake.setSpeed(0)));
         operatorDpadRight.onTrue(new InstantCommand(() -> selector.increasePos()));
