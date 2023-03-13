@@ -22,11 +22,11 @@ public class Arm extends SubsystemBase {
     private WPI_TalonFX mArmMotor;
     private double velocity;
     private double voltage;
-    private CANCoder armCANCoder = new CANCoder(Constants.HardwarePorts.armCANCoder); // max 420 (i think)
+    private CANCoder armCANCoder = new CANCoder(Constants.HardwarePorts.armCANCoder); 
     CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
     private ArmStates armState = ArmStates.ZERO;
 
-    public enum ArmStates {
+    public enum ArmStates { // configure new positions
         ZERO(52.0), 
 
         CONEINTAKE(220), 
@@ -107,8 +107,7 @@ public class Arm extends SubsystemBase {
     }
 
     public double getCANCoderPosition() {
-        return (armCANCoder.getAbsolutePosition() - 40 + 360) % 360;
-        // return armCANCoder.getAbsolutePosition();
+        return armCANCoder.getAbsolutePosition();
     }
 
     public double getCANCoderVoltage() {

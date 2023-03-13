@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.util.ArrayList;
+
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -11,26 +13,22 @@ import frc.robot.subsystems.Swerve;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SmartResetOdometry extends CommandBase {
     Swerve s_Swerve;
     Limelight s_Limelight;
-    boolean isReset;
     Timer timer = new Timer();
+    ArrayList<Pose3d> poses = new ArrayList<Pose3d>();
 
     public SmartResetOdometry() {
         s_Swerve = Swerve.getInstance();
-        // addRequirements(s_Swerve);
         s_Limelight = Limelight.getInstance();
-        // addRequirements(s_Limelight);
     }
     
     @Override
     public void initialize() {
-        isReset = false;
         timer.reset();
         timer.start();
     }
@@ -46,23 +44,36 @@ public class SmartResetOdometry extends CommandBase {
                 targetPose,
                 new Transform3d(Constants.Limelight.cameraOffsets, Constants.Limelight.cameraAngleOffsets)
             );
-            SmartDashboard.putNumber("robot-SO-x",  /*Units.metersToInches*/(robotPose.getX()));
-            SmartDashboard.putNumber("robot-SO-y", /*Units.metersToInches*/(robotPose.getY()));
-            SmartDashboard.putNumber("robot-SO-z", /*Units.metersToInches*/(robotPose.getZ()));
-            SmartDashboard.putNumber("robot-SO-rot", Units.radiansToDegrees(robotPose.getRotation().getZ()));
-            s_Swerve.resetOdometry(new Pose2d(robotPose.getX(), robotPose.getY(),
-                    Rotation2d.fromRadians(robotPose.getRotation().getZ())));
-            isReset = true;
+            if(target.getPoseAmbiguity() < 0.1) {
+                poses.add(robotPose);
+            }
         }
     }
 
     @Override
     public boolean isFinished() {
-        return isReset || timer.hasElapsed(0.2);
+        return timer.hasElapsed(0.2);
     }
     
     @Override
     public void end(boolean interrupted){
         timer.stop();
+        if (poses.size() > 0) {
+            double avgX = 0;
+            double avgY = 0;
+            double avgRot = 0;
+
+            for (Pose3d pose : poses) {
+                avgX += pose.getX();
+                avgY += pose.getY();
+                avgRot += pose.getRotation().getZ();
+            }
+
+            avgX /= poses.size();
+            avgY /= poses.size();
+            avgRot /= poses.size();
+
+            s_Swerve.resetOdometry(new Pose2d(avgX, avgY, Rotation2d.fromRadians(avgRot)));
+        }
     }
 }
