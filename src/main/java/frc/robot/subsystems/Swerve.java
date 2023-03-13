@@ -158,6 +158,7 @@ public class Swerve extends SubsystemBase {
 
         AutomaticScoringSelector.getInstance().realXEntry.setDouble(getPose().getX());
         AutomaticScoringSelector.getInstance().realYEntry.setDouble(getPose().getY());
+        AutomaticScoringSelector.getInstance().realRotEntry.setDouble(getPose().getRotation().getDegrees());
 
         // for (SwerveModule mod : mSwerveMods) {
         //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());

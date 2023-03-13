@@ -35,7 +35,7 @@ public final class AutomaticScoringSelector {
                                                                   // farthest from load zone
     private boolean[][] isSelected = new boolean[3][9];
     private GenericEntry[][] selectionDisplay = new GenericEntry[3][9];
-    public GenericEntry currPosEntry, currLevelEntry, currentXPosEntry, currentYPosEntry, realXEntry, realYEntry;
+    public GenericEntry currPosEntry, currLevelEntry, currentXPosEntry, currentYPosEntry, realXEntry, realYEntry, realRotEntry;
 
     public int currPos = 0;
     public int currLevel = 0;
@@ -74,6 +74,7 @@ public final class AutomaticScoringSelector {
         currentYPosEntry = scoringGridDisplay.add("Current Y pos", currentYpos).getEntry();
         realXEntry = scoringGridDisplay.add("RealX", 0).getEntry();
         realYEntry = scoringGridDisplay.add("RealY", 0).getEntry();
+        realRotEntry = scoringGridDisplay.add("RealRot", 0).getEntry();
 
         // for (int i = 0; i < 3; i++) {
         //     for (int j = 8; j > -1; j--) {

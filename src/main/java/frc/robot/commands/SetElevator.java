@@ -31,11 +31,6 @@ public class SetElevator extends CommandBase {
 		this.state = state;
 	}
 
-	// @Override
-	// public InterruptionBehavior getInterruptionBehavior() {
-	// 	return InterruptionBehavior.kCancelSelf;
-	// }
-
 	@Override
 	public void initialize() {
 		s_Elevator.setState(state);

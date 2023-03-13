@@ -43,22 +43,24 @@ public class AutoTeleopScore extends CommandBase {
                             new OnTheFlyGeneration(s_AutomaticScoringSelector.getSelectedPose()),
                             // new WaitUntilCommand(s_AutomaticScoringSelector.inPosition).andThen(new SetMechanism(s_AutomaticScoringSelector.getMechState())),
                             new SetMechanism(MechanismState.L2CONE),
-                            // new SetElevator(ElevatorStates.L2CONE),
                             // new SetMechanism(s_AutomaticScoringSelector.getMechState()),
                             new InstantCommand(() -> finished = true)
                     // new WaitUntilCommand(s_AutomaticScoringSelector.inPosition)
                     // .andThen(new SetMechanism(mechanismState)),
                     ));
         }
+        SmartDashboard.putBoolean("AutoTeleop", true);
     }
 
     @Override
     public void execute() {
-
     }
 
     @Override
     public boolean isFinished() {
+        if (finished) {
+            SmartDashboard.putBoolean("AutoTeleop", false);
+        }
         return finished;
     }
 

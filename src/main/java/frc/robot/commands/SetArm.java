@@ -22,11 +22,6 @@ public class SetArm extends CommandBase {
 		this.state = state;
 	}
 
-	// @Override
-	// public InterruptionBehavior getInterruptionBehavior() {
-	// 	return InterruptionBehavior.kCancelSelf;
-	// }
-
 	@Override
 	public void initialize() {
 		s_Arm.setState(state);

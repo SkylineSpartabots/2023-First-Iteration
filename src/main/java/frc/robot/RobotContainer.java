@@ -143,8 +143,9 @@ public class RobotContainer {
         // driver buttons
         driverStart.onTrue(new SmartResetOdometry());
         driverBack.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
-        // driverRightTrigger.onTrue(coneSubstation);
-        driverRightTrigger.onTrue(new SetElevator(ElevatorStates.L2CONE));
+        driverRightTrigger.onTrue(coneSubstation);
+        // driverRightTrigger.onTrue(new SetElevator(ElevatorStates.L2CONE));
+        // driverLeftTrigger.onTrue(new SetElevator(ElevatorStates.ZERO));
         driverLeftTrigger.onTrue(cubeIntake);
         driverRightBumper.onTrue(coneIntake);
         driverB.onTrue(new InstantCommand(() -> zeroCommand()));
