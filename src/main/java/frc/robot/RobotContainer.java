@@ -1,7 +1,5 @@
 package frc.robot;
 
-import javax.swing.text.html.Option;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -159,10 +157,10 @@ public class RobotContainer {
         driverY.onTrue(new AutoTeleopScore());
 
         // operator buttons
-        operatorA.onTrue(new InstantCommand(() -> s_CompleteMechanism.l1State()));
-        operatorX.onTrue(new InstantCommand(() -> s_CompleteMechanism.l2State()));
-        operatorY.onTrue(new InstantCommand(() -> s_CompleteMechanism.l3State()));
-        operatorB.onTrue(new InstantCommand(() -> reverseCommand()));
+        // operatorA.onTrue(new InstantCommand(() -> s_CompleteMechanism.l1State()));
+        // operatorX.onTrue(new InstantCommand(() -> s_CompleteMechanism.l2State()));
+        // operatorY.onTrue(new InstantCommand(() -> s_CompleteMechanism.l3State()));
+        // operatorB.onTrue(new InstantCommand(() -> reverseCommand()));
         operatorRightTrigger.onTrue(new InstantCommand(() -> s_Intake.setSpeed(0.75)));
         operatorLeftTrigger.onTrue(new InstantCommand(() -> s_Intake.setSpeed(0)));
         operatorDpadRight.onTrue(new InstantCommand(() -> selector.increasePos()));
@@ -170,10 +168,6 @@ public class RobotContainer {
         operatorDpadUp.onTrue(new InstantCommand(() -> selector.setLevel(2)));
         operatorDpadDown.onTrue(new InstantCommand(() -> selector.setLevel(1)));
         operatorLeftBumper.onTrue(new InstantCommand(() -> selector.setLevel(0)));
-        // operatorDpadUp.onTrue(new InstantCommand(() -> selector.moveUp()));
-        // operatorDpadRight.onTrue(new InstantCommand(() -> selector.moveRight()));
-        // operatorDpadDown.onTrue(new InstantCommand(() -> selector.moveDown()));
-        // operatorDpadLeft.onTrue(new InstantCommand(() -> selector.moveLeft()));
 
         operatorA.onTrue(new SetIntake(IntakeStates.OFF_CLOSED_CONE));
         operatorB.onTrue(new SetIntake(IntakeStates.ON_CLOSED_CONE));
@@ -216,12 +210,6 @@ public class RobotContainer {
                         s_Intake.intakeState.piece.equals("cube") ? new SetIntake(IntakeStates.REV_OPEN_CUBE)
                                 : new SetIntake(IntakeStates.OFF_OPEN_CONE));
     }
-
-    // public void deployCommand() {
-    // CommandScheduler.getInstance().schedule(Intake.getInstance().intakeState.cube
-    // ? new SetIntake(IntakeStates.OFF_DEPLOYED_CUBE) : new
-    // SetIntake(IntakeStates.OFF_DEPLOYED));
-    // }
 
     public void onRobotDisabled() {
         // reset mechanisms so it does not have to be done manually

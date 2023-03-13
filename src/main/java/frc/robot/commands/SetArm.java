@@ -13,8 +13,6 @@ public class SetArm extends CommandBase {
 	// PIDController armController = new PIDController(0.09, 7e-3, 2.5e-3); // tune
 	// PID
 	PIDController armController = new PIDController(0.12, 4e-3, 0); // tune PID
-	// ArmFeedforward armFeedforward = new ArmFeedforward(0.2782, 0.13793,
-	// 0.0025705, 0.00053547);
 
 	public SetArm(ArmStates state) {
 		s_Arm = Arm.getInstance();

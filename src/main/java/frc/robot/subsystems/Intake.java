@@ -14,12 +14,14 @@ import frc.robot.Constants;
 import frc.robot.commands.SetIntake;
 
 public class Intake extends SubsystemBase {
-    
+
     private static Intake instance;
     CANSparkMax m_leaderMotor, m_followerMotor;
     Solenoid m_solenoid;
     Compressor m_compressor;
     public IntakeStates intakeState = IntakeStates.OFF_CLOSED_CONE;
+    int cubeCounter;
+    int coneCounter;
 
     public static Intake getInstance() {
         if (instance == null) {
@@ -29,10 +31,12 @@ public class Intake extends SubsystemBase {
     }
 
     Intake() {
+        cubeCounter = 0;
+        coneCounter = 0;
         m_solenoid = new Solenoid(
-            Constants.HardwarePorts.pneumaticHub,
-            PneumaticsModuleType.REVPH,
-            Constants.HardwarePorts.intakeSolenoidChannel);
+                Constants.HardwarePorts.pneumaticHub,
+                PneumaticsModuleType.REVPH,
+                Constants.HardwarePorts.intakeSolenoidChannel);
         m_compressor = new Compressor(Constants.HardwarePorts.pneumaticHub, PneumaticsModuleType.REVPH);
         m_compressor.enableDigital();
         m_leaderMotor = new CANSparkMax(Constants.HardwarePorts.intakeLeaderMotor, MotorType.kBrushless);
@@ -41,8 +45,8 @@ public class Intake extends SubsystemBase {
     }
 
     public enum IntakeStates {
-        ON_CLOSED_CONE(false, "cone", 1), //spinning so we can intake, and then it is closed
-        OFF_CLOSED_CONE(false, "cone", 0), 
+        ON_CLOSED_CONE(false, "cone", 1), // spinning so we can intake, and then it is closed
+        OFF_CLOSED_CONE(false, "cone", 0),
         REV_CLOSED_CONE(false, "cone", -1),
         OFF_OPEN_CONE(true, "cone", 0),
 
@@ -54,7 +58,6 @@ public class Intake extends SubsystemBase {
         // OFF_DEPLOYED_LAYEDCONE(true, "layed", 0.075),
         // OFF_RETRACTED_LAYEDCONE(false, "layed", 0.075),
         // REV_RETRACTED_LAYEDCONE(false, "layed", -1.2);
-
 
         public boolean deployed;
         public String piece;
@@ -82,72 +85,94 @@ public class Intake extends SubsystemBase {
     public boolean getIntakeDeployed() {
         return intakeState.deployed;
     }
-    
+
     public String getIntakePiece() {
         return intakeState.piece;
     }
 
-    private double coneThreshold = 46.5;
-    public boolean hasCone(){
+    private double coneThreshold = 8;
+
+    public boolean hasCone() {
         double currentVolt = m_leaderMotor.getOutputCurrent();
         return currentVolt > coneThreshold;
     }
 
-    public double cubeThreshold = 39;
-    public boolean hasCube(){
+    public double cubeThreshold = 8;
+
+    public boolean hasCube() {
         double currentVolt = m_leaderMotor.getOutputCurrent();
         return currentVolt > cubeThreshold;
     }
 
-    private double gConeThreshold = 55;
-    public boolean hasLayedCone(){
+    private double layedConeThreshold = 0;
+
+    public boolean hasLayedCone() {
         double currentVolt = m_leaderMotor.getOutputCurrent();
-        return currentVolt > gConeThreshold;
+        return currentVolt > layedConeThreshold;
     }
 
     @Override
     public void periodic() {
         SmartDashboard.putString("intake piece", getIntakePiece());
-        // SmartDashboard.putNumber("intake current", leaderMotor.getStatorCurrent());
+        SmartDashboard.putNumber("intake current", m_leaderMotor.getOutputCurrent());
         // SmartDashboard.putBoolean("intake deployed", getIntakeDeployed());
 
+        if (hasCone()) {
+            coneCounter++;
+        } else {
+            coneCounter = 0;
+        }
+
+        if (hasCube()) {
+            cubeCounter++;
+        } else {
+            cubeCounter = 0;
+        }
+
         if (intakeState == IntakeStates.ON_OPEN_CUBE) {
-            if (hasCube()) {
-                CommandScheduler.getInstance().schedule(new WaitCommand(1.0).andThen(new SetIntake(IntakeStates.OFF_OPEN_CUBE)));
+            if (cubeCounter > 10) {
+                CommandScheduler.getInstance()
+                        .schedule(new WaitCommand(0.1).andThen(new SetIntake(IntakeStates.OFF_OPEN_CUBE)));
             }
         }
 
         if (intakeState == IntakeStates.ON_CLOSED_CONE) {
-            if (hasCone()) {
-                CommandScheduler.getInstance().schedule(new WaitCommand(1.0).andThen(new SetIntake(IntakeStates.OFF_CLOSED_CONE)));
+            if (coneCounter > 10) {
+                CommandScheduler.getInstance()
+                        .schedule(new WaitCommand(0.1).andThen(new SetIntake(IntakeStates.OFF_CLOSED_CONE)));
             }
         }
-        
+
         // if (intakeState == IntakeStates.ON_DEPLOYED_LAYEDCONE) {
-        //     if (hasLayedCone()) {
-        //         CommandScheduler.getInstance().schedule(new WaitCommand(1.6).andThen(new SetIntake(IntakeStates.OFF_RETRACTED_LAYEDCONE)));
-        //     }
+        // if (hasLayedCone()) {
+        // CommandScheduler.getInstance().schedule(new WaitCommand(1.6).andThen(new
+        // SetIntake(IntakeStates.OFF_RETRACTED_LAYEDCONE)));
+        // }
         // }
 
         // if (intakeState == IntakeStates.ON_RETRACTED_CONE) {
-        //     if (hasCone()) {
-        //         CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED_CONE));
-        //     }
+        // if (hasCone()) {
+        // CommandScheduler.getInstance().schedule(new
+        // SetIntake(IntakeStates.OFF_RETRACTED_CONE));
+        // }
         // }
         // if (intakeState == IntakeStates.ON_RETRACTED_CUBE) {
-        //     if (hasCube()) {
-        //         CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED_CUBE));
-        //     }
+        // if (hasCube()) {
+        // CommandScheduler.getInstance().schedule(new
+        // SetIntake(IntakeStates.OFF_RETRACTED_CUBE));
+        // }
         // }
         // if (intakeState == IntakeStates.REV_DEPLOYED) {
-        //     if (!hasGamePiece()) {
-        //         CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_DEPLOYED));
-        //     }
+        // if (!hasGamePiece()) {
+        // CommandScheduler.getInstance().schedule(new
+        // SetIntake(IntakeStates.OFF_DEPLOYED));
+        // }
         // }
         // if (intakeState == IntakeStates.REV_RETRACTED) {
-        //     if (!hasGamePiece()) {
-        //         CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED));
-        //     }
+        // if (!hasGamePiece()) {
+        // CommandScheduler.getInstance().schedule(new
+        // SetIntake(IntakeStates.OFF_RETRACTED));
+        // }
         // }
     }
 

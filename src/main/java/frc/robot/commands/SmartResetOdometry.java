@@ -13,7 +13,6 @@ import frc.robot.subsystems.Swerve;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -21,12 +20,11 @@ public class SmartResetOdometry extends CommandBase {
     Swerve s_Swerve;
     Limelight s_Limelight;
     Timer timer = new Timer();
+    ArrayList<Pose3d> poses = new ArrayList<Pose3d>();
 
     public SmartResetOdometry() {
         s_Swerve = Swerve.getInstance();
-        // addRequirements(s_Swerve);
         s_Limelight = Limelight.getInstance();
-        // addRequirements(s_Limelight);
     }
     
     @Override
