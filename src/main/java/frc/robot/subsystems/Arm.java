@@ -27,18 +27,18 @@ public class Arm extends SubsystemBase {
     private ArmStates armState = ArmStates.ZERO;
 
     public enum ArmStates { 
-        ZERO(11), 
+        ZERO(7), 
         REALZERO(9),
 
-        CONEINTAKE(90), 
-        CUBEINTAKE(90), 
+        CONEINTAKE(83), 
+        CUBEINTAKE(83), 
         // LAYEDCONE(271),
         SUBSTATION(0),  // find
         DOUBLESUBSTATION(0), // find
 
-        L1CONE(11), 
-        L2CONE(43), 
-        L3CONE(65), 
+        L1CONE(9), 
+        L2CONE(37), 
+        L3CONE(58), 
 
         L1CUBE(11), 
         L2CUBE(47), 

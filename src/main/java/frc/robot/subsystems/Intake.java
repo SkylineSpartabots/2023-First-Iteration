@@ -40,20 +40,20 @@ public class Intake extends SubsystemBase {
         m_compressor = new Compressor(Constants.HardwarePorts.pneumaticHub, PneumaticsModuleType.REVPH);
         m_compressor.enableDigital();
         m_leaderMotor = new CANSparkMax(Constants.HardwarePorts.intakeLeaderMotor, MotorType.kBrushless);
-        m_leaderMotor.setInverted(true);
+        m_leaderMotor.setInverted(false);
         m_followerMotor = new CANSparkMax(Constants.HardwarePorts.intakeFollowerMotor, MotorType.kBrushless);
         m_followerMotor.follow(m_leaderMotor, true);
     }
 
     public enum IntakeStates {
-        ON_CLOSED_CONE(true, "cone", 1), 
+        ON_CLOSED_CONE(true, "cone", 1),
         OFF_CLOSED_CONE(true, "cone", 0),
         REV_CLOSED_CONE(true, "cone", -1),
         OFF_OPEN_CONE(false, "cone", 0),
 
-        ON_OPEN_CUBE(false, "cube", 1),
+        ON_OPEN_CUBE(false, "cube", 0.75),
         OFF_OPEN_CUBE(false, "cube", 0),
-        REV_OPEN_CUBE(false, "cube", -1);
+        REV_OPEN_CUBE(false, "cube", -0.5);
 
         // ON_DEPLOYED_LAYEDCONE(true, "layed", 1.2),
         // OFF_DEPLOYED_LAYEDCONE(true, "layed", 0.075),
@@ -90,25 +90,23 @@ public class Intake extends SubsystemBase {
         return intakeState.piece;
     }
 
-    private double coneThreshold = 30; // 8
+    private double coneThreshold = 7.3; // 8
 
     public boolean hasCone() {
-        double currentVolt = m_leaderMotor.getOutputCurrent();
-        return currentVolt > coneThreshold;
+        return m_leaderMotor.getOutputCurrent() > coneThreshold || m_followerMotor.getOutputCurrent() > coneThreshold;
     }
 
-    public double cubeThreshold = 30; // 8
+    public double cubeThreshold = 6.8; // 8
 
     public boolean hasCube() {
-        double currentVolt = m_leaderMotor.getOutputCurrent();
-        return currentVolt > cubeThreshold;
+        return m_leaderMotor.getOutputCurrent() > cubeThreshold || m_followerMotor.getOutputCurrent() > cubeThreshold;
     }
 
     // private double layedConeThreshold = 0;
 
     // public boolean hasLayedCone() {
-    //     double currentVolt = m_leaderMotor.getOutputCurrent();
-    //     return currentVolt > layedConeThreshold;
+    // double currentVolt = m_leaderMotor.getOutputCurrent();
+    // return currentVolt > layedConeThreshold;
     // }
 
     @Override
@@ -130,9 +128,9 @@ public class Intake extends SubsystemBase {
         }
 
         if (intakeState == IntakeStates.ON_OPEN_CUBE) {
-            if (cubeCounter > 10) {
+            if (cubeCounter > 6) {
                 CommandScheduler.getInstance()
-                        .schedule(new WaitCommand(0.1).andThen(new SetIntake(IntakeStates.OFF_OPEN_CUBE)));
+                        .schedule(new WaitCommand(0.0).andThen(new SetIntake(IntakeStates.OFF_OPEN_CUBE)));
             }
         }
 
