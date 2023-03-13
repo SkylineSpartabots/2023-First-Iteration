@@ -6,9 +6,8 @@ import frc.robot.commands.SetMechanism;
 import frc.robot.subsystems.Arm.ArmStates;
 import frc.robot.subsystems.Elevator.ElevatorStates;
 
-
 public class CompleteMechanism extends SubsystemBase {
-    
+
     private static CompleteMechanism combScoring;
     private MechanismState currentState = MechanismState.REALZERO;
     Arm s_Arm;
@@ -22,13 +21,13 @@ public class CompleteMechanism extends SubsystemBase {
     }
 
     public static CompleteMechanism getInstance() {
-        if(combScoring == null){
+        if (combScoring == null) {
             combScoring = new CompleteMechanism();
         }
         return combScoring;
     }
 
-    public enum MechanismState{
+    public enum MechanismState {
         REALZERO(ElevatorStates.REALZERO, ArmStates.ZERO),
         ZERO(ElevatorStates.ZERO, ArmStates.ZERO),
 
@@ -43,7 +42,7 @@ public class CompleteMechanism extends SubsystemBase {
         // L1LAYEDCONE(ElevatorStates.L1LAYEDCONE, ArmStates.L1LAYEDCONE),
         // L2LAYEDCONE(ElevatorStates.L2LAYEDCONE, ArmStates.L2LAYEDCONE),
         // L3LAYEDCONE(ElevatorStates.L3LAYEDCONE, ArmStates.L3LAYEDCONE),
-        
+
         CUBEINTAKE(ElevatorStates.CUBEINTAKE, ArmStates.CUBEINTAKE),
         CONEINTAKE(ElevatorStates.CONEINTAKE, ArmStates.CONEINTAKE),
         // LAYEDCONE(ElevatorStates.LAYEDCONE, ArmStates.LAYEDCONE),
@@ -53,47 +52,41 @@ public class CompleteMechanism extends SubsystemBase {
         public ElevatorStates elevState;
         public ArmStates armState;
 
-        private MechanismState(ElevatorStates elevState, ArmStates armState){
-            this.elevState = elevState; this.armState = armState;
+        private MechanismState(ElevatorStates elevState, ArmStates armState) {
+            this.elevState = elevState;
+            this.armState = armState;
         }
     }
 
     public void l1State() {
         CommandScheduler.getInstance().schedule(
                 s_Intake.intakeState.piece.equals("cube") ? new SetMechanism(MechanismState.L1CUBE)
-                                : new SetMechanism(MechanismState.L1CONE));
+                        : new SetMechanism(MechanismState.L1CONE));
     }
 
     public void l2State() {
         CommandScheduler.getInstance().schedule(
                 s_Intake.intakeState.piece.equals("cube") ? new SetMechanism(MechanismState.L2CUBE)
-                                : new SetMechanism(MechanismState.L2CONE));
+                        : new SetMechanism(MechanismState.L2CONE));
     }
 
     public void l3State() {
         CommandScheduler.getInstance().schedule(
                 s_Intake.intakeState.piece.equals("cube") ? new SetMechanism(MechanismState.L3CUBE)
-                                : new SetMechanism(MechanismState.L3CONE));
+                        : new SetMechanism(MechanismState.L3CONE));
     }
 
-    public MechanismState getState(){
-        // if(currentState == null){
-        //     currentState = MechanismState.ZERO;
-        // }
+    public MechanismState getState() {
         return currentState;
     }
 
-    public void setState(MechanismState state){
+    public void setState(MechanismState state) {
         currentState = state;
-        // SetMechanism command = new SetMechanism(state);
-        // command.schedule();
     }
 
     public boolean inState() {
-        return ((Math.abs(s_Elevator.getCANCoderSetpoint() - s_Elevator.getCANCoderPosition()) < 45) 
-       
-        //  && (Math.abs(s_Arm.getCANCoderSetpoint() - s_Arm.getCANCoderPosition()) < 15)
-        );
+        return ((Math.abs(s_Elevator.getCANCoderSetpoint() - s_Elevator.getCANCoderPosition()) < 45)
+                && (Math.abs(s_Arm.getCANCoderSetpoint() - s_Arm.getCANCoderPosition()) < 15));
     }
 
     @Override

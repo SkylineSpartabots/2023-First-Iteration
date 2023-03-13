@@ -47,14 +47,12 @@ public class Arm extends SubsystemBase {
         // L1LAYEDCONE(150),
         // L2LAYEDCONE(90),
         // L3LAYEDCONE(143);
-        
 
         double statePosition = 0.0;
 
         private ArmStates(double statePosition) {
             this.statePosition = statePosition;
         }
-
     }
 
     public Arm() {

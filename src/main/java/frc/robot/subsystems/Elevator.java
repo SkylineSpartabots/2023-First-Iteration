@@ -23,7 +23,7 @@ public class Elevator extends SubsystemBase {
     private WPI_TalonFX mLeaderElevatorMotor, mFollowerElevatorMotor;
     private double velocity;
     private double voltage;
-    private CANCoder elevatorCANCoder = new CANCoder(Constants.HardwarePorts.elevatorCANCoder); // max 2632
+    private CANCoder elevatorCANCoder = new CANCoder(Constants.HardwarePorts.elevatorCANCoder); // max 2480
     CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
     ElevatorStates elevatorState = ElevatorStates.ZERO;
 
@@ -39,7 +39,7 @@ public class Elevator extends SubsystemBase {
 
         L1CONE(50),
         L2CONE(1167),
-        L3CONE(2430),
+        L3CONE(2425),
 
         L1CUBE(50),
         L2CUBE(454),
@@ -109,7 +109,6 @@ public class Elevator extends SubsystemBase {
     }
 
     public double getCANCoderPosition() {
-        // return (elevatorCANCoder.getAbsolutePosition() - 225) % 360;
         return elevatorCANCoder.getPosition();
     }
 

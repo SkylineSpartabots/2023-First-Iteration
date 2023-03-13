@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-// import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
@@ -10,9 +9,7 @@ public class SetArm extends CommandBase {
 	Arm s_Arm;
 	Arm.ArmStates state;
 	double armVoltage;
-	// PIDController armController = new PIDController(0.09, 7e-3, 2.5e-3); // tune
-	// PID
-	PIDController armController = new PIDController(0.23, 5e-3, 1.6e-3); // tune PID
+	PIDController armController = new PIDController(0.23, 5e-3, 1.6e-3); 
 
 	public SetArm(ArmStates state) {
 		s_Arm = Arm.getInstance();
@@ -29,9 +26,6 @@ public class SetArm extends CommandBase {
 	@Override
 	public void execute() {
 		armVoltage = armController.calculate(s_Arm.getCANCoderPosition(), s_Arm.getCANCoderSetpoint());
-		// if (Math.abs(s_Arm.getCANCoderPosition() - s_Arm.getCANCoderSetpoint()) < 2.5) {
-		// 	armVoltage += 0.35;
-		// }
 		s_Arm.setVoltage(armVoltage);
 	}
 

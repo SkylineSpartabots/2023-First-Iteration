@@ -46,7 +46,7 @@ public class Intake extends SubsystemBase {
     }
 
     public enum IntakeStates {
-        ON_CLOSED_CONE(true, "cone", 1), // spinning so we can intake, and then it is closed
+        ON_CLOSED_CONE(true, "cone", 1), 
         OFF_CLOSED_CONE(true, "cone", 0),
         REV_CLOSED_CONE(true, "cone", -1),
         OFF_OPEN_CONE(false, "cone", 0),
@@ -104,12 +104,12 @@ public class Intake extends SubsystemBase {
         return currentVolt > cubeThreshold;
     }
 
-    private double layedConeThreshold = 0;
+    // private double layedConeThreshold = 0;
 
-    public boolean hasLayedCone() {
-        double currentVolt = m_leaderMotor.getOutputCurrent();
-        return currentVolt > layedConeThreshold;
-    }
+    // public boolean hasLayedCone() {
+    //     double currentVolt = m_leaderMotor.getOutputCurrent();
+    //     return currentVolt > layedConeThreshold;
+    // }
 
     @Override
     public void periodic() {
@@ -142,38 +142,5 @@ public class Intake extends SubsystemBase {
                         .schedule(new WaitCommand(0.1).andThen(new SetIntake(IntakeStates.OFF_CLOSED_CONE)));
             }
         }
-
-        // if (intakeState == IntakeStates.ON_DEPLOYED_LAYEDCONE) {
-        // if (hasLayedCone()) {
-        // CommandScheduler.getInstance().schedule(new WaitCommand(1.6).andThen(new
-        // SetIntake(IntakeStates.OFF_RETRACTED_LAYEDCONE)));
-        // }
-        // }
-
-        // if (intakeState == IntakeStates.ON_RETRACTED_CONE) {
-        // if (hasCone()) {
-        // CommandScheduler.getInstance().schedule(new
-        // SetIntake(IntakeStates.OFF_RETRACTED_CONE));
-        // }
-        // }
-        // if (intakeState == IntakeStates.ON_RETRACTED_CUBE) {
-        // if (hasCube()) {
-        // CommandScheduler.getInstance().schedule(new
-        // SetIntake(IntakeStates.OFF_RETRACTED_CUBE));
-        // }
-        // }
-        // if (intakeState == IntakeStates.REV_DEPLOYED) {
-        // if (!hasGamePiece()) {
-        // CommandScheduler.getInstance().schedule(new
-        // SetIntake(IntakeStates.OFF_DEPLOYED));
-        // }
-        // }
-        // if (intakeState == IntakeStates.REV_RETRACTED) {
-        // if (!hasGamePiece()) {
-        // CommandScheduler.getInstance().schedule(new
-        // SetIntake(IntakeStates.OFF_RETRACTED));
-        // }
-        // }
     }
-
 }

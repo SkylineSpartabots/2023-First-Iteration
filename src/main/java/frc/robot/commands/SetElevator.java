@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -13,13 +12,7 @@ public class SetElevator extends CommandBase {
 	Elevator.ElevatorStates state;
 	double elevatorVoltage;
 	double elevatorFeedforwardVolage;
-	// PIDController elevatorController = new PIDController(0.028, 10e-3, 0.0); // tune PID
-	// ProfiledPIDController downController = new ProfiledPIDController(
-	// 	0.050, 1e-2, 1e-3,
-	// 	new TrapezoidProfile.Constraints(1e9, 1e9)
-	// );
 	ProfiledPIDController elevatorController = new ProfiledPIDController(
-		// 0.050, 1e-2, 1e-3,
 		0.040, 1e-2, 1e-3,
 		new TrapezoidProfile.Constraints(500000, 3000 * 1e5)
 	);

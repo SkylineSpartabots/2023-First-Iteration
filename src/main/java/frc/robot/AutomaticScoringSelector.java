@@ -22,7 +22,6 @@ import frc.robot.subsystems.Elevator.ElevatorStates;
 import frc.robot.subsystems.Intake.IntakeStates;
 import frc.robot.subsystems.Limelight;
 import frc.lib.util.COTSFalconSwerveConstants.driveGearRatios;
-import frc.robot.ScoringPosition;
 
 public final class AutomaticScoringSelector {
 

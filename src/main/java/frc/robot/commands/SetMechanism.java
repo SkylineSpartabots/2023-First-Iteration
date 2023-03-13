@@ -5,7 +5,6 @@ import frc.robot.subsystems.CompleteMechanism;
 import frc.robot.subsystems.CompleteMechanism.MechanismState;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class SetMechanism extends CommandBase {
 
@@ -15,7 +14,6 @@ public class SetMechanism extends CommandBase {
     public SetMechanism(MechanismState state) {
         this.state = state;
         s_Mechanism = CompleteMechanism.getInstance();
-        // s_Mechanism.setState(state);
     }
 
     @Override

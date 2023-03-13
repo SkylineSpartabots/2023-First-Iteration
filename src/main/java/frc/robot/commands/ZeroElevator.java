@@ -6,8 +6,8 @@ import frc.robot.subsystems.Elevator.ElevatorStates;
 
 public class ZeroElevator extends CommandBase {
     Elevator s_Elevator;
-    final double currentThreshold = 15; // TODO: Change This
-    final double downVoltage = -2.1; // TODO: Change This
+    final double currentThreshold = 15;
+    final double downVoltage = -2.2;
 
     public ZeroElevator() {
         s_Elevator = Elevator.getInstance();
@@ -20,7 +20,7 @@ public class ZeroElevator extends CommandBase {
         s_Elevator.setVoltage(downVoltage);
     }
 
-    @Override 
+    @Override
     public void execute() {
 
     }
@@ -34,7 +34,7 @@ public class ZeroElevator extends CommandBase {
         super.end(interrupted);
     }
 
-    @Override 
+    @Override
     public boolean isFinished() {
         if (s_Elevator.getCurrent() > currentThreshold) {
             return true;

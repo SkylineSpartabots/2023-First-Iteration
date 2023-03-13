@@ -23,9 +23,6 @@ public class TeleopSwerve extends CommandBase {
         this.translationSup = translationSup;
         this.strafeSup = strafeSup;
         this.rotationSup = rotationSup;
-        // this.robotCentricSup = robotCentricSup;
-        // removed BooleanSupplier robotCentricSup because it was designed to change from field oriented to robot oriented
-        // no longer needed
     }
 
     @Override
