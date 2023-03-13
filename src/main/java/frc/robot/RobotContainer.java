@@ -129,9 +129,9 @@ public class RobotContainer {
         s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
                         s_Swerve,
-                        () -> -driver.getRawAxis(translationAxis),
-                        () -> -driver.getRawAxis(strafeAxis),
-                        () -> -driver.getRawAxis(rotationAxis)));
+                        () -> -operator.getRawAxis(translationAxis), // change back to driver
+                        () -> -operator.getRawAxis(strafeAxis),
+                        () -> -operator.getRawAxis(rotationAxis)));
 
         // Configure the button bindings
         configureButtonBindings();
@@ -163,16 +163,27 @@ public class RobotContainer {
         // operatorB.onTrue(new InstantCommand(() -> reverseCommand()));
         operatorRightTrigger.onTrue(new InstantCommand(() -> s_Intake.setSpeed(0.75)));
         operatorLeftTrigger.onTrue(new InstantCommand(() -> s_Intake.setSpeed(0)));
-        operatorDpadRight.onTrue(new InstantCommand(() -> selector.increasePos()));
-        operatorDpadLeft.onTrue(new InstantCommand(() -> selector.decreasePos()));
-        operatorDpadUp.onTrue(new InstantCommand(() -> selector.setLevel(2)));
-        operatorDpadDown.onTrue(new InstantCommand(() -> selector.setLevel(1)));
+        // operatorDpadRight.onTrue(new InstantCommand(() -> selector.increasePos()));
+        // operatorDpadLeft.onTrue(new InstantCommand(() -> selector.decreasePos()));
+        // operatorDpadUp.onTrue(new InstantCommand(() -> selector.setLevel(2)));
+        // operatorDpadDown.onTrue(new InstantCommand(() -> selector.setLevel(1)));
         operatorLeftBumper.onTrue(new InstantCommand(() -> selector.setLevel(0)));
 
-        operatorA.onTrue(new SetIntake(IntakeStates.OFF_CLOSED_CONE));
-        operatorB.onTrue(new SetIntake(IntakeStates.ON_CLOSED_CONE));
-        operatorX.onTrue(new SetIntake(IntakeStates.REV_CLOSED_CONE));
-        operatorY.onTrue(new SetIntake(IntakeStates.OFF_OPEN_CONE));
+
+        // testing binds
+
+        operatorBack.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
+        operatorRightTrigger.onTrue(new ZeroElevator());
+
+        operatorA.onTrue(new InstantCommand(() -> s_CompleteMechanism.l1State()));
+        operatorB.onTrue(new InstantCommand(() -> s_CompleteMechanism.l2State()));
+        operatorY.onTrue(new InstantCommand(() -> s_CompleteMechanism.l3State()));
+        operatorX.onTrue(coneIntake);
+
+        operatorDpadDown.onTrue(new SetIntake(IntakeStates.ON_CLOSED_CONE));
+        operatorDpadRight.onTrue(new SetIntake(IntakeStates.OFF_CLOSED_CONE));
+        operatorDpadUp.onTrue(new SetIntake(IntakeStates.REV_CLOSED_CONE));
+        operatorDpadLeft.onTrue(new SetIntake(IntakeStates.OFF_OPEN_CONE));
 
         operatorRightBumper.onTrue(new AutoTeleopScore());
     }

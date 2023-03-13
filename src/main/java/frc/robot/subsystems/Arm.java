@@ -26,22 +26,23 @@ public class Arm extends SubsystemBase {
     CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
     private ArmStates armState = ArmStates.ZERO;
 
-    public enum ArmStates { // configure new positions
-        ZERO(52.0), 
+    public enum ArmStates { 
+        ZERO(11), 
+        REALZERO(9),
 
-        CONEINTAKE(220), 
-        CUBEINTAKE(270), 
-        LAYEDCONE(271),
-        SUBSTATION(277), 
-        DOUBLESUBSTATION(125),
+        CONEINTAKE(90), 
+        CUBEINTAKE(90), 
+        // LAYEDCONE(271),
+        SUBSTATION(0),  // find
+        DOUBLESUBSTATION(0), // find
 
-        L1CONE(183), 
-        L2CONE(148), 
-        L3CONE(123), 
+        L1CONE(11), 
+        L2CONE(43), 
+        L3CONE(65), 
 
-        L1CUBE(55), 
-        L2CUBE(111), 
-        L3CUBE(151);
+        L1CUBE(11), 
+        L2CUBE(47), 
+        L3CUBE(64);
 
         // L1LAYEDCONE(150),
         // L2LAYEDCONE(90),
@@ -60,7 +61,7 @@ public class Arm extends SubsystemBase {
         mArmMotor = new WPI_TalonFX(Constants.HardwarePorts.armMotor);
         configureMotor(mArmMotor, true);
         mArmMotor.setSelectedSensorPosition(0);
-        canCoderConfig.sensorDirection = true;
+        canCoderConfig.sensorDirection = false;
         armCANCoder.configAllSettings(canCoderConfig);
         setCANCoderPosition(0);
     }
@@ -69,7 +70,7 @@ public class Arm extends SubsystemBase {
         talon.setInverted(inverted);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(false);
-        talon.setNeutralMode(NeutralMode.Coast);
+        talon.setNeutralMode(NeutralMode.Brake);
         talon.config_kF(0, 0.05, Constants.timeOutMs);
         talon.config_kP(0, 0.12, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);
@@ -107,7 +108,7 @@ public class Arm extends SubsystemBase {
     }
 
     public double getCANCoderPosition() {
-        return armCANCoder.getAbsolutePosition();
+        return (armCANCoder.getAbsolutePosition() - 270 + 360) % 360;
     }
 
     public double getCANCoderVoltage() {

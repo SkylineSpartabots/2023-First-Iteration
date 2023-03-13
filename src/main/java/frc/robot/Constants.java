@@ -50,7 +50,7 @@ public final class Constants {
         public static final String photonCamName = "lime";
         public static final Translation3d cameraOffsets = new Translation3d(
                 Units.inchesToMeters(-12.56), // x (front-back) offset
-                Units.inchesToMeters(-4.0), // y (left-right) offset
+                Units.inchesToMeters(-3.8), // y (left-right) offset
                 Units.inchesToMeters(-7.71) // z (up-down) offset
         );
         public static final Rotation3d cameraAngleOffsets = new Rotation3d(

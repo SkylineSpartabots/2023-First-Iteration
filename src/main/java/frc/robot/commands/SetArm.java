@@ -12,7 +12,7 @@ public class SetArm extends CommandBase {
 	double armVoltage;
 	// PIDController armController = new PIDController(0.09, 7e-3, 2.5e-3); // tune
 	// PID
-	PIDController armController = new PIDController(0.12, 4e-3, 0); // tune PID
+	PIDController armController = new PIDController(0.23, 5e-3, 1.6e-3); // tune PID
 
 	public SetArm(ArmStates state) {
 		s_Arm = Arm.getInstance();
@@ -29,8 +29,10 @@ public class SetArm extends CommandBase {
 	@Override
 	public void execute() {
 		armVoltage = armController.calculate(s_Arm.getCANCoderPosition(), s_Arm.getCANCoderSetpoint());
-		// DO NOT MOVE THE ARM RIGHT NOW
-		// s_Arm.setVoltage(armVoltage);
+		// if (Math.abs(s_Arm.getCANCoderPosition() - s_Arm.getCANCoderSetpoint()) < 2.5) {
+		// 	armVoltage += 0.35;
+		// }
+		s_Arm.setVoltage(armVoltage);
 	}
 
 	@Override

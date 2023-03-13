@@ -40,19 +40,20 @@ public class Intake extends SubsystemBase {
         m_compressor = new Compressor(Constants.HardwarePorts.pneumaticHub, PneumaticsModuleType.REVPH);
         m_compressor.enableDigital();
         m_leaderMotor = new CANSparkMax(Constants.HardwarePorts.intakeLeaderMotor, MotorType.kBrushless);
+        m_leaderMotor.setInverted(true);
         m_followerMotor = new CANSparkMax(Constants.HardwarePorts.intakeFollowerMotor, MotorType.kBrushless);
         m_followerMotor.follow(m_leaderMotor, true);
     }
 
     public enum IntakeStates {
-        ON_CLOSED_CONE(false, "cone", 1), // spinning so we can intake, and then it is closed
-        OFF_CLOSED_CONE(false, "cone", 0),
-        REV_CLOSED_CONE(false, "cone", -1),
-        OFF_OPEN_CONE(true, "cone", 0),
+        ON_CLOSED_CONE(true, "cone", 1), // spinning so we can intake, and then it is closed
+        OFF_CLOSED_CONE(true, "cone", 0),
+        REV_CLOSED_CONE(true, "cone", -1),
+        OFF_OPEN_CONE(false, "cone", 0),
 
-        ON_OPEN_CUBE(true, "cube", 1),
-        OFF_OPEN_CUBE(true, "cube", 0),
-        REV_OPEN_CUBE(true, "cube", -1);
+        ON_OPEN_CUBE(false, "cube", 1),
+        OFF_OPEN_CUBE(false, "cube", 0),
+        REV_OPEN_CUBE(false, "cube", -1);
 
         // ON_DEPLOYED_LAYEDCONE(true, "layed", 1.2),
         // OFF_DEPLOYED_LAYEDCONE(true, "layed", 0.075),
@@ -78,8 +79,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void setSpeed(double speed) {
-        // DO NOT RUN THE INTAKE MOTOR RIGHT NOW
-        // m_leaderMotor.set(speed);
+        m_leaderMotor.set(speed);
     }
 
     public boolean getIntakeDeployed() {
@@ -90,14 +90,14 @@ public class Intake extends SubsystemBase {
         return intakeState.piece;
     }
 
-    private double coneThreshold = 8;
+    private double coneThreshold = 30; // 8
 
     public boolean hasCone() {
         double currentVolt = m_leaderMotor.getOutputCurrent();
         return currentVolt > coneThreshold;
     }
 
-    public double cubeThreshold = 8;
+    public double cubeThreshold = 30; // 8
 
     public boolean hasCube() {
         double currentVolt = m_leaderMotor.getOutputCurrent();

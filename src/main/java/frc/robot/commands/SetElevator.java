@@ -19,8 +19,9 @@ public class SetElevator extends CommandBase {
 	// 	new TrapezoidProfile.Constraints(1e9, 1e9)
 	// );
 	ProfiledPIDController elevatorController = new ProfiledPIDController(
-		0.050, 1e-2, 1e-3,
-		new TrapezoidProfile.Constraints(3000, 3000)
+		// 0.050, 1e-2, 1e-3,
+		0.040, 1e-2, 1e-3,
+		new TrapezoidProfile.Constraints(500000, 3000 * 1e5)
 	);
 	ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0.083319, 0.46718, 62.909, 3.709);
 
@@ -40,7 +41,7 @@ public class SetElevator extends CommandBase {
 	public void execute() {
 		elevatorVoltage = elevatorController.calculate(s_Elevator.getCANCoderPosition(), s_Elevator.getCANCoderSetpoint());
 		if (Math.abs(s_Elevator.getCANCoderPosition() - s_Elevator.getCANCoderSetpoint()) < 15) {
-			elevatorVoltage = 0.8;
+			elevatorVoltage = 0.7;
 		}
 		s_Elevator.setVoltage(elevatorVoltage);
 	}

@@ -27,23 +27,23 @@ public class Elevator extends SubsystemBase {
     CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
     ElevatorStates elevatorState = ElevatorStates.ZERO;
 
-    public enum ElevatorStates { // configure new positions
-        ZERO(50.0),
+    public enum ElevatorStates { 
+        ZERO(50),
         REALZERO(0),
 
-        CONEINTAKE(50.0),
-        CUBEINTAKE(650),
-        LAYEDCONE(499),
-        SUBSTATION(1100),
-        DOUBLESUBSTATION(920),
+        CONEINTAKE(50),
+        CUBEINTAKE(50),
+        // LAYEDCONE(499),
+        SUBSTATION(0), // find 
+        DOUBLESUBSTATION(0), // find
 
-        L1CONE(50.0),
-        L2CONE(1562),
-        L3CONE(2250),
+        L1CONE(50),
+        L2CONE(1167),
+        L3CONE(2430),
 
-        L1CUBE(55),
-        L2CUBE(764),
-        L3CUBE(1880);
+        L1CUBE(50),
+        L2CUBE(454),
+        L3CUBE(1926);
 
         // L1LAYEDCONE(0.0),
         // L2LAYEDCONE(1145),
@@ -71,7 +71,7 @@ public class Elevator extends SubsystemBase {
         talon.setInverted(inverted);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(false);
-        talon.setNeutralMode(NeutralMode.Coast);
+        talon.setNeutralMode(NeutralMode.Brake);
         talon.config_kF(0, 0.05, Constants.timeOutMs);
         talon.config_kP(0, 0.12, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);
