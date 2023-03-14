@@ -46,14 +46,14 @@ public class Intake extends SubsystemBase {
     }
 
     public enum IntakeStates {
-        ON_CLOSED_CONE(true, "cone", 1),
-        OFF_CLOSED_CONE(true, "cone", 0),
-        REV_CLOSED_CONE(true, "cone", -1),
-        OFF_OPEN_CONE(false, "cone", 0),
+        ON_CLOSED_CONE(false, "cone", 0.85),
+        OFF_CLOSED_CONE(false, "cone", 0),
+        REV_CLOSED_CONE(false, "cone", -1),
+        OFF_OPEN_CONE(true, "cone", 0),
 
-        ON_OPEN_CUBE(false, "cube", 0.75),
-        OFF_OPEN_CUBE(false, "cube", 0),
-        REV_OPEN_CUBE(false, "cube", -0.5);
+        ON_OPEN_CUBE(true, "cube", 0.75),
+        OFF_OPEN_CUBE(true, "cube", 0),
+        REV_OPEN_CUBE(true, "cube", -0.5);
 
         // ON_DEPLOYED_LAYEDCONE(true, "layed", 1.2),
         // OFF_DEPLOYED_LAYEDCONE(true, "layed", 0.075),
@@ -135,7 +135,7 @@ public class Intake extends SubsystemBase {
         }
 
         if (intakeState == IntakeStates.ON_CLOSED_CONE) {
-            if (coneCounter > 10) {
+            if (coneCounter > 6) {
                 CommandScheduler.getInstance()
                         .schedule(new WaitCommand(0.1).andThen(new SetIntake(IntakeStates.OFF_CLOSED_CONE)));
             }

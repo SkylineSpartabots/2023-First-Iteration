@@ -34,12 +34,12 @@ public class Elevator extends SubsystemBase {
         CONEINTAKE(50),
         CUBEINTAKE(50),
         // LAYEDCONE(499),
-        SUBSTATION(0), // find 
-        DOUBLESUBSTATION(0), // find
+        SUBSTATION(50), 
+        DOUBLESUBSTATION(1950),
 
         L1CONE(50),
         L2CONE(1155),
-        L3CONE(2455),
+        L3CONE(2463),
 
         L1CUBE(50),
         L2CUBE(454),

@@ -9,7 +9,7 @@ public class SetArm extends CommandBase {
 	Arm s_Arm;
 	Arm.ArmStates state;
 	double armVoltage;
-	PIDController armController = new PIDController(0.23, 5e-3, 1.6e-3); 
+	PIDController armController = new PIDController(0.23, 5.4e-3, 1.6e-3); 
 
 	public SetArm(ArmStates state) {
 		s_Arm = Arm.getInstance();

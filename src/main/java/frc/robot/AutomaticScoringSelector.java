@@ -53,7 +53,7 @@ public final class AutomaticScoringSelector {
 
     public AutomaticScoringSelector() {
         s_Swerve = Swerve.getInstance();
-        double x = 1.8025; //should be the same for every default scoring position
+        double x = 1.87; //should be the same for every default scoring position
         double y = 0.59 - 0.1; //only one that changes
         double yIncrem = Units.inchesToMeters(22); //how much each y varies by - currently unmeasured
 

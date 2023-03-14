@@ -33,8 +33,8 @@ public class Arm extends SubsystemBase {
         CONEINTAKE(83), 
         CUBEINTAKE(83), 
         // LAYEDCONE(271),
-        SUBSTATION(0),  // find
-        DOUBLESUBSTATION(0), // find
+        SUBSTATION(38),  
+        DOUBLESUBSTATION(60), 
 
         L1CONE(9), 
         L2CONE(37), 

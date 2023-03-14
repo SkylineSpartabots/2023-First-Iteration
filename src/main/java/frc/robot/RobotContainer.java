@@ -129,7 +129,7 @@ public class RobotContainer {
         s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
                         s_Swerve,
-                        () -> -operator.getRawAxis(translationAxis), // change back to driver
+                        () -> -operator.getRawAxis(translationAxis), 
                         () -> -operator.getRawAxis(strafeAxis),
                         () -> -operator.getRawAxis(rotationAxis)));
 
@@ -139,13 +139,13 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         // driver buttons
-        driverStart.onTrue(new SmartResetOdometry());
-        driverBack.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
-        driverRightTrigger.onTrue(coneSubstation);
-        driverLeftTrigger.onTrue(cubeIntake);
-        driverRightBumper.onTrue(coneIntake);
-        driverB.onTrue(new InstantCommand(() -> zeroCommand()));
-        driverA.onTrue(new ZeroElevator());
+        // driverStart.onTrue(new SmartResetOdometry());
+        // driverBack.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
+        // driverRightTrigger.onTrue(coneSubstation);
+        // driverLeftTrigger.onTrue(cubeIntake);
+        // driverRightBumper.onTrue(coneIntake);
+        // driverB.onTrue(new InstantCommand(() -> zeroCommand()));
+        // driverA.onTrue(new ZeroElevator());
 
         // operator buttons
         // operatorA.onTrue(new InstantCommand(() -> s_CompleteMechanism.l1State()));
@@ -158,18 +158,20 @@ public class RobotContainer {
         // operatorDpadLeft.onTrue(new InstantCommand(() -> selector.decreasePos()));
         // operatorDpadUp.onTrue(new InstantCommand(() -> selector.setLevel(2)));
         // operatorDpadDown.onTrue(new InstantCommand(() -> selector.setLevel(1)));
-        operatorLeftBumper.onTrue(new InstantCommand(() -> selector.setLevel(0)));
+        // operatorLeftBumper.onTrue(new InstantCommand(() -> selector.setLevel(0)));
 
 
         // testing binds
 
         // temporary commands (should be on operator)
+        driverStart.onTrue(new SmartResetOdometry());
+        driverBack.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
         driverDpadRight.onTrue(new InstantCommand(() -> selector.increasePos()));
         driverDpadLeft.onTrue(new InstantCommand(() -> selector.decreasePos()));
         driverDpadUp.onTrue(new InstantCommand(() -> selector.setLevel(2)));
-        driverDpadDown.onTrue(new InstantCommand(() -> selector.setLevel(0)));
-        driverX.onTrue(new InstantCommand(() -> selector.setLevel(1)));
-        driverY.onTrue(new AutoTeleopScore());
+        driverDpadDown.onTrue(new InstantCommand(() -> selector.setLevel(1)));
+        driverLeftBumper.onTrue(new InstantCommand(() -> selector.setLevel(0)));
+        driverRightBumper.onTrue(new AutoTeleopScore());
 
         operatorBack.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
         operatorRightTrigger.onTrue(new ZeroElevator());
@@ -179,13 +181,44 @@ public class RobotContainer {
         operatorY.onTrue(new InstantCommand(() -> s_CompleteMechanism.l3State()));
         operatorX.onTrue(new SetMechanism(MechanismState.CONEINTAKE));
 
-        operatorDpadDown.onTrue(new SetIntake(IntakeStates.ON_OPEN_CUBE));
-        operatorDpadRight.onTrue(new SetIntake(IntakeStates.OFF_OPEN_CUBE));
-        operatorDpadUp.onTrue(new SetIntake(IntakeStates.REV_OPEN_CUBE));
+        operatorDpadDown.onTrue(new InstantCommand(() -> onIntake()));
+        operatorDpadRight.onTrue(new InstantCommand(() -> offIntake()));
+        operatorDpadUp.onTrue(new InstantCommand(() -> reverseIntake()));
         operatorDpadLeft.onTrue(new SetIntake(IntakeStates.OFF_OPEN_CONE));
 
-        operatorRightBumper.onTrue(new AutoTeleopScore());
+        operatorLeftTrigger.onTrue(new InstantCommand(() -> cone = !cone));
+
+        operatorRightBumper.onTrue(new SetMechanism(MechanismState.DOUBLESUBSTATION));
+        operatorLeftBumper.onTrue(new SetMechanism(MechanismState.SUBSTATION));
     }
+
+    // test intake
+    boolean cone = true;
+
+    public void onIntake() {
+        if(cone) {
+            CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.ON_CLOSED_CONE));
+        } else {
+            CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.ON_OPEN_CUBE));
+        }
+    }
+
+    public void offIntake() {
+        if(cone) {
+            CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_CLOSED_CONE));
+        } else {
+            CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_OPEN_CUBE));
+        }
+    }
+
+    public void reverseIntake() {
+        if(cone) {
+            CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.REV_CLOSED_CONE));
+        } else {
+            CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.REV_OPEN_CUBE));
+        }
+    }
+    
 
     ParallelCommandGroup coneIntake = new ParallelCommandGroup(
             new SetMechanism(MechanismState.CONEINTAKE),
