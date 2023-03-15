@@ -128,16 +128,16 @@ public class Intake extends SubsystemBase {
         }
 
         if (intakeState == IntakeStates.ON_OPEN_CUBE) {
-            if (cubeCounter > 6) {
+            if (cubeCounter > 10) {
                 CommandScheduler.getInstance()
                         .schedule(new WaitCommand(0.0).andThen(new SetIntake(IntakeStates.OFF_OPEN_CUBE)));
             }
         }
 
         if (intakeState == IntakeStates.ON_CLOSED_CONE) {
-            if (coneCounter > 6) {
+            if (coneCounter > 10) {
                 CommandScheduler.getInstance()
-                        .schedule(new WaitCommand(0.1).andThen(new SetIntake(IntakeStates.OFF_CLOSED_CONE)));
+                        .schedule(new WaitCommand(0.0).andThen(new SetIntake(IntakeStates.OFF_CLOSED_CONE)));
             }
         }
     }

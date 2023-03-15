@@ -43,6 +43,7 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         getRedPose();
         ctreConfigs = new CTREConfigs();
+        m_chooser.addOption("Test", AutoCommandFactory.AutoType.Test);
         m_chooser.addOption("1C", AutoCommandFactory.AutoType.OneCone);
         m_chooser.addOption("1C Back", AutoCommandFactory.AutoType.OneConeBack);
         m_chooser.addOption("1C M Dock", AutoCommandFactory.AutoType.OneConeDockMiddle);

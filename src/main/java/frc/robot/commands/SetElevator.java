@@ -13,7 +13,7 @@ public class SetElevator extends CommandBase {
 	double elevatorVoltage;
 	double elevatorFeedforwardVolage;
 	ProfiledPIDController elevatorController = new ProfiledPIDController(
-		0.040, 1e-2, 1e-3,
+		0.060, 1e-2, 1e-3,
 		new TrapezoidProfile.Constraints(500000, 3000 * 1e5)
 	);
 	ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0.083319, 0.46718, 62.909, 3.709);
