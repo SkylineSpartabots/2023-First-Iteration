@@ -136,7 +136,7 @@ public class AutoCommandFactory {
                                                 initState.poseMeters.getY(), new Rotation2d(Math.toRadians(180))))),
                                 new ParallelCommandGroup(
                                                 followPathCommand(path),
-                                                new SetMechanism(MechanismState.CUBEINTAKE)
+                                                new SetMechanism(MechanismState.GROUNDINTAKE)
                                                                 .andThen(new WaitCommand(0.7))
                                                                 .andThen(new SetIntake(IntakeStates.ON_CLOSED_CONE))));
         }
@@ -204,7 +204,7 @@ public class AutoCommandFactory {
                                                                 new SetIntake(IntakeStates.ON_OPEN_CUBE)),
                                                 new ParallelDeadlineGroup(new WaitCommand(1.1),
                                                                 new SetMechanism(MechanismState.ZERO))
-                                                                .andThen(new SetMechanism(MechanismState.CUBEINTAKE))),
+                                                                .andThen(new SetMechanism(MechanismState.GROUNDINTAKE))),
                                 // new InstantCommand(() -> forwardUntilCommand()),
                                 // new SetIntake(IntakeStates.OFF_OPEN_CUBE),
                                 new ParallelCommandGroup(

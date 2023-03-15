@@ -160,6 +160,22 @@ public class RobotContainer {
         // operatorDpadDown.onTrue(new InstantCommand(() -> selector.setLevel(1)));
         // operatorLeftBumper.onTrue(new InstantCommand(() -> selector.setLevel(0)));
 
+        operatorBack.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
+        operatorStart.onTrue(new SmartResetOdometry());
+
+        operatorRightBumper.onTrue(new InstantCommand(() -> groundIntake()));
+        operatorRightTrigger.onTrue(new InstantCommand(() -> doubleSubIntake()));
+        operatorLeftTrigger.onTrue(new InstantCommand(() -> singleSubIntake()));
+        operatorLeftBumper.onTrue(new InstantCommand(() -> cone = !cone));
+
+        operatorDpadDown.onTrue(new InstantCommand(() -> s_CompleteMechanism.l1State()));
+        operatorDpadRight.onTrue(new InstantCommand(() -> s_CompleteMechanism.l2State()));
+        operatorDpadUp.onTrue(new InstantCommand(() -> s_CompleteMechanism.l3State()));
+
+        operatorA.onTrue(new InstantCommand(() -> zeroMech()));
+        operatorX.onTrue(new InstantCommand(() -> reverseIntake()));
+        operatorB.onTrue(new ZeroElevator());
+
 
         // testing binds
 
@@ -172,86 +188,99 @@ public class RobotContainer {
         driverDpadDown.onTrue(new InstantCommand(() -> selector.setLevel(1)));
         driverLeftBumper.onTrue(new InstantCommand(() -> selector.setLevel(0)));
         driverRightBumper.onTrue(new AutoTeleopScore());
-
-        operatorBack.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
-        operatorRightTrigger.onTrue(new ZeroElevator());
-
-        operatorA.onTrue(new InstantCommand(() -> s_CompleteMechanism.l1State()));
-        operatorB.onTrue(new InstantCommand(() -> s_CompleteMechanism.l2State()));
-        operatorY.onTrue(new InstantCommand(() -> s_CompleteMechanism.l3State()));
-        operatorX.onTrue(new SetMechanism(MechanismState.CONEINTAKE));
-
-        operatorDpadDown.onTrue(new InstantCommand(() -> onIntake()));
-        operatorDpadRight.onTrue(new InstantCommand(() -> offIntake()));
-        operatorDpadUp.onTrue(new InstantCommand(() -> reverseIntake()));
-        operatorDpadLeft.onTrue(new SetIntake(IntakeStates.OFF_OPEN_CONE));
-
-        operatorLeftTrigger.onTrue(new InstantCommand(() -> cone = !cone));
-
-        operatorRightBumper.onTrue(new SetMechanism(MechanismState.DOUBLESUBSTATION));
-        operatorLeftBumper.onTrue(new SetMechanism(MechanismState.SUBSTATION));
     }
 
     // test intake
     boolean cone = true;
 
-    public void onIntake() {
+    public Command onIntake() {
         if(cone) {
-            CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.ON_CLOSED_CONE));
+            return new SetIntake(IntakeStates.ON_CLOSED_CONE);
         } else {
-            CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.ON_OPEN_CUBE));
+            return new SetIntake(IntakeStates.ON_OPEN_CUBE);
         }
     }
 
-    public void offIntake() {
+    public Command offIntake() {
         if(cone) {
-            CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_CLOSED_CONE));
+            return new SetIntake(IntakeStates.OFF_CLOSED_CONE);
         } else {
-            CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_OPEN_CUBE));
+            return new SetIntake(IntakeStates.OFF_OPEN_CUBE);
         }
     }
 
     public void reverseIntake() {
         if(cone) {
-            CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.REV_CLOSED_CONE));
+            CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_OPEN_CONE));
         } else {
             CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.REV_OPEN_CUBE));
         }
     }
     
+    public void groundIntake() {
+        CommandScheduler.getInstance().schedule(
+            new ParallelCommandGroup(
+            new SetMechanism(MechanismState.GROUNDINTAKE),
+            onIntake())
+        );
+    }
 
-    ParallelCommandGroup coneIntake = new ParallelCommandGroup(
-            new SetMechanism(MechanismState.CONEINTAKE),
-            new SetIntake(IntakeStates.ON_CLOSED_CONE));
-    ParallelCommandGroup cubeIntake = new ParallelCommandGroup(
-            new SetMechanism(MechanismState.CUBEINTAKE),
-            new SetIntake(IntakeStates.ON_OPEN_CUBE));
-//     ParallelCommandGroup layedCone = new ParallelCommandGroup(
-//             new SetMechanism(MechanismState.LAYEDCONE),
-//             new SetIntake(IntakeStates.ON_DEPLOYED_LAYEDCONE));
-    ParallelCommandGroup coneSubstation = new ParallelCommandGroup(
+    public void singleSubIntake() {
+        CommandScheduler.getInstance().schedule(
+            new ParallelCommandGroup(
+            new SetMechanism(MechanismState.SUBSTATION),
+            onIntake())
+        );
+    }
+
+    public void doubleSubIntake() {
+        CommandScheduler.getInstance().schedule(
+            new ParallelCommandGroup(
             new SetMechanism(MechanismState.DOUBLESUBSTATION),
-            new SetIntake(IntakeStates.ON_CLOSED_CONE));
+            onIntake())
+        );
+    }
 
-    ParallelCommandGroup zeroCone = new ParallelCommandGroup(
+    public void zeroMech() {
+        CommandScheduler.getInstance().schedule(
+            new ParallelCommandGroup(
             new SetMechanism(MechanismState.ZERO),
-            new SetIntake(IntakeStates.OFF_CLOSED_CONE));
-    ParallelCommandGroup zeroCube = new ParallelCommandGroup(
-            new SetMechanism(MechanismState.ZERO),
-            new SetIntake(IntakeStates.OFF_OPEN_CUBE));
+            offIntake())
+        );
+    }
+
+    // ParallelCommandGroup zeroCone = new ParallelCommandGroup(
+    //         new SetMechanism(MechanismState.ZERO),
+    //         new SetIntake(IntakeStates.OFF_CLOSED_CONE));
+    // ParallelCommandGroup zeroCube = new ParallelCommandGroup(
+    //         new SetMechanism(MechanismState.ZERO),
+    //         new SetIntake(IntakeStates.OFF_OPEN_CUBE));
+    
 //     ParallelCommandGroup zeroLayed = new ParallelCommandGroup(
 //             new SetMechanism(MechanismState.ZERO),
 //             new SetIntake(IntakeStates.OFF_RETRACTED_LAYEDCONE));
 
-    public void zeroCommand() {
+    // public void zeroCommand() {
+    //     CommandScheduler.getInstance().schedule(
+    //             s_Intake.intakeState.piece.equals("cube") ? zeroCube : zeroCone);
+    // }
+
+    public void layedConeCommand() {
         CommandScheduler.getInstance().schedule(
-                s_Intake.intakeState.piece.equals("cube") ? zeroCube : zeroCone);
+            new SequentialCommandGroup(
+                new SetElevator(ElevatorStates.SLEEPCONEINTAKE),
+                new SetArm(ArmStates.SLEEPCONEINTAKE)
+            )
+        );
     }
 
-    public void reverseCommand() {  
+    public void layedConeBackCommand() {
         CommandScheduler.getInstance().schedule(
-                        s_Intake.intakeState.piece.equals("cube") ? new SetIntake(IntakeStates.REV_OPEN_CUBE)
-                                : new SetIntake(IntakeStates.OFF_OPEN_CONE));
+            new SequentialCommandGroup(
+                new SetArm(ArmStates.ZERO),
+                new SetElevator(ElevatorStates.ZERO)
+            )
+        );
     }
 
     public void onRobotDisabled() {
