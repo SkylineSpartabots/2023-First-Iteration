@@ -22,7 +22,7 @@ public class SetMechanism extends CommandBase {
         if(state == MechanismState.L3CUBE || state == MechanismState.L3CONE) {
             CommandScheduler.getInstance().schedule(
                 new ParallelCommandGroup(
-                        new WaitCommand(0.3).andThen(new SetArm(state.armState)),
+                        new WaitCommand(0.4).andThen(new SetArm(state.armState)),
                         new SetElevator(state.elevState)));
 
         } else {
