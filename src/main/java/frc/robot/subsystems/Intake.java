@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -19,7 +21,8 @@ public class Intake extends SubsystemBase {
     CANSparkMax m_leaderMotor, m_followerMotor;
     Solenoid m_solenoid;
     Compressor m_compressor;
-    public IntakeStates intakeState = IntakeStates.OFF_CLOSED_CONE;
+    public IntakeStates intakeState = IntakeStates.OFF_OPEN_CUBE;
+    public BooleanSupplier motorStopped = () -> motorStopped();
     int cubeCounter;
     int coneCounter;
 
@@ -100,6 +103,10 @@ public class Intake extends SubsystemBase {
 
     public boolean hasCube() {
         return m_leaderMotor.getOutputCurrent() > cubeThreshold || m_followerMotor.getOutputCurrent() > cubeThreshold;
+    }
+
+    public boolean motorStopped() {
+        return intakeState == IntakeStates.OFF_CLOSED_CONE || intakeState == IntakeStates.OFF_OPEN_CUBE;
     }
 
     // private double layedConeThreshold = 0;

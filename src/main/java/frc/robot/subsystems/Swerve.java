@@ -38,10 +38,15 @@ public class Swerve extends SubsystemBase {
     private SwerveModule[] mSwerveMods;
     public Supplier<Pose2d> poseSupplier = () -> getPose();
     public Consumer<Pose2d> poseConsumer = a -> {resetOdometry(a);};
+    public BooleanSupplier inPosition = () -> inPosition();
     public Consumer<ChassisSpeeds> chassisConsumer = a -> {
         autoDrive(a, true);
     };
     public BooleanSupplier isPathRunningSupplier = () -> pathInProgress();
+    public Pose2d goalPose = new Pose2d();
+    public double xTolerance = 0.8;
+    public double yTolerance = 0.8;
+    public double rotTolerance = 30;
     
     public Swerve() {
         gyro = new Pigeon2(Constants.SwerveConstants.pigeonID, "2976 CANivore");
@@ -142,6 +147,19 @@ public class Swerve extends SubsystemBase {
 
     public boolean pathInProgress() {
         return !getDefaultCommand().isScheduled();
+    }
+
+    public void goalPoseParameters(Pose2d goalPose, double xTolerance, double yTolerance, double rotTolerance) {
+        this.goalPose = goalPose;
+        this.xTolerance = xTolerance;
+        this.yTolerance = yTolerance;
+    }
+
+    public boolean inPosition() {
+        return (Math.abs(getPose().getX() - goalPose.getX()) < xTolerance)
+                && (Math.abs(getPose().getY() - goalPose.getY()) < yTolerance)
+                && (Math.abs(getPose().getRotation().getDegrees()
+                        - goalPose.getRotation().getDegrees()) < rotTolerance);
     }
 
     @Override

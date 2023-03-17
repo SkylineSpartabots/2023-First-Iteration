@@ -45,14 +45,14 @@ public class Robot extends TimedRobot {
         ctreConfigs = new CTREConfigs();
         m_chooser.addOption("Test", AutoCommandFactory.AutoType.Test);
         m_chooser.addOption("1C", AutoCommandFactory.AutoType.OneCone);
-        m_chooser.addOption("1C Back", AutoCommandFactory.AutoType.OneConeBack);
+        m_chooser.addOption("1C B Back", AutoCommandFactory.AutoType.OneConeBackBottom);
         m_chooser.addOption("1C M Dock", AutoCommandFactory.AutoType.OneConeDockMiddle);
-        // m_chooser.addOption("1.5C T Dock", AutoCommandFactory.AutoType.OneHalfConeDockTop);
-        // m_chooser.addOption("2C B", AutoCommandFactory.AutoType.TwoConeBottom);
-        // m_chooser.addOption("2C B Dock", AutoCommandFactory.AutoType.TwoConeDockBottom);
-        // m_chooser.addOption("2C T Dock", AutoCommandFactory.AutoType.TwoConeDockTop);
+        m_chooser.addOption("1.5C T Dock", AutoCommandFactory.AutoType.OneHalfConeDockTop);
+        m_chooser.addOption("2C B", AutoCommandFactory.AutoType.TwoConeBottom);
+        m_chooser.addOption("2C B Dock", AutoCommandFactory.AutoType.TwoConeDockBottom);
+        m_chooser.addOption("2C T Dock", AutoCommandFactory.AutoType.TwoConeDockTop);
         m_chooser.addOption("2C T", AutoCommandFactory.AutoType.TwoConeTop);
-        // m_chooser.addOption("3C B", AutoCommandFactory.AutoType.ThreeConeBottom);
+        m_chooser.addOption("3C B", AutoCommandFactory.AutoType.ThreeConeBottom);
         SmartDashboard.putData("Auto choices", m_chooser);
         DriverStation.Alliance a = DriverStation.getAlliance();
         SmartDashboard.putString("Alliance",

@@ -43,7 +43,7 @@ public class AutoBalance extends CommandBase {
                 s_Swerve.drive(
                     new Translation2d(driveSpeed, 0).times(Constants.SwerveConstants.maxSpeed),
                     0,
-                    true,
+                    false,
                     true);
             } else {
                 finished = true;

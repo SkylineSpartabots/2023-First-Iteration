@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.9620559047990012,
-        "y": 4.419863388312903
+        "x": 1.8475447217007717,
+        "y": 4.416554625794707
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.4342921776899447,
-        "y": 4.601960367711254
+        "x": 2.9172492494039752,
+        "y": 4.693434600630441
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -24,20 +24,45 @@
     },
     {
       "anchorPoint": {
-        "x": 6.38258154151528,
-        "y": 4.559575201100272
+        "x": 4.825182610017527,
+        "y": 4.64745828035104
       },
       "prevControl": {
-        "x": 5.2799091184676685,
-        "y": 4.614220013833994
+        "x": 3.914941602514906,
+        "y": 4.713016487748758
       },
       "nextControl": {
-        "x": 5.2799091184676685,
-        "y": 4.614220013833994
+        "x": 5.730145502154212,
+        "y": 4.582280218188458
       },
-      "holonomicAngle": 0.0,
-      "isReversal": true,
-      "velOverride": null,
+      "holonomicAngle": 0.01,
+      "isReversal": false,
+      "velOverride": 2.5,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.376949790400908,
+        "y": 4.58
+      },
+      "prevControl": {
+        "x": 6.34326372835492,
+        "y": 4.579438079101688
+      },
+      "nextControl": {
+        "x": 6.410635852446896,
+        "y": 4.580561920898312
+      },
+      "holonomicAngle": -0.01,
+      "isReversal": false,
+      "velOverride": 1.0,
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
@@ -49,16 +74,16 @@
     },
     {
       "anchorPoint": {
-        "x": 1.864565566056438,
-        "y": 4.969078930124778
+        "x": 1.8479087202487772,
+        "y": 4.998750808722183
       },
       "prevControl": {
-        "x": 2.5460639348691836,
-        "y": 4.7559481648076
+        "x": 2.92880255736512,
+        "y": 4.667849937356807
       },
       "nextControl": {
-        "x": 2.5460639348691836,
-        "y": 4.7559481648076
+        "x": 2.92880255736512,
+        "y": 4.667849937356807
       },
       "holonomicAngle": 180.0,
       "isReversal": true,
@@ -74,18 +99,43 @@
     },
     {
       "anchorPoint": {
-        "x": 6.360236883563988,
-        "y": 3.363658621709291
+        "x": 5.244548819417601,
+        "y": 4.558892641817013
       },
       "prevControl": {
-        "x": 6.257396596687506,
-        "y": 4.980768052264009
+        "x": 3.3112168103389368,
+        "y": 4.886020899260901
       },
       "nextControl": {
-        "x": 6.257396596687506,
-        "y": 4.980768052264009
+        "x": 5.434075690539077,
+        "y": 4.526823863770812
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": -26.57092795719267,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.417808701821432,
+        "y": 3.7591708670758885
+      },
+      "prevControl": {
+        "x": 5.580126908429672,
+        "y": 4.5663041641738715
+      },
+      "nextControl": {
+        "x": 5.580126908429672,
+        "y": 4.5663041641738715
+      },
+      "holonomicAngle": -33.0,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
@@ -99,12 +149,12 @@
     },
     {
       "anchorPoint": {
-        "x": 1.9308106884143117,
-        "y": 3.8446197598839653
+        "x": 1.85,
+        "y": 3.851953888623192
       },
       "prevControl": {
-        "x": 2.164492273620307,
-        "y": 4.9430740897893015
+        "x": 3.2297876887025057,
+        "y": 5.665154171690641
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
