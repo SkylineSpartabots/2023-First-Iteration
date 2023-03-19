@@ -27,8 +27,8 @@ public class Arm extends SubsystemBase {
     private ArmStates armState = ArmStates.ZERO;
 
     public enum ArmStates { 
-        ZERO(7), 
-        REALZERO(9),
+        ZERO(12), 
+        REALZERO(7),
 
         GROUNDINTAKE(83), 
         SLEEPCONEINTAKE(171),

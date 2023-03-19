@@ -21,7 +21,7 @@ public class Intake extends SubsystemBase {
     CANSparkMax m_leaderMotor, m_followerMotor;
     Solenoid m_solenoid;
     Compressor m_compressor;
-    public IntakeStates intakeState = IntakeStates.OFF_OPEN_CUBE;
+    public IntakeStates intakeState = IntakeStates.OFF_CLOSED_CONE;
     public BooleanSupplier motorStopped = () -> motorStopped();
     int cubeCounter;
     int coneCounter;
@@ -49,7 +49,7 @@ public class Intake extends SubsystemBase {
     }
 
     public enum IntakeStates {
-        ON_CLOSED_CONE(false, "cone", 0.85),
+        ON_CLOSED_CONE(false, "cone", 1.0),
         OFF_CLOSED_CONE(false, "cone", 0),
         REV_CLOSED_CONE(false, "cone", -1),
         OFF_OPEN_CONE(true, "cone", 0),
@@ -93,13 +93,14 @@ public class Intake extends SubsystemBase {
         return intakeState.piece;
     }
 
-    private double coneThreshold = 7.3; // 8
+    private double coneThreshold = 7.8;
+
 
     public boolean hasCone() {
         return m_leaderMotor.getOutputCurrent() > coneThreshold || m_followerMotor.getOutputCurrent() > coneThreshold;
     }
 
-    public double cubeThreshold = 6.8; // 8
+    public double cubeThreshold = 6.8; 
 
     public boolean hasCube() {
         return m_leaderMotor.getOutputCurrent() > cubeThreshold || m_followerMotor.getOutputCurrent() > cubeThreshold;
@@ -142,7 +143,7 @@ public class Intake extends SubsystemBase {
         }
 
         if (intakeState == IntakeStates.ON_CLOSED_CONE) {
-            if (coneCounter > 10) {
+            if (coneCounter > 12) {
                 CommandScheduler.getInstance()
                         .schedule(new WaitCommand(0.0).andThen(new SetIntake(IntakeStates.OFF_CLOSED_CONE)));
             }

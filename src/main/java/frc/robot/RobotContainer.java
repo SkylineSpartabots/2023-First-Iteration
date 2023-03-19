@@ -190,7 +190,6 @@ public class RobotContainer {
         driverRightBumper.onTrue(new AutoTeleopScore());
     }
 
-    // test intake
     boolean cone = true;
 
     public Command onIntake() {

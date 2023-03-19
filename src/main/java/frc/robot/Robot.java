@@ -52,7 +52,7 @@ public class Robot extends TimedRobot {
         m_chooser.addOption("2C B Dock", AutoCommandFactory.AutoType.TwoConeDockBottom);
         m_chooser.addOption("2C T Dock", AutoCommandFactory.AutoType.TwoConeDockTop);
         m_chooser.addOption("2C T", AutoCommandFactory.AutoType.TwoConeTop);
-        m_chooser.addOption("3C B", AutoCommandFactory.AutoType.ThreeConeBottom);
+        m_chooser.addOption("3C T", AutoCommandFactory.AutoType.ThreeConeTop);
         SmartDashboard.putData("Auto choices", m_chooser);
         DriverStation.Alliance a = DriverStation.getAlliance();
         SmartDashboard.putString("Alliance",

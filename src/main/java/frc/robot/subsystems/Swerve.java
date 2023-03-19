@@ -44,8 +44,8 @@ public class Swerve extends SubsystemBase {
     };
     public BooleanSupplier isPathRunningSupplier = () -> pathInProgress();
     public Pose2d goalPose = new Pose2d();
-    public double xTolerance = 0.8;
-    public double yTolerance = 0.8;
+    public double xTolerance = 1.0;
+    public double yTolerance = 1.0;
     public double rotTolerance = 30;
     
     public Swerve() {
