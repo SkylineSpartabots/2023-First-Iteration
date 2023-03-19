@@ -202,13 +202,14 @@ public class AutoCommandFactory {
                                 new InstantCommand(() -> s_Swerve.goalPoseParameters(
                                                 getPoseFromState(pathGroup.get(0).getEndState(), 0), 2.2, 2.2, 60)),
                                 new ParallelCommandGroup(
-                                                followPathCommand(pathGroup.get(0)),
+                                                followPathCommand(pathGroup.get(0)).andThen(new InstantCommand(() -> s_Swerve.drive(new Translation2d(0,0), 0, false, false))),
                                                 new SetIntake(IntakeStates.ON_OPEN_CUBE),
-                                                new SetMechanism(MechanismState.ZERO),
-                                                new WaitUntilCommand(s_Swerve.inPosition).andThen(
-                                                                new SetMechanism(MechanismState.GROUNDINTAKE))),
-                                // new WaitUntilCommand(s_Intake.motorStopped),
-                                new WaitCommand(1.0),
+                                                new SetMechanism(MechanismState.ZERO)),
+                                                new WaitCommand(2.0).andThen(new SetMechanism(MechanismState.GROUNDINTAKE)),
+                                                // new WaitUntilCommand(s_Swerve.inPosition).andThen(
+                                                //                 new SetMechanism(MechanismState.GROUNDINTAKE))),
+                                new WaitUntilCommand(s_Intake.motorStopped),
+                                // new WaitCommand(1.0),
                                 new ParallelCommandGroup(
                                                 followPathCommand(pathGroup.get(1)),
                                                 new SetMechanism(MechanismState.ZERO)),
