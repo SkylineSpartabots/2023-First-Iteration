@@ -21,6 +21,7 @@ import com.pathplanner.lib.PathConstraints;
 
 import frc.robot.Constants;
 import frc.robot.commands.AutoBalance;
+import frc.robot.commands.ForwardUntilCommand;
 import frc.robot.commands.SetIntake;
 import frc.robot.commands.SetMechanism;
 import frc.robot.subsystems.*;
@@ -122,7 +123,7 @@ public class AutoCommandFactory {
 
         public static void forwardUntilCommand() {
                 double driveSpeed = 0.2;
-                while (!Intake.getInstance().hasCone() && s_Swerve.getPose().getX() < 7.6) {
+                while (!Intake.getInstance().hasCube() && s_Swerve.getPose().getX() < 7) { //careful watch for hasCube vs hasCone
                         s_Swerve.drive(
                                         new Translation2d(driveSpeed, 0).times(Constants.SwerveConstants.maxSpeed),
                                         0,
@@ -190,8 +191,8 @@ public class AutoCommandFactory {
         // one cube and then one cone top
         private static Command twoConeTop() {
                 List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("2 cone top",
-                                new PathConstraints(5.0, 1.5),
-                                new PathConstraints(5.0, 2.5));
+                                new PathConstraints(4.0, 1),
+                                new PathConstraints(4.0, 1));
                 Pose2d initPose = getPoseFromState(pathGroup.get(0).getInitialState(), 180);
                 return new SequentialCommandGroup(
                                 new InstantCommand(() -> s_Swerve.resetOdometry(initPose)),
@@ -205,7 +206,9 @@ public class AutoCommandFactory {
                                                 followPathCommand(pathGroup.get(0)).andThen(new InstantCommand(() -> s_Swerve.drive(new Translation2d(0,0), 0, false, false))),
                                                 new SetIntake(IntakeStates.ON_OPEN_CUBE),
                                                 new SetMechanism(MechanismState.ZERO)),
-                                                new WaitCommand(2.0).andThen(new SetMechanism(MechanismState.GROUNDINTAKE)),
+                                                new WaitCommand(1.0).andThen(new SetMechanism(MechanismState.GROUNDINTAKE)).andThen(
+                                                        new ForwardUntilCommand()
+                                                ),
                                                 // new WaitUntilCommand(s_Swerve.inPosition).andThen(
                                                 //                 new SetMechanism(MechanismState.GROUNDINTAKE))),
                                 new WaitUntilCommand(s_Intake.motorStopped),

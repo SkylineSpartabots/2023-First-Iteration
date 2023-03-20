@@ -175,6 +175,7 @@ public class RobotContainer {
         operatorA.onTrue(new InstantCommand(() -> zeroMech()));
         operatorX.onTrue(new InstantCommand(() -> reverseIntake()));
         operatorB.onTrue(new ZeroElevator());
+        operatorY.onTrue(new SetIntake(IntakeStates.ON_CLOSED_CONE));
 
 
         // testing binds

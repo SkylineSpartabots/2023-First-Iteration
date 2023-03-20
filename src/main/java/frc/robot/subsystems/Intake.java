@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,6 +26,7 @@ public class Intake extends SubsystemBase {
     public BooleanSupplier motorStopped = () -> motorStopped();
     int cubeCounter;
     int coneCounter;
+    private Timer timer;
 
     public static Intake getInstance() {
         if (instance == null) {
@@ -34,6 +36,7 @@ public class Intake extends SubsystemBase {
     }
 
     Intake() {
+        timer = new Timer();
         cubeCounter = 0;
         coneCounter = 0;
         m_solenoid = new Solenoid(
@@ -100,10 +103,28 @@ public class Intake extends SubsystemBase {
         return m_leaderMotor.getOutputCurrent() > coneThreshold || m_followerMotor.getOutputCurrent() > coneThreshold;
     }
 
-    public double cubeThreshold = 6.8; 
+    public double cubeThreshold = 11; 
 
+    private boolean timerStarted = false;
     public boolean hasCube() {
-        return m_leaderMotor.getOutputCurrent() > cubeThreshold || m_followerMotor.getOutputCurrent() > cubeThreshold;
+
+        if(m_leaderMotor.getOutputCurrent() > cubeThreshold || m_followerMotor.getOutputCurrent() > cubeThreshold){
+            if(!timerStarted){
+                timer.start();
+                timerStarted = true;
+            } else {
+                if(timer.hasElapsed(0.25)){
+                    timer.stop(); timer.reset(); timerStarted = false;
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            timer.stop(); timer.reset(); timerStarted = false;
+            return false;
+        }
+        return false;
     }
 
     public boolean motorStopped() {
@@ -117,9 +138,14 @@ public class Intake extends SubsystemBase {
     // return currentVolt > layedConeThreshold;
     // }
 
+    boolean tempHasCube = false;
+
     @Override
     public void periodic() {
+        tempHasCube = hasCube() ? true : tempHasCube;
         SmartDashboard.putString("intake piece", getIntakePiece());
+        SmartDashboard.putBoolean("has cube", tempHasCube);
+        SmartDashboard.putNumber("timer", timer.get());
         SmartDashboard.putNumber("intake current", m_leaderMotor.getOutputCurrent());
         // SmartDashboard.putBoolean("intake deployed", getIntakeDeployed());
 

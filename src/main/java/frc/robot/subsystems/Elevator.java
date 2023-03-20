@@ -40,7 +40,7 @@ public class Elevator extends SubsystemBase {
 
         L1CONE(50),
         L2CONE(1155),
-        L3CONE(2463),
+        L3CONE(2443),
 
         L1CUBE(50),
         L2CUBE(454),
