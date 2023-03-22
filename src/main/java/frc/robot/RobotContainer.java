@@ -41,7 +41,7 @@ public class RobotContainer {
     private final XboxController driver = new XboxController(0);
     private final XboxController operator = new XboxController(1);
 
-    /* Drive Controls */
+    /* Driver Joysticks (drive control) */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
     private final int strafeAxis = XboxController.Axis.kLeftX.value;
     private final int rotationAxis = XboxController.Axis.kRightX.value;
@@ -68,7 +68,7 @@ public class RobotContainer {
         return driver.getRightTriggerAxis() > Constants.triggerDeadzone;
     });
 
-    /* Operator Buttons, currently just used for testing */
+    /* Operator Buttons */
     private final JoystickButton operatorBack = new JoystickButton(operator, XboxController.Button.kBack.value);
     private final JoystickButton operatorStart = new JoystickButton(operator, XboxController.Button.kStart.value);
     private final JoystickButton operatorA = new JoystickButton(operator, XboxController.Button.kA.value);
@@ -91,8 +91,7 @@ public class RobotContainer {
         return operator.getRightTriggerAxis() > Constants.triggerDeadzone;
     });
 
-    /* operator joysticks */
-
+    /* Operator Joysticks */
     private final int operatorLeftStick = XboxController.Axis.kLeftY.value;
     private final int operatorRightStick = XboxController.Axis.kRightY.value;
 
@@ -129,66 +128,45 @@ public class RobotContainer {
         s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
                         s_Swerve,
-                        () -> -operator.getRawAxis(translationAxis), 
-                        () -> -operator.getRawAxis(strafeAxis),
-                        () -> -operator.getRawAxis(rotationAxis)));
+                        () -> -driver.getRawAxis(translationAxis), 
+                        () -> -driver.getRawAxis(strafeAxis),
+                        () -> -driver.getRawAxis(rotationAxis)));
 
         // Configure the button bindings
         configureButtonBindings();
     }
 
     private void configureButtonBindings() {
-        // driver buttons
-        // driverStart.onTrue(new SmartResetOdometry());
-        // driverBack.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
-        // driverRightTrigger.onTrue(coneSubstation);
-        // driverLeftTrigger.onTrue(cubeIntake);
-        // driverRightBumper.onTrue(coneIntake);
-        // driverB.onTrue(new InstantCommand(() -> zeroCommand()));
-        // driverA.onTrue(new ZeroElevator());
-
-        // operator buttons
-        // operatorA.onTrue(new InstantCommand(() -> s_CompleteMechanism.l1State()));
-        // operatorX.onTrue(new InstantCommand(() -> s_CompleteMechanism.l2State()));
-        // operatorY.onTrue(new InstantCommand(() -> s_CompleteMechanism.l3State()));
-        // operatorB.onTrue(new InstantCommand(() -> reverseCommand()));
-        // operatorRightTrigger.onTrue(new InstantCommand(() -> s_Intake.setSpeed(0.75)));
-        // operatorLeftTrigger.onTrue(new InstantCommand(() -> s_Intake.setSpeed(0)));
-        // operatorDpadRight.onTrue(new InstantCommand(() -> selector.increasePos()));
-        // operatorDpadLeft.onTrue(new InstantCommand(() -> selector.decreasePos()));
-        // operatorDpadUp.onTrue(new InstantCommand(() -> selector.setLevel(2)));
-        // operatorDpadDown.onTrue(new InstantCommand(() -> selector.setLevel(1)));
-        // operatorLeftBumper.onTrue(new InstantCommand(() -> selector.setLevel(0)));
-
-        operatorBack.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
-        operatorStart.onTrue(new SmartResetOdometry());
-
-        operatorRightBumper.onTrue(new InstantCommand(() -> groundIntake()));
-        operatorRightTrigger.onTrue(new InstantCommand(() -> doubleSubIntake()));
-        operatorLeftTrigger.onTrue(new InstantCommand(() -> singleSubIntake()));
-        operatorLeftBumper.onTrue(new InstantCommand(() -> cone = !cone));
-
-        operatorDpadDown.onTrue(new InstantCommand(() -> s_CompleteMechanism.l1State()));
-        operatorDpadRight.onTrue(new InstantCommand(() -> s_CompleteMechanism.l2State()));
-        operatorDpadUp.onTrue(new InstantCommand(() -> s_CompleteMechanism.l3State()));
-
-        operatorA.onTrue(new InstantCommand(() -> zeroMech()));
-        operatorX.onTrue(new InstantCommand(() -> reverseIntake()));
-        operatorB.onTrue(new ZeroElevator());
-        operatorY.onTrue(new SetIntake(IntakeStates.ON_CLOSED_CONE));
-
-
-        // testing binds
-
-        // temporary commands (should be on operator)
-        driverStart.onTrue(new SmartResetOdometry());
+        // driver controls
         driverBack.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
-        driverDpadRight.onTrue(new InstantCommand(() -> selector.increasePos()));
-        driverDpadLeft.onTrue(new InstantCommand(() -> selector.decreasePos()));
-        driverDpadUp.onTrue(new InstantCommand(() -> selector.setLevel(2)));
-        driverDpadDown.onTrue(new InstantCommand(() -> selector.setLevel(1)));
-        driverLeftBumper.onTrue(new InstantCommand(() -> selector.setLevel(0)));
-        driverRightBumper.onTrue(new AutoTeleopScore());
+        driverStart.onTrue(new SmartResetOdometry());
+
+        driverRightBumper.onTrue(new InstantCommand(() -> groundIntake()));
+        driverRightTrigger.onTrue(new InstantCommand(() -> doubleSubIntake()));
+        driverLeftTrigger.onTrue(new InstantCommand(() -> singleSubIntake()));
+        driverLeftBumper.onTrue(new InstantCommand(() -> cone = !cone));
+
+        driverDpadDown.onTrue(new InstantCommand(() -> s_CompleteMechanism.l1State()));
+        driverDpadRight.onTrue(new InstantCommand(() -> s_CompleteMechanism.l2State()));
+        driverDpadUp.onTrue(new InstantCommand(() -> s_CompleteMechanism.l3State()));
+
+        driverA.onTrue(new InstantCommand(() -> zeroMech()));
+        driverX.onTrue(new InstantCommand(() -> reverseIntake()));
+        driverB.onTrue(new ZeroElevator());
+        driverY.onTrue(new AutoBalance());
+
+        // operator controls
+        operatorStart.onTrue(new SmartResetOdometry());
+        operatorBack.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
+
+        operatorDpadRight.onTrue(new InstantCommand(() -> selector.increasePos()));
+        operatorDpadLeft.onTrue(new InstantCommand(() -> selector.decreasePos()));
+
+        operatorRightTrigger.onTrue(new InstantCommand(() -> selector.setLevel(2)));
+        operatorLeftTrigger.onTrue(new InstantCommand(() -> selector.setLevel(1)));
+        operatorLeftBumper.onTrue(new InstantCommand(() -> selector.setLevel(0)));
+
+        operatorRightBumper.onTrue(new AutoTeleopScore());
     }
 
     boolean cone = true;

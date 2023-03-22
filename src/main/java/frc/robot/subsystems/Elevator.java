@@ -40,7 +40,7 @@ public class Elevator extends SubsystemBase {
 
         L1CONE(50),
         L2CONE(1155),
-        L3CONE(2443),
+        L3CONE(2463),
 
         L1CUBE(50),
         L2CUBE(454),
@@ -135,6 +135,6 @@ public class Elevator extends SubsystemBase {
         // SmartDashboard.putNumber("ele set velo", getVelocitySetpoint());
         // SmartDashboard.putNumber("ele set volt", getVoltageSetpoint());
         // SmartDashboard.putBoolean("elevator ", elevatorError());
-        // SmartDashboard.putNumber("eleCurrent", getCurrent());
+        SmartDashboard.putNumber("eleCurrent", getCurrent());
     }
 }

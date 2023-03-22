@@ -53,7 +53,7 @@ public final class AutomaticScoringSelector {
 
     public AutomaticScoringSelector() {
         s_Swerve = Swerve.getInstance();
-        double x = 1.87; //should be the same for every default scoring position
+        double x = 1.72; //should be the same for every default scoring position
         double y = 0.59 - 0.1; //only one that changes
         double yIncrem = Units.inchesToMeters(22); //how much each y varies by - currently unmeasured
 
@@ -95,8 +95,8 @@ public final class AutomaticScoringSelector {
     }
 
     public void updateShuffleboard() {
-        currPosEntry.setDouble(currPos);
-        currLevelEntry.setDouble(currLevel);
+        currPosEntry.setDouble(currPos+1);
+        currLevelEntry.setDouble(currLevel+1);
         currentXpos = convertToRed(allPoses[currPos]).getX();
         currentYpos = convertToRed(allPoses[currPos]).getY();    
         currentXPosEntry.setDouble(currentXpos);

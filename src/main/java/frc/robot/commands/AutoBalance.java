@@ -5,6 +5,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.Swerve;
 
@@ -35,22 +38,22 @@ public class AutoBalance extends CommandBase {
     public void execute() {
         counter++;
         if (counter % 1 == 0) {
-            if(Math.abs(s_Swerve.getPitch())+0.15 >= Math.abs(robotPitch) || timer.get() < 2.0) {
+            if (Math.abs(s_Swerve.getPitch()) + 0.135 >= Math.abs(robotPitch) || timer.get() < 1.2) {
                 driveSpeed = driveController.calculate(s_Swerve.getPitch(), 0);
                 SmartDashboard.putNumber("drive speed", driveSpeed);
                 SmartDashboard.putNumber("last pit", Math.abs(robotPitch));
-                SmartDashboard.putNumber("curr pit 3", Math.abs(s_Swerve.getPitch())+3);
+                SmartDashboard.putNumber("curr pit 3", Math.abs(s_Swerve.getPitch()) + 3);
                 s_Swerve.drive(
-                    new Translation2d(driveSpeed, 0).times(Constants.SwerveConstants.maxSpeed),
-                    0,
-                    false,
-                    true);
+                        new Translation2d(driveSpeed, 0).times(Constants.SwerveConstants.maxSpeed),
+                        0,
+                        false,
+                        true);
             } else {
                 finished = true;
             }
             robotPitch = s_Swerve.getPitch();
         }
-        
+
         // driveSpeed = driveController.calculate(robotPitch, 0);
         // SmartDashboard.putNumber("drive speed", driveSpeed);
         // s_Swerve.drive(
@@ -71,25 +74,31 @@ public class AutoBalance extends CommandBase {
         timer.stop();
         robotPitch = 0;
         s_Swerve.drive(
-            new Translation2d(0, 0).times(Constants.SwerveConstants.maxSpeed),
-            0,
-            true,
-            true);
+                new Translation2d(0, 0.1).times(Constants.SwerveConstants.maxSpeed),
+                0,
+                true,
+                true);
+        CommandScheduler.getInstance().schedule(new WaitCommand(0.08).andThen(new InstantCommand(() -> s_Swerve.drive(
+                new Translation2d(0, 0).times(Constants.SwerveConstants.maxSpeed),
+                0,
+                false,
+                true))));
         // CommandScheduler.getInstance().schedule(
-        //     new ParallelDeadlineGroup(
-        //         new WaitCommand(1.0),  
-        //         new InstantCommand(() -> s_Swerve.drive(
-        //         new Translation2d(direction*0.3, 0).times(Constants.SwerveConstants.maxSpeed),
-        //         0,
-        //         true,
-        //         true))
-        //     ).andThen(
-        //         new InstantCommand(() ->  s_Swerve.drive(
-        //             new Translation2d(0, 0).times(Constants.SwerveConstants.maxSpeed),
-        //             0,
-        //             true,
-        //             true))
-        //     )
+        // new ParallelDeadlineGroup(
+        // new WaitCommand(1.0),
+        // new InstantCommand(() -> s_Swerve.drive(
+        // new Translation2d(direction*0.3,
+        // 0).times(Constants.SwerveConstants.maxSpeed),
+        // 0,
+        // true,
+        // true))
+        // ).andThen(
+        // new InstantCommand(() -> s_Swerve.drive(
+        // new Translation2d(0, 0).times(Constants.SwerveConstants.maxSpeed),
+        // 0,
+        // true,
+        // true))
+        // )
         // );
     }
 

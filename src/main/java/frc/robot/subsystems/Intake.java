@@ -26,7 +26,6 @@ public class Intake extends SubsystemBase {
     public BooleanSupplier motorStopped = () -> motorStopped();
     int cubeCounter;
     int coneCounter;
-    private Timer timer;
 
     public static Intake getInstance() {
         if (instance == null) {
@@ -36,7 +35,6 @@ public class Intake extends SubsystemBase {
     }
 
     Intake() {
-        timer = new Timer();
         cubeCounter = 0;
         coneCounter = 0;
         m_solenoid = new Solenoid(
@@ -46,7 +44,7 @@ public class Intake extends SubsystemBase {
         m_compressor = new Compressor(Constants.HardwarePorts.pneumaticHub, PneumaticsModuleType.REVPH);
         m_compressor.enableDigital();
         m_leaderMotor = new CANSparkMax(Constants.HardwarePorts.intakeLeaderMotor, MotorType.kBrushless);
-        m_leaderMotor.setInverted(false);
+        m_leaderMotor.setInverted(true);
         m_followerMotor = new CANSparkMax(Constants.HardwarePorts.intakeFollowerMotor, MotorType.kBrushless);
         m_followerMotor.follow(m_leaderMotor, true);
     }
@@ -103,28 +101,10 @@ public class Intake extends SubsystemBase {
         return m_leaderMotor.getOutputCurrent() > coneThreshold || m_followerMotor.getOutputCurrent() > coneThreshold;
     }
 
-    public double cubeThreshold = 11; 
+    public double cubeThreshold = 7.0; 
 
-    private boolean timerStarted = false;
     public boolean hasCube() {
-
-        if(m_leaderMotor.getOutputCurrent() > cubeThreshold || m_followerMotor.getOutputCurrent() > cubeThreshold){
-            if(!timerStarted){
-                timer.start();
-                timerStarted = true;
-            } else {
-                if(timer.hasElapsed(0.25)){
-                    timer.stop(); timer.reset(); timerStarted = false;
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        } else {
-            timer.stop(); timer.reset(); timerStarted = false;
-            return false;
-        }
-        return false;
+        return m_leaderMotor.getOutputCurrent() > coneThreshold || m_followerMotor.getOutputCurrent() > coneThreshold;
     }
 
     public boolean motorStopped() {
@@ -142,10 +122,7 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
-        tempHasCube = hasCube() ? true : tempHasCube;
         SmartDashboard.putString("intake piece", getIntakePiece());
-        SmartDashboard.putBoolean("has cube", tempHasCube);
-        SmartDashboard.putNumber("timer", timer.get());
         SmartDashboard.putNumber("intake current", m_leaderMotor.getOutputCurrent());
         // SmartDashboard.putBoolean("intake deployed", getIntakeDeployed());
 
@@ -162,14 +139,14 @@ public class Intake extends SubsystemBase {
         }
 
         if (intakeState == IntakeStates.ON_OPEN_CUBE) {
-            if (cubeCounter > 10) {
+            if (cubeCounter > 8) {
                 CommandScheduler.getInstance()
                         .schedule(new WaitCommand(0.0).andThen(new SetIntake(IntakeStates.OFF_OPEN_CUBE)));
             }
         }
 
         if (intakeState == IntakeStates.ON_CLOSED_CONE) {
-            if (coneCounter > 12) {
+            if (coneCounter > 8) {
                 CommandScheduler.getInstance()
                         .schedule(new WaitCommand(0.0).andThen(new SetIntake(IntakeStates.OFF_CLOSED_CONE)));
             }

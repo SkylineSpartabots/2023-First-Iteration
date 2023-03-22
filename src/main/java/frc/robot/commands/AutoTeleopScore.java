@@ -40,6 +40,8 @@ public class AutoTeleopScore extends CommandBase {
                             new SetMechanism(s_AutomaticScoringSelector.getMechState()),
                             new InstantCommand(() -> finished = true)
                     ));
+        } else {
+            finished = true;
         }
     }
 

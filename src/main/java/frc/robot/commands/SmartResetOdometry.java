@@ -28,7 +28,7 @@ public class SmartResetOdometry extends CommandBase {
         s_Swerve = Swerve.getInstance();
         s_Limelight = Limelight.getInstance();
     }
-    
+
     @Override
     public void initialize() {
         timer.reset();
@@ -44,17 +44,16 @@ public class SmartResetOdometry extends CommandBase {
             Pose3d targetPose = Constants.Limelight.gameAprilTags[target.getFiducialId() - 1];
             SmartDashboard.putNumber("pose-amb", target.getPoseAmbiguity());
             Pose3d robotPose = PhotonUtils.estimateFieldToRobotAprilTag(
-                target.getBestCameraToTarget(), 
-                targetPose,
-                new Transform3d(Constants.Limelight.cameraOffsets, Constants.Limelight.cameraAngleOffsets)
-            );
-            // double ambi = target.getPoseAmbiguity();
-            
-            // if (ambi < 0.1) {
-            //     poseList.add(robotPose); 
-            // }
-            s_Swerve.resetOdometry(new Pose2d(robotPose.getX(), robotPose.getY(),
-                    Rotation2d.fromRadians(robotPose.getRotation().getZ())));
+                    target.getBestCameraToTarget(),
+                    targetPose,
+                    new Transform3d(Constants.Limelight.cameraOffsets, Constants.Limelight.cameraAngleOffsets));
+            double ambi = target.getPoseAmbiguity();
+
+            if (ambi < 0.08) {
+                s_Swerve.resetOdometry(new Pose2d(robotPose.getX(), robotPose.getY(),
+                        Rotation2d.fromRadians(robotPose.getRotation().getZ())));
+            }
+
             isReset = true;
         }
     }
@@ -63,28 +62,28 @@ public class SmartResetOdometry extends CommandBase {
     public boolean isFinished() {
         return timer.hasElapsed(0.2) || isReset;
     }
-    
+
     @Override
-    public void end(boolean interrupted){
+    public void end(boolean interrupted) {
         // timer.stop();
         // if (poseList.size() > 0) {
-        //     double x = 0;
-        //     double y = 0;
-        //     double angle = 0;
-        //     for (int i = 0; i < poseList.size(); i++) {
-        //         x += poseList.get(i).getX();
-        //         y += poseList.get(i).getY();
-        //         angle += poseList.get(i).getRotation().getZ();
-        //     }
+        // double x = 0;
+        // double y = 0;
+        // double angle = 0;
+        // for (int i = 0; i < poseList.size(); i++) {
+        // x += poseList.get(i).getX();
+        // y += poseList.get(i).getY();
+        // angle += poseList.get(i).getRotation().getZ();
+        // }
 
-        //     x /= poseList.size();
-        //     y /= poseList.size();
-        //     angle /= poseList.size();
+        // x /= poseList.size();
+        // y /= poseList.size();
+        // angle /= poseList.size();
 
-        //     s_Swerve.resetOdometry(new Pose2d(x, y, Rotation2d.fromRadians(angle)));
-        //     SmartDashboard.putNumber("robot-SO-x",  /*Units.metersToInches*/(x));
-        //     SmartDashboard.putNumber("robot-SO-y", /*Units.metersToInches*/(y));
-        //     SmartDashboard.putNumber("robot-SO-rot", Units.radiansToDegrees(angle));
+        // s_Swerve.resetOdometry(new Pose2d(x, y, Rotation2d.fromRadians(angle)));
+        // SmartDashboard.putNumber("robot-SO-x", /*Units.metersToInches*/(x));
+        // SmartDashboard.putNumber("robot-SO-y", /*Units.metersToInches*/(y));
+        // SmartDashboard.putNumber("robot-SO-rot", Units.radiansToDegrees(angle));
         // }
     }
 }

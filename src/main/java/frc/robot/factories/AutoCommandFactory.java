@@ -19,11 +19,14 @@ import java.util.List;
 
 import com.pathplanner.lib.PathConstraints;
 
+import frc.robot.AutomaticScoringSelector;
 import frc.robot.Constants;
 import frc.robot.commands.AutoBalance;
 import frc.robot.commands.ForwardUntilCommand;
+import frc.robot.commands.OnTheFlyGeneration;
 import frc.robot.commands.SetIntake;
 import frc.robot.commands.SetMechanism;
+import frc.robot.commands.SmartResetOdometry;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.CompleteMechanism.MechanismState;
 import frc.robot.subsystems.Intake.IntakeStates;
@@ -50,6 +53,8 @@ public class AutoCommandFactory {
                                 return selectedAuto = oneConeBackBottom();
                         case OneConeDockMiddle:
                                 return selectedAuto = oneConeDockMiddle();
+                        case OneConeDockMiddleCom:
+                                return selectedAuto = oneConeDockMiddleCom();
                         case OneHalfConeDockTop:
                                 return selectedAuto = oneHalfConeDockTop();
                         case TwoConeTop:
@@ -75,6 +80,7 @@ public class AutoCommandFactory {
                 OneCone,
                 OneConeBackBottom,
                 OneConeDockMiddle,
+                OneConeDockMiddleCom,
                 OneHalfConeDockTop,
                 TwoConeBottom,
                 TwoConeDockBottom,
@@ -123,7 +129,8 @@ public class AutoCommandFactory {
 
         public static void forwardUntilCommand() {
                 double driveSpeed = 0.2;
-                while (!Intake.getInstance().hasCube() && s_Swerve.getPose().getX() < 7) { //careful watch for hasCube vs hasCone
+                while (!Intake.getInstance().hasCube() && s_Swerve.getPose().getX() < 7) { // careful watch for hasCube
+                                                                                           // vs hasCone
                         s_Swerve.drive(
                                         new Translation2d(driveSpeed, 0).times(Constants.SwerveConstants.maxSpeed),
                                         0,
@@ -174,49 +181,80 @@ public class AutoCommandFactory {
 
         // one cube and then dock middle
         private static Command oneConeDockMiddle() {
-                PathPlannerTrajectory path = PathPlanner.loadPath("1 cone dock middle", new PathConstraints(2.0, 1.5));
+                PathPlannerTrajectory path = PathPlanner.loadPath("1 cone dock middle", new PathConstraints(2.0, 0.5));
                 Pose2d initPose = getPoseFromState(path.getInitialState(), 180);
                 return new SequentialCommandGroup(
                                 new InstantCommand(() -> s_Swerve.resetOdometry(initPose)),
-                                new SetMechanism(MechanismState.L3CUBE),
-                                new WaitCommand(1),
-                                new SetIntake(IntakeStates.REV_OPEN_CUBE),
-                                new WaitCommand(0.8),
-                                new SetIntake(IntakeStates.OFF_CLOSED_CONE),
-                                new SetMechanism(MechanismState.ZERO),
+                                // new SetMechanism(MechanismState.L3CONE),
+                                // new WaitCommand(1),
+                                // new SetIntake(IntakeStates.OFF_OPEN_CONE),
+                                // new WaitCommand(0.8),
+                                // new SetIntake(IntakeStates.OFF_CLOSED_CONE),
+                                // new SetMechanism(MechanismState.ZERO),
                                 followPathCommand(path),
+                                // new WaitCommand(0.3),
+                                new AutoBalance());
+        }
+
+        private static Command oneConeDockMiddleCom() {
+                List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("1 cone dock middle com",
+                                new PathConstraints(3.0, 1.0),
+                                new PathConstraints(2.0, 0.6),
+                                new PathConstraints(2.0, 0.5));
+                Pose2d initPose = getPoseFromState(pathGroup.get(0).getInitialState(), 180);
+                return new SequentialCommandGroup(
+                                new InstantCommand(() -> s_Swerve.resetOdometry(initPose)),
+                                // new SetMechanism(MechanismState.L3CONE),
+                                // new WaitCommand(1),
+                                // new SetIntake(IntakeStates.OFF_OPEN_CONE),
+                                // new WaitCommand(0.8),
+                                // new SetIntake(IntakeStates.OFF_CLOSED_CONE),
+                                // new SetMechanism(MechanismState.ZERO),
+                                followPathCommand(pathGroup.get(0)),
+                                followPathCommand(pathGroup.get(1)),
+                                // new WaitCommand(0.3),
+                                followPathCommand(pathGroup.get(2)),
                                 new AutoBalance());
         }
 
         // one cube and then one cone top
         private static Command twoConeTop() {
                 List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("2 cone top",
-                                new PathConstraints(4.0, 1),
-                                new PathConstraints(4.0, 1));
+                                new PathConstraints(5.0, 2),
+                                new PathConstraints(5.0, 2));
                 Pose2d initPose = getPoseFromState(pathGroup.get(0).getInitialState(), 180);
                 return new SequentialCommandGroup(
                                 new InstantCommand(() -> s_Swerve.resetOdometry(initPose)),
-                                new SetMechanism(MechanismState.L3CONE),
+                                new SetMechanism(MechanismState.L1CONE),
                                 new WaitCommand(0.5),
                                 new SetIntake(IntakeStates.OFF_OPEN_CONE),
                                 new WaitCommand(0.5),
                                 new InstantCommand(() -> s_Swerve.goalPoseParameters(
-                                                getPoseFromState(pathGroup.get(0).getEndState(), 0), 2.2, 2.2, 60)),
+                                                getPoseFromState(pathGroup.get(0).getEndState(), 0), 2.4, 2.4, 100)),
                                 new ParallelCommandGroup(
-                                                followPathCommand(pathGroup.get(0)).andThen(new InstantCommand(() -> s_Swerve.drive(new Translation2d(0,0), 0, false, false))),
+                                                followPathCommand(pathGroup.get(0))
+                                                                .andThen(new InstantCommand(
+                                                                                () -> s_Swerve.drive(
+                                                                                                new Translation2d(0, 0),
+                                                                                                0, false,
+                                                                                                false))),
                                                 new SetIntake(IntakeStates.ON_OPEN_CUBE),
-                                                new SetMechanism(MechanismState.ZERO)),
-                                                new WaitCommand(1.0).andThen(new SetMechanism(MechanismState.GROUNDINTAKE)).andThen(
-                                                        new ForwardUntilCommand()
-                                                ),
-                                                // new WaitUntilCommand(s_Swerve.inPosition).andThen(
-                                                //                 new SetMechanism(MechanismState.GROUNDINTAKE))),
+                                                new SetMechanism(MechanismState.ZERO),
+                                                // new WaitCommand(1.0).andThen(new
+                                                // SetMechanism(MechanismState.GROUNDINTAKE))
+                                                // .andThen(new ForwardUntilCommand()),
+                                                new WaitUntilCommand(s_Swerve.inPosition).andThen(
+                                                                new SetMechanism(MechanismState.GROUNDINTAKE))),
                                 new WaitUntilCommand(s_Intake.motorStopped),
-                                // new WaitCommand(1.0),
+                                new WaitCommand(0.3),
                                 new ParallelCommandGroup(
                                                 followPathCommand(pathGroup.get(1)),
                                                 new SetMechanism(MechanismState.ZERO)),
-                                new SetMechanism(MechanismState.L3CUBE).andThen(new WaitCommand(0.8)),
+                                new SmartResetOdometry(),
+                                new OnTheFlyGeneration(AutomaticScoringSelector.getInstance()
+                                                .convertToRed(new Pose2d(new Translation2d(1.85, 4.42),
+                                                                Rotation2d.fromDegrees(180)))),
+                                new SetMechanism(MechanismState.L1CUBE).andThen(new WaitCommand(0.8)),
                                 new SetIntake(IntakeStates.REV_OPEN_CUBE));
         }
 

@@ -36,7 +36,7 @@ public class SetElevator extends CommandBase {
 		if (Math.abs(s_Elevator.getCANCoderPosition() - s_Elevator.getCANCoderSetpoint()) < 15) {
 			elevatorVoltage = 0.7;
 		}
-		s_Elevator.setVoltage(elevatorVoltage);
+		// s_Elevator.setVoltage(elevatorVoltage);
 	}
 
 	@Override
