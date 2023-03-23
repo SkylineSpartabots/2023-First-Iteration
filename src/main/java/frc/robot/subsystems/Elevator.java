@@ -132,9 +132,9 @@ public class Elevator extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("eleCANpos", getCANCoderPosition());
         SmartDashboard.putNumber("elePosSet", getCANCoderSetpoint());
+        SmartDashboard.putNumber("eleCurrent", getCurrent());
         // SmartDashboard.putNumber("ele set velo", getVelocitySetpoint());
         // SmartDashboard.putNumber("ele set volt", getVoltageSetpoint());
         // SmartDashboard.putBoolean("elevator ", elevatorError());
-        SmartDashboard.putNumber("eleCurrent", getCurrent());
     }
 }

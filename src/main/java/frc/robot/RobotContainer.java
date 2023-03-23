@@ -153,7 +153,7 @@ public class RobotContainer {
         driverA.onTrue(new InstantCommand(() -> zeroMech()));
         driverX.onTrue(new InstantCommand(() -> reverseIntake()));
         driverB.onTrue(new ZeroElevator());
-        driverY.onTrue(new AutoBalance());
+        driverY.onTrue(new ZeroArm());
 
         // operator controls
         operatorStart.onTrue(new SmartResetOdometry());

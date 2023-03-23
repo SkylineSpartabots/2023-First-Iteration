@@ -117,11 +117,14 @@ public class Arm extends SubsystemBase {
     public boolean armError() {
         return armCANCoder.getMagnetFieldStrength() == MagnetFieldStrength.BadRange_RedLED;
     }
-
+    public double getCurrent() {
+        return mArmMotor.getStatorCurrent();
+    }
     @Override
     public void periodic() {
         SmartDashboard.putNumber("armCANpos", getCANCoderPosition());
 		SmartDashboard.putNumber("armPosSet", getCANCoderSetpoint());
+		SmartDashboard.putNumber("arm curr", getCurrent());
 		// SmartDashboard.putNumber("arm set velo", getVelocitySetpoint());
 		// SmartDashboard.putNumber("arm set volt", getVoltageSetpoint());
         // SmartDashboard.putNumber("arm CANCoder Voltage", getCANCoderVoltage());
