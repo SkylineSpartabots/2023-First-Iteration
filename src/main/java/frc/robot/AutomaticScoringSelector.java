@@ -1,9 +1,5 @@
 package frc.robot;
 
-import java.sql.Driver;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -11,17 +7,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.Arm.ArmStates;
 import frc.robot.subsystems.CompleteMechanism.MechanismState;
-import frc.robot.subsystems.Elevator.ElevatorStates;
-import frc.robot.subsystems.Intake.IntakeStates;
-import frc.robot.subsystems.Limelight;
-import frc.lib.util.COTSFalconSwerveConstants.driveGearRatios;
 
 public final class AutomaticScoringSelector {
 

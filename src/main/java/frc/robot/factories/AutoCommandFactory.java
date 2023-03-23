@@ -10,10 +10,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 
 import java.util.List;
 
@@ -22,7 +20,6 @@ import com.pathplanner.lib.PathConstraints;
 import frc.robot.AutomaticScoringSelector;
 import frc.robot.Constants;
 import frc.robot.commands.AutoBalance;
-import frc.robot.commands.ForwardUntilCommand;
 import frc.robot.commands.OnTheFlyGeneration;
 import frc.robot.commands.SetIntake;
 import frc.robot.commands.SetMechanism;
@@ -113,7 +110,7 @@ public class AutoCommandFactory {
                                                 yController,
                                                 thetaController,
                                                 s_Swerve.chassisConsumer,
-                                                true,
+                                                true, // TODO
                                                 s_Swerve));
                 return lastCommand;
         }
@@ -185,12 +182,12 @@ public class AutoCommandFactory {
                 Pose2d initPose = getPoseFromState(path.getInitialState(), 180);
                 return new SequentialCommandGroup(
                                 new InstantCommand(() -> s_Swerve.resetOdometry(initPose)),
-                                // new SetMechanism(MechanismState.L3CONE),
-                                // new WaitCommand(1),
-                                // new SetIntake(IntakeStates.OFF_OPEN_CONE),
-                                // new WaitCommand(0.8),
-                                // new SetIntake(IntakeStates.OFF_CLOSED_CONE),
-                                // new SetMechanism(MechanismState.ZERO),
+                                new SetMechanism(MechanismState.L3CONE),
+                                new WaitCommand(1),
+                                new SetIntake(IntakeStates.OFF_OPEN_CONE),
+                                new WaitCommand(0.8),
+                                new SetIntake(IntakeStates.OFF_CLOSED_CONE),
+                                new SetMechanism(MechanismState.ZERO),
                                 followPathCommand(path),
                                 // new WaitCommand(0.3),
                                 new AutoBalance());
@@ -204,12 +201,12 @@ public class AutoCommandFactory {
                 Pose2d initPose = getPoseFromState(pathGroup.get(0).getInitialState(), 180);
                 return new SequentialCommandGroup(
                                 new InstantCommand(() -> s_Swerve.resetOdometry(initPose)),
-                                // new SetMechanism(MechanismState.L3CONE),
-                                // new WaitCommand(1),
-                                // new SetIntake(IntakeStates.OFF_OPEN_CONE),
-                                // new WaitCommand(0.8),
-                                // new SetIntake(IntakeStates.OFF_CLOSED_CONE),
-                                // new SetMechanism(MechanismState.ZERO),
+                                new SetMechanism(MechanismState.L3CONE),
+                                new WaitCommand(1),
+                                new SetIntake(IntakeStates.OFF_OPEN_CONE),
+                                new WaitCommand(0.8),
+                                new SetIntake(IntakeStates.OFF_CLOSED_CONE),
+                                new SetMechanism(MechanismState.ZERO),
                                 followPathCommand(pathGroup.get(0)),
                                 followPathCommand(pathGroup.get(1)),
                                 // new WaitCommand(0.3),
