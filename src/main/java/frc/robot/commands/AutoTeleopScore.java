@@ -33,6 +33,10 @@ public class AutoTeleopScore extends CommandBase {
     public void initialize() {
         finished = false;
         if (s_Limelight.hasTarget()) {
+            if (s_Limelight.getBestTarget().getPoseAmbiguity() > 0.08) {
+                finished = true;
+                return;
+            }
             CommandScheduler.getInstance().schedule(
                     new SequentialCommandGroup(
                             new SmartResetOdometry(),

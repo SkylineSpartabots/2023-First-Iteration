@@ -21,14 +21,11 @@ public final class AutomaticScoringSelector {
 
     // private ScoringPosition[][] grid = new ScoringPosition[3][9]; // [row][column] 0 row is l1, 0 column is the one
                                                                   // farthest from load zone
-    private boolean[][] isSelected = new boolean[3][9];
-    private GenericEntry[][] selectionDisplay = new GenericEntry[3][9];
     public GenericEntry currPosEntry, currLevelEntry, currentXPosEntry, currentYPosEntry, realXEntry, realYEntry, realRotEntry;
 
     public int currPos = 0;
     public int currLevel = 0;
     public double currentXpos, currentYpos; 
-    private int selectedRow = -1, selectedColumn = -1;
 
     public static AutomaticScoringSelector getInstance() {
         if (instance == null) {
