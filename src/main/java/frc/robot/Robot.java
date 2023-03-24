@@ -62,7 +62,7 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().schedule(new SetMechanism(MechanismState.ZERO));
     }
 
-    public void getRedPose() {
+    public static void getRedPose() {
         for (int i = 0; i < 8; i++) {
             Pose3d a = Constants.Limelight.blueGameAprilTags[i];
             Constants.Limelight.redGameAprilTags[i] = new Pose3d(Constants.FIELD_HEIGHT_METERS - a.getX(),

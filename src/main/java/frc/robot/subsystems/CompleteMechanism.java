@@ -13,6 +13,7 @@ public class CompleteMechanism extends SubsystemBase {
     Arm s_Arm;
     Elevator s_Elevator;
     Intake s_Intake;
+    
 
     public CompleteMechanism() {
         s_Arm = Arm.getInstance();

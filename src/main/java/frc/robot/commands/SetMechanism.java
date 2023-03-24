@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CompleteMechanism;
 import frc.robot.subsystems.CompleteMechanism.MechanismState;
@@ -11,6 +12,7 @@ public class SetMechanism extends CommandBase {
 
     private MechanismState state;
     private CompleteMechanism s_Mechanism;
+    boolean done; 
 
     public SetMechanism(MechanismState state) {
         this.state = state;
@@ -19,6 +21,8 @@ public class SetMechanism extends CommandBase {
 
     @Override
     public void initialize() {
+        done = false; 
+        SmartDashboard.putBoolean("Set Mech", done);
         if(state == MechanismState.L3CUBE || state == MechanismState.L3CONE) {
             CommandScheduler.getInstance().schedule(
                 new ParallelCommandGroup(
@@ -37,11 +41,17 @@ public class SetMechanism extends CommandBase {
 
     @Override
     public void execute() {
-
+        
     }
 
     @Override
     public boolean isFinished() {
         return s_Mechanism.inState();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        done = true;
+        SmartDashboard.putBoolean("Set Mech", done);
     }
 }

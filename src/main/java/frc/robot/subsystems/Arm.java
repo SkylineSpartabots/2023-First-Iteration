@@ -38,7 +38,7 @@ public class Arm extends SubsystemBase {
         DOUBLESUBSTATION(68), 
 
         L1CONE(9), 
-        L2CONE(37), 
+        L2CONE(38), 
         L3CONE(58), 
 
         L1CUBE(11), 

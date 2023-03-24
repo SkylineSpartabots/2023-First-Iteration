@@ -100,7 +100,7 @@ public class Intake extends SubsystemBase {
         return m_leaderMotor.getOutputCurrent() > coneThreshold || m_followerMotor.getOutputCurrent() > coneThreshold;
     }
 
-    public double cubeThreshold = 7.0; 
+    public double cubeThreshold = 7.8; 
 
     public boolean hasCube() {
         return m_leaderMotor.getOutputCurrent() > coneThreshold || m_followerMotor.getOutputCurrent() > coneThreshold;
@@ -138,14 +138,14 @@ public class Intake extends SubsystemBase {
         }
 
         if (intakeState == IntakeStates.ON_OPEN_CUBE) {
-            if (cubeCounter > 11) {
+            if (cubeCounter > 10) {
                 CommandScheduler.getInstance()
                         .schedule(new WaitCommand(0.0).andThen(new SetIntake(IntakeStates.OFF_OPEN_CUBE)));
             }
         }
 
         if (intakeState == IntakeStates.ON_CLOSED_CONE) {
-            if (coneCounter > 11) {
+            if (coneCounter > 10) {
                 CommandScheduler.getInstance()
                         .schedule(new WaitCommand(0.0).andThen(new SetIntake(IntakeStates.OFF_CLOSED_CONE)));
             }

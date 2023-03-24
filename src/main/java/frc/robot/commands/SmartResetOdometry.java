@@ -6,6 +6,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Swerve;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -28,6 +29,7 @@ public class SmartResetOdometry extends CommandBase {
 
     @Override
     public void initialize() {
+        Robot.getRedPose();
         timer.reset();
         timer.start();
     }
