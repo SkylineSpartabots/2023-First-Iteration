@@ -67,7 +67,8 @@ public final class Constants {
                 new Pose3d(16.18, 6.75, 0.69, new Rotation3d(0, 0, Math.PI)),
                 new Pose3d(0.36, 6.75, 0.69, new Rotation3d(0, 0, 0)),
                 new Pose3d(1.03, 4.42, 0.46, new Rotation3d(0, 0, 0)),
-                new Pose3d(1.03, 2.74, 0.46, new Rotation3d(0, 0, 0)),
+                new Pose3d(1.03, 4.42, 0.46, new Rotation3d(0, 0, 0)),
+                // new Pose3d(1.03, 2.74, 0.46, new Rotation3d(0, 0, 0)),
                 new Pose3d(1.03, 1.07, 0.46, new Rotation3d(0, 0, 0))
         };
         
@@ -79,7 +80,8 @@ public final class Constants {
                 new Pose2d(16.18, 6.75, new Rotation2d(Math.PI)),
                 new Pose2d(0.36, 6.75, new Rotation2d(0)),
                 new Pose2d(1.03, 4.42, new Rotation2d(0)),
-                new Pose2d(1.03, 2.74, new Rotation2d(0)),
+                new Pose2d(1.03, 4.42, new Rotation2d(0)),
+                // new Pose2d(1.03, 2.74, new Rotation2d(0)),
                 new Pose2d(1.03, 1.07, new Rotation2d(0))
         };
         

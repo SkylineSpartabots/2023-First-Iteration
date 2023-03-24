@@ -4,6 +4,8 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -131,11 +133,11 @@ public class AutoCommandFactory {
                         s_Swerve.drive(
                                         new Translation2d(driveSpeed, 0).times(Constants.SwerveConstants.maxSpeed),
                                         0,
-                                        true,
-                                        true);
+                                        false,
+                                        false);
                 }
                 s_Swerve.drive(
-                                new Translation2d(0, 0), 0, true, true);
+                                new Translation2d(0, 0), 0, false, false);
         }
 
         // test auto for testing purposes
@@ -214,6 +216,52 @@ public class AutoCommandFactory {
                                 new AutoBalance());
         }
 
+        private static boolean isOverHalfway(){
+                return s_Swerve.getPose().getX() > 7;
+        }
+
+        private static Command babyTwoConeTop(){
+                List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("2 cone top",
+                                new PathConstraints(5.0, 1.0),
+                                new PathConstraints(5.0, 2));
+                Pose2d initPose = getPoseFromState(pathGroup.get(0).getInitialState(), 180);
+                return new SequentialCommandGroup(
+                                new InstantCommand(() -> s_Swerve.resetOdometry(initPose)),
+                                new SetMechanism(MechanismState.L3CONE),
+                                new WaitCommand(0.5),
+                                new SetIntake(IntakeStates.OFF_OPEN_CONE),
+                                new WaitCommand(0.5),
+                                new InstantCommand(() -> s_Swerve.goalPoseParameters(
+                                                getPoseFromState(pathGroup.get(0).getEndState(), 0), 3.2, 3.0, 180)),
+                                new InstantCommand(() -> s_Swerve.drive(new Translation2d(0, 0), 180, false, false)),
+                                new ParallelCommandGroup(
+                                                followPathCommand(pathGroup.get(0))
+                                                                .andThen(new InstantCommand(
+                                                                                () -> s_Swerve.drive(
+                                                                                                new Translation2d(0, 0),
+                                                                                                0, false,
+                                                                                                false))),
+                                                new SetIntake(IntakeStates.ON_OPEN_CUBE),
+                                                new SetMechanism(MechanismState.ZERO),
+                                                new WaitUntilCommand(s_Swerve.inPosition).andThen(
+                                                                new SetMechanism(MechanismState.GROUNDINTAKE))
+                                                                ).andThen(new InstantCommand(() -> s_Swerve.drive(new Translation2d(0.3, 0).times(Constants.SwerveConstants.maxSpeed), 
+                                                                0, false, false))),
+                                new WaitUntilCommand(s_Intake.motorStopped),
+                                new InstantCommand(()-> s_Swerve.drive(new Translation2d(0, 0), 0, false, false)),
+                                new WaitCommand(0.3),
+                                new ParallelCommandGroup(
+                                                followPathCommand(pathGroup.get(1)),
+                                                new SetMechanism(MechanismState.ZERO)),
+                                new SmartResetOdometry(), // AS
+                                // new OnTheFlyGeneration(AutomaticScoringSelector.getInstance()
+                                //                 .convertToRed(new Pose2d(new Translation2d(1.85, 4.42),
+                                //                                 Rotation2d.fromDegrees(180)))), // AS
+                                followPathCommand(pathGroup.get(2)),
+                                new SetMechanism(MechanismState.L3CUBE).andThen(new WaitCommand(0.8)),
+                                new SetIntake(IntakeStates.REV_OPEN_CUBE));
+        }
+
         // one cube and then one cone top
         private static Command twoConeTop() {
                 List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("2 cone top",
@@ -239,8 +287,10 @@ public class AutoCommandFactory {
                                                 new SetMechanism(MechanismState.ZERO),
                                                 new WaitUntilCommand(s_Swerve.inPosition).andThen(
                                                                 new SetMechanism(MechanismState.GROUNDINTAKE))
-                                                                ),
-                                new WaitUntilCommand(s_Intake.motorStopped),
+                                                                ).andThen(new InstantCommand(() -> s_Swerve.drive(new Translation2d(0.3, 0).times(Constants.SwerveConstants.maxSpeed), 
+                                                                0, false, false))),
+                                new WaitUntilCommand(s_Intake.shouldStopOnAuto),
+                                new InstantCommand(()-> s_Swerve.drive(new Translation2d(0, 0), 0, false, false)),
                                 new WaitCommand(0.3),
                                 new ParallelCommandGroup(
                                                 followPathCommand(pathGroup.get(1)),

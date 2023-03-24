@@ -18,11 +18,13 @@ import frc.robot.commands.SetIntake;
 public class Intake extends SubsystemBase {
 
     private static Intake instance;
+    private Swerve s_Swerve;
     CANSparkMax m_leaderMotor, m_followerMotor;
     Solenoid m_solenoid;
     Compressor m_compressor;
     public IntakeStates intakeState = IntakeStates.OFF_CLOSED_CONE;
     public BooleanSupplier motorStopped = () -> motorStopped();
+    public BooleanSupplier shouldStopOnAuto = () -> stopMovingOnAuto();
     int cubeCounter;
     int coneCounter;
 
@@ -34,6 +36,7 @@ public class Intake extends SubsystemBase {
     }
 
     Intake() {
+        s_Swerve = Swerve.getInstance();
         cubeCounter = 0;
         coneCounter = 0;
         m_solenoid = new Solenoid(
@@ -108,6 +111,10 @@ public class Intake extends SubsystemBase {
 
     public boolean motorStopped() {
         return intakeState == IntakeStates.OFF_CLOSED_CONE || intakeState == IntakeStates.OFF_OPEN_CUBE;
+    }
+
+    public boolean stopMovingOnAuto(){
+        return intakeState == IntakeStates.OFF_CLOSED_CONE || intakeState == IntakeStates.OFF_OPEN_CUBE || s_Swerve.getPose().getX() > 7;
     }
 
     // private double layedConeThreshold = 0;
