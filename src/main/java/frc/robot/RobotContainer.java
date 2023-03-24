@@ -144,7 +144,7 @@ public class RobotContainer {
         driverX.onTrue(new InstantCommand(() -> reverseIntake()));
         driverB.onTrue(new ZeroElevator());
         driverY.onTrue(new ZeroArm());
-
+        
         // operator controls
         operatorStart.onTrue(new SmartResetOdometry());
         operatorBack.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
@@ -157,6 +157,8 @@ public class RobotContainer {
         operatorLeftBumper.onTrue(new InstantCommand(() -> selector.setLevel(0)));
 
         operatorRightBumper.onTrue(new AutoTeleopScore());
+        operatorY.whileTrue(new InstantCommand(() -> s_Arm.setVoltage(-1.5))).onFalse(new InstantCommand(() -> s_Arm.setVoltage(0)));
+
     }
 
     boolean cone = true;
