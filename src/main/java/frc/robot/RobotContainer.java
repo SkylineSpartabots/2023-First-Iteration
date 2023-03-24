@@ -157,8 +157,8 @@ public class RobotContainer {
         operatorLeftBumper.onTrue(new InstantCommand(() -> selector.setLevel(0)));
 
         operatorRightBumper.onTrue(new AutoTeleopScore());
-        operatorY.whileTrue(new InstantCommand(() -> s_Arm.setVoltage(-1.5))).onFalse(new InstantCommand(() -> s_Arm.setVoltage(0)));
-
+        // operatorY.whileTrue(new InstantCommand(() -> s_Arm.setVoltage(-1.5))).onFalse(new InstantCommand(() -> s_Arm.setVoltage(0)));
+        
     }
 
     boolean cone = true;
