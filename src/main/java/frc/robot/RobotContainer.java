@@ -139,6 +139,7 @@ public class RobotContainer {
         driverDpadDown.onTrue(new InstantCommand(() -> s_CompleteMechanism.l1State()));
         driverDpadRight.onTrue(new InstantCommand(() -> s_CompleteMechanism.l2State()));
         driverDpadUp.onTrue(new InstantCommand(() -> s_CompleteMechanism.l3State()));
+        driverDpadLeft.onTrue(new AutoBalance());
 
         driverA.onTrue(new InstantCommand(() -> zeroMech()));
         driverX.onTrue(new InstantCommand(() -> reverseIntake()));
@@ -157,8 +158,6 @@ public class RobotContainer {
         operatorLeftBumper.onTrue(new InstantCommand(() -> selector.setLevel(0)));
 
         operatorRightBumper.onTrue(new AutoTeleopScore());
-        // operatorY.whileTrue(new InstantCommand(() -> s_Arm.setVoltage(-1.5))).onFalse(new InstantCommand(() -> s_Arm.setVoltage(0)));
-        
     }
 
     boolean cone = true;

@@ -35,8 +35,8 @@ public class Elevator extends SubsystemBase {
         SLEEPCONEINTAKE(2371),
         SLEEPCONEINTAKE2(2076),
         // LAYEDCONE(499),
-        SUBSTATION(175), 
-        DOUBLESUBSTATION(2200),
+        SUBSTATION(100), 
+        DOUBLESUBSTATION(2080),
 
         L1CONE(50),
         L2CONE(950),

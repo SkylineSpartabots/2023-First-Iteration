@@ -61,7 +61,7 @@ public class OnTheFlyGeneration extends CommandBase {
         // SmartDashboard.putNumber("OTF-end-y", targetPos.getY());
         CommandScheduler.getInstance().schedule(
             new SequentialCommandGroup(
-                AutoCommandFactory.followPathCommand(trajectory),
+                AutoCommandFactory.followPathCommandTeleOP(trajectory),
                 new InstantCommand(() -> {
                     done = true;
                 })

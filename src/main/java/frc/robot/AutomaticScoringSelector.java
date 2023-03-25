@@ -35,14 +35,14 @@ public final class AutomaticScoringSelector {
     }
 
     Pose2d[] allPoses = new Pose2d[9];
+    double x = 1.68; //should be the same for every default scoring position
+    double y = 0.59 - 0.1; //only one that changes
+    double yIncrem = Units.inchesToMeters(22); //how much each y varies by - currently unmeasured
 
 
     public AutomaticScoringSelector() {
         s_Swerve = Swerve.getInstance();
-        double x = 1.68; //should be the same for every default scoring position
-        double y = 0.59 - 0.1; //only one that changes
-        double yIncrem = Units.inchesToMeters(22); //how much each y varies by - currently unmeasured
-
+        
         
         for (int i = 0; i < 9; i++) {
             allPoses[DriverStation.getAlliance() == DriverStation.Alliance.Blue ? 8 - i : i] = new Pose2d(x, y + yIncrem * i, new Rotation2d(Math.PI));
@@ -104,6 +104,9 @@ public final class AutomaticScoringSelector {
     }
 
     public Pose2d convertToRed(Pose2d a) {
+        for (int i = 0; i < 9; i++) {
+            allPoses[DriverStation.getAlliance() == DriverStation.Alliance.Blue ? 8 - i : i] = new Pose2d(x, y + yIncrem * i, new Rotation2d(Math.PI));
+        }
         if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
             Pose2d b = new Pose2d(a.getX(), Constants.FIELD_WIDTH_METERS - a.getY(), a.getRotation());
             return b;

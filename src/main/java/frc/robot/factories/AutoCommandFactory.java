@@ -117,6 +117,25 @@ public class AutoCommandFactory {
                 return lastCommand;
         }
 
+        public static Command followPathCommandTeleOP(PathPlannerTrajectory path) {
+                PIDController xController = new PIDController(5, 0, 0);
+                PIDController yController = new PIDController(5, 0, 0);
+                PIDController thetaController = new PIDController(2, 0, 0);
+                thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+                lastCommand = new SequentialCommandGroup(
+                                new PPSwerveControllerCommand(
+                                                path,
+                                                s_Swerve.poseSupplier,
+                                                xController,
+                                                yController,
+                                                thetaController,
+                                                s_Swerve.chassisConsumer,
+                                                false, // TODO
+                                                s_Swerve));
+                return lastCommand;
+        }
+
         // used to generate init and end poses for trajectories from path states, have
         // to provide rotation manually
         public static Pose2d getPoseFromState(PathPlannerState state, double angleRotation) {
@@ -204,9 +223,9 @@ public class AutoCommandFactory {
                 return new SequentialCommandGroup(
                                 new InstantCommand(() -> s_Swerve.resetOdometry(initPose)),
                                 new SetMechanism(MechanismState.L3CONE),
-                                new WaitCommand(1),
-                                new SetIntake(IntakeStates.OFF_OPEN_CONE),
                                 new WaitCommand(0.8),
+                                new SetIntake(IntakeStates.OFF_OPEN_CONE),
+                                new WaitCommand(0.5),
                                 new SetIntake(IntakeStates.OFF_CLOSED_CONE),
                                 new SetMechanism(MechanismState.ZERO),
                                 followPathCommand(pathGroup.get(0)),
