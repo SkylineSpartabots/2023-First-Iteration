@@ -45,7 +45,6 @@ public class CompleteMechanism extends SubsystemBase {
         // L3LAYEDCONE(ElevatorStates.L3LAYEDCONE, ArmStates.L3LAYEDCONE),
 
         GROUNDINTAKE(ElevatorStates.GROUNDINTAKE, ArmStates.GROUNDINTAKE),
-        SLEEPCONEINTAKE(ElevatorStates.SLEEPCONEINTAKE, ArmStates.SLEEPCONEINTAKE),
         // LAYEDCONE(ElevatorStates.LAYEDCONE, ArmStates.LAYEDCONE),
         SUBSTATION(ElevatorStates.SUBSTATION, ArmStates.SUBSTATION),
         CONEDOUBLESUBSTATION(ElevatorStates.CONEDOUBLESUBSTATION, ArmStates.CONEDOUBLESUBSTATION),

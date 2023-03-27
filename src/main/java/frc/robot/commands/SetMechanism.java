@@ -1,6 +1,9 @@
+/*
+ set mechanism command to control the arm and elevator mechanisms
+*/
+
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.CompleteMechanism;
 import frc.robot.subsystems.CompleteMechanism.MechanismState;
@@ -22,7 +25,7 @@ public class SetMechanism extends CommandBase {
     @Override
     public void initialize() {
         done = false; 
-        SmartDashboard.putBoolean("Set Mech", done);
+        // slight arm delay if the new state L3 to prevent arm from hitting the scoring structures
         if(state == MechanismState.L3CUBE || state == MechanismState.L3CONE) {
             CommandScheduler.getInstance().schedule(
                 new ParallelCommandGroup(
@@ -46,12 +49,13 @@ public class SetMechanism extends CommandBase {
 
     @Override
     public boolean isFinished() {
+        // ends when both mechanisms are within a certain threshold from current pos to goal pos
+        // the set arm and set elevator commands will still perpetually run though
         return s_Mechanism.inState();
     }
 
     @Override
     public void end(boolean interrupted) {
         done = true;
-        SmartDashboard.putBoolean("Set Mech", done);
     }
 }

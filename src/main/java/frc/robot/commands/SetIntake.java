@@ -1,3 +1,7 @@
+/*
+ set intake command to control intake arm mechanism
+*/
+
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -13,30 +17,15 @@ public class SetIntake extends CommandBase {
     }
 
     public void initialize() {
+        // calls the method with the new intake state that will change it
         s_Intake.setState(state);
     }    
 
     public void execute() {
     }
 
-    // @Override
-    // public void end(boolean interrupted) {
-    //     if(state == IntakeStates.ON_RETRACTED){
-    //         s_Intake.setState(IntakeStates.OFF_RETRACTED);
-    //     } else if (state == IntakeStates.ON_DEPLOYED){
-    //         s_Intake.setState(IntakeStates.OFF_DEPLOYED);
-    //     }
-    // }
-
     @Override
     public boolean isFinished() {
-        // if(state == IntakeStates.ON_RETRACTED || state == IntakeStates.ON_DEPLOYED){
-        //     if (s_Intake.hasGamePiece()){
-        //         return true;
-        //     }
-        //     return false;
-        // }
         return true;
-        // return true;
     }
 }

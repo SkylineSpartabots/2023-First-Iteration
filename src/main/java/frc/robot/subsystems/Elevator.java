@@ -1,3 +1,7 @@
+/*
+ elevator subsystem, encapsulates methods to control the elevator mechanism
+*/
+
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -27,13 +31,12 @@ public class Elevator extends SubsystemBase {
     CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
     ElevatorStates elevatorState = ElevatorStates.ZERO;
 
-    public enum ElevatorStates { 
+    // all positions for the elevator mechanism
+    public enum ElevatorStates {
         ZERO(50),
         REALZERO(0),
 
         GROUNDINTAKE(50),
-        SLEEPCONEINTAKE(2371),
-        SLEEPCONEINTAKE2(2076),
         // LAYEDCONE(499),
         SUBSTATION(100), 
         CONEDOUBLESUBSTATION(2030),
@@ -58,6 +61,8 @@ public class Elevator extends SubsystemBase {
         }
     }
 
+    // initializes hardward components, 2 motors and CANcoder
+    // one of the motor in in follower moder
     public Elevator() {
         mLeaderElevatorMotor = new WPI_TalonFX(Constants.HardwarePorts.elevatorLeaderMotor);
         configureMotor(mLeaderElevatorMotor, true);
@@ -69,6 +74,7 @@ public class Elevator extends SubsystemBase {
         setCANCoderPosition(0);
     }
 
+    // sets motor configurations
     private void configureMotor(WPI_TalonFX talon, boolean inverted) {
         talon.setInverted(inverted);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
@@ -79,6 +85,9 @@ public class Elevator extends SubsystemBase {
         talon.config_kI(0, 0, Constants.timeOutMs);
         talon.config_kD(0, 0, Constants.timeOutMs);
     }
+
+    // these methods are all pretty straighforward to understand
+    // they do what their name suggests
 
     public void setVelocity(double velocity) {
         this.velocity = velocity;

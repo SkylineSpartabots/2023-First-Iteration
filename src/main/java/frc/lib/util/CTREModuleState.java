@@ -1,3 +1,8 @@
+/* 
+swerve module states, used by the swerve drivetrain library we use (team 364)
+https://github.com/Team364/BaseFalconSwerve
+*/
+
 package frc.lib.util;
 
 import edu.wpi.first.math.geometry.Rotation2d;

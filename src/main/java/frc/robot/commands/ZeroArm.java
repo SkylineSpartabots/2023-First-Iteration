@@ -1,3 +1,7 @@
+/*
+ zero arm command to move arm back all the way inside the robot
+*/
+
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -16,6 +20,7 @@ public class ZeroArm extends CommandBase {
 
     @Override
     public void initialize() {
+        // sets arm voltage to a constant low voltage to make it move back
         s_Arm.setState(ArmStates.REALZERO);
         s_Arm.setVoltage(downVoltage);
     }
@@ -33,6 +38,8 @@ public class ZeroArm extends CommandBase {
 
     @Override
     public boolean isFinished() {
+        // when current spike is detected, basically when it is all the
+        // way back in and hits the robot, the command ends
         if (s_Arm.getCurrent() > currentThreshold) {
             return true;
         }

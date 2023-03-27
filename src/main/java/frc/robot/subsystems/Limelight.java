@@ -1,3 +1,7 @@
+/*
+ limelight subsystem, encapsulates methods to use the limelight
+*/
+
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.util.Units;
@@ -43,12 +47,17 @@ public class Limelight extends SubsystemBase {
 		return false;
 	}
 
+	// gets the target that the limelight detects
+	// has information about target distance and position relative to robot
 	public PhotonTrackedTarget getBestTarget() {
 		if (hasTarget()) {
 			lastTarget = result.getBestTarget();
 		}
 		return lastTarget;
 	}
+
+	// these methods are all pretty straighforward to understand
+    // they do what their name suggests
 
 	public double getYaw() {
 		if (hasTarget()) {

@@ -1,0 +1,3 @@
+This is the .path files for all the path planner generated trajectories. 
+Whenever you want to run one of these paths you will need to call the path with the 
+file name of the given path in the path planner library. (see AutoCommandFactory.java)

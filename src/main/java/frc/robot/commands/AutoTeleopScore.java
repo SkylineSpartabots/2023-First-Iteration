@@ -1,7 +1,10 @@
+/*
+ auto score command to make the robot automatically move and deploy mechanisms
+*/
+
 package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -31,6 +34,8 @@ public class AutoTeleopScore extends CommandBase {
 
     @Override
     public void initialize() {
+        // if the limelight is detecing an april tag then resest odometry and then use OTF 
+        // to generate a path from robot current pose to target pose and then deploy mechanisms
         finished = false;
         if (s_Limelight.hasTarget()) {
             if (s_Limelight.getBestTarget().getPoseAmbiguity() > 0.08) {
@@ -42,8 +47,7 @@ public class AutoTeleopScore extends CommandBase {
                             new SmartResetOdometry(),
                             new OnTheFlyGeneration(s_AutomaticScoringSelector.getSelectedPose()),
                             new SetMechanism(s_AutomaticScoringSelector.getMechState()),
-                            new InstantCommand(() -> finished = true)
-                    ));
+                            new InstantCommand(() -> finished = true)));
         } else {
             finished = true;
         }
@@ -55,9 +59,6 @@ public class AutoTeleopScore extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        if (finished) {
-            SmartDashboard.putBoolean("AutoTeleop", false);
-        }
         return finished;
     }
 

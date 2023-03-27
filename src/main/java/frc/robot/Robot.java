@@ -1,3 +1,8 @@
+/* 
+ robot class which has all the different states the robot can be in
+ teleop init, teleop periodic, auto init, auto periodic, etc
+*/
+
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -41,8 +46,10 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
+        // converts poses for targets and other stuff to red
         getRedPose();
         ctreConfigs = new CTREConfigs();
+        // sendable chooser for autos
         m_chooser.addOption("Test", AutoCommandFactory.AutoType.Test);
         m_chooser.addOption("1C", AutoCommandFactory.AutoType.OneCone);
         m_chooser.addOption("1C B Back", AutoCommandFactory.AutoType.OneConeBackBottom);
@@ -78,7 +85,6 @@ public class Robot extends TimedRobot {
             Constants.Limelight.gameAprilTags = Constants.Limelight.blueGameAprilTags;
             Constants.Limelight.gameAprilTags2d = Constants.Limelight.blueGameAprilTags2d;
         }
-
     }
 
     /**

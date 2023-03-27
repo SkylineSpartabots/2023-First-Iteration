@@ -1,3 +1,7 @@
+/*
+ smart reset odometry command used to reset swerve odo from april tag and limelight
+*/
+
 package frc.robot.commands;
 
 import org.photonvision.PhotonUtils;
@@ -20,7 +24,6 @@ public class SmartResetOdometry extends CommandBase {
     Limelight s_Limelight;
     Timer timer = new Timer();
     boolean isReset;
-    // ArrayList<Pose3d> poses = new ArrayList<Pose3d>();
 
     public SmartResetOdometry() {
         s_Swerve = Swerve.getInstance();
@@ -34,10 +37,10 @@ public class SmartResetOdometry extends CommandBase {
         timer.start();
     }
 
-    // ArrayList<Pose3d> poseList = new ArrayList<>();
-
     @Override
     public void execute() {
+        // if limelight has a target then run. It gets the pose of the target that it is detecting from
+        // constants and then uses the library to caluclate the robot pose in 3D which can be used to reset odo
         if (s_Limelight.hasTarget()) {
             PhotonTrackedTarget target = s_Limelight.getBestTarget();
             Pose3d targetPose = Constants.Limelight.gameAprilTags[target.getFiducialId() - 1];
@@ -48,6 +51,7 @@ public class SmartResetOdometry extends CommandBase {
                     new Transform3d(Constants.Limelight.cameraOffsets, Constants.Limelight.cameraAngleOffsets));
             double ambi = target.getPoseAmbiguity();
 
+            // only reset if the target detected has an ambiguity of less than 0.08
             if (ambi < 0.08) {
                 s_Swerve.resetOdometry(new Pose2d(robotPose.getX(), robotPose.getY(),
                         Rotation2d.fromRadians(robotPose.getRotation().getZ())));
@@ -59,30 +63,11 @@ public class SmartResetOdometry extends CommandBase {
 
     @Override
     public boolean isFinished() {
+        // timer so that it does not perpetually run if no target is detected
         return timer.hasElapsed(0.2) || isReset;
     }
 
     @Override
     public void end(boolean interrupted) {
-        // timer.stop();
-        // if (poseList.size() > 0) {
-        // double x = 0;
-        // double y = 0;
-        // double angle = 0;
-        // for (int i = 0; i < poseList.size(); i++) {
-        // x += poseList.get(i).getX();
-        // y += poseList.get(i).getY();
-        // angle += poseList.get(i).getRotation().getZ();
-        // }
-
-        // x /= poseList.size();
-        // y /= poseList.size();
-        // angle /= poseList.size();
-
-        // s_Swerve.resetOdometry(new Pose2d(x, y, Rotation2d.fromRadians(angle)));
-        // SmartDashboard.putNumber("robot-SO-x", /*Units.metersToInches*/(x));
-        // SmartDashboard.putNumber("robot-SO-y", /*Units.metersToInches*/(y));
-        // SmartDashboard.putNumber("robot-SO-rot", Units.radiansToDegrees(angle));
-        // }
     }
 }

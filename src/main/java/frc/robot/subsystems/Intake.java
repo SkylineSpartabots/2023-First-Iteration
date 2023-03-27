@@ -1,3 +1,7 @@
+/*
+ intake subsystem, encapsulates methods to control the intake mechanism
+*/
+
 package frc.robot.subsystems;
 
 import java.util.function.BooleanSupplier;
@@ -35,22 +39,7 @@ public class Intake extends SubsystemBase {
         return instance;
     }
 
-    Intake() {
-        s_Swerve = Swerve.getInstance();
-        cubeCounter = 0;
-        coneCounter = 0;
-        m_solenoid = new Solenoid(
-                Constants.HardwarePorts.pneumaticHub,
-                PneumaticsModuleType.REVPH,
-                Constants.HardwarePorts.intakeSolenoidChannel);
-        m_compressor = new Compressor(Constants.HardwarePorts.pneumaticHub, PneumaticsModuleType.REVPH);
-        m_compressor.enableDigital();
-        m_leaderMotor = new CANSparkMax(Constants.HardwarePorts.intakeLeaderMotor, MotorType.kBrushless);
-        m_leaderMotor.setInverted(true);
-        m_followerMotor = new CANSparkMax(Constants.HardwarePorts.intakeFollowerMotor, MotorType.kBrushless);
-        m_followerMotor.follow(m_leaderMotor, true);
-    }
-
+    // all states for the intake mechanism
     public enum IntakeStates {
         ON_CLOSED_CONE(false, "cone", 1.0),
         OFF_CLOSED_CONE(false, "cone", 0),
@@ -77,6 +66,27 @@ public class Intake extends SubsystemBase {
         }
     }
 
+    // initializes hardward components, 2 motors, solenoid, and compressor
+    // one of the motor in in follower moder
+    Intake() {
+        s_Swerve = Swerve.getInstance();
+        cubeCounter = 0;
+        coneCounter = 0;
+        m_solenoid = new Solenoid(
+                Constants.HardwarePorts.pneumaticHub,
+                PneumaticsModuleType.REVPH,
+                Constants.HardwarePorts.intakeSolenoidChannel);
+        m_compressor = new Compressor(Constants.HardwarePorts.pneumaticHub, PneumaticsModuleType.REVPH);
+        m_compressor.enableDigital();
+        m_leaderMotor = new CANSparkMax(Constants.HardwarePorts.intakeLeaderMotor, MotorType.kBrushless);
+        m_leaderMotor.setInverted(true);
+        m_followerMotor = new CANSparkMax(Constants.HardwarePorts.intakeFollowerMotor, MotorType.kBrushless);
+        m_followerMotor.follow(m_leaderMotor, true);
+    }
+
+    // these methods are all pretty straighforward to understand
+    // they do what their name suggests
+
     public void setState(IntakeStates state) {
         this.intakeState = state;
         m_solenoid.set(intakeState.deployed);
@@ -98,7 +108,7 @@ public class Intake extends SubsystemBase {
 
     private double coneThreshold = 7.8;
 
-
+    // current limiting methods to detect when a game piece has been intaked, auto stops the intake
     public boolean hasCone() {
         return m_leaderMotor.getOutputCurrent() > coneThreshold || m_followerMotor.getOutputCurrent() > coneThreshold;
     }
@@ -132,6 +142,9 @@ public class Intake extends SubsystemBase {
         SmartDashboard.putNumber("intake current", m_leaderMotor.getOutputCurrent());
         // SmartDashboard.putBoolean("intake deployed", getIntakeDeployed());
 
+        // if the current for a piece has been detected for 10 loops in a row then auto stop the intake
+        // this make it so that it does not stop when the motor spikes when it first starts moving because
+        // that spike does not last that long
         if (hasCone()) {
             coneCounter++;
         } else {

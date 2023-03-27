@@ -1,3 +1,7 @@
+/* 
+ has all the button initilizations and subsystem initlizations
+*/
+
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -6,15 +10,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.*;
-import frc.robot.factories.ScoringCommandFactory;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Arm.ArmStates;
 import frc.robot.subsystems.CompleteMechanism.MechanismState;
-import frc.robot.subsystems.Elevator.ElevatorStates;
 import frc.robot.subsystems.Intake.IntakeStates;
 
 /**
@@ -92,7 +93,6 @@ public class RobotContainer {
     private final Arm s_Arm;
     private final Intake s_Intake;
     private final CompleteMechanism s_CompleteMechanism;
-    private final ScoringCommandFactory scoreCommandFactory;
     private final AutomaticScoringSelector selector;
     private boolean currentlyCoast;
 
@@ -109,12 +109,13 @@ public class RobotContainer {
         s_Intake = Intake.getInstance();
         s_Arm = Arm.getInstance();
         s_CompleteMechanism = CompleteMechanism.getInstance();
-        scoreCommandFactory = ScoringCommandFactory.getInstance();
         selector = AutomaticScoringSelector.getInstance();
         selector.createDisplay();
 
         s_Swerve.resetOdometry(new Pose2d());
         s_Swerve.zeroGyro();
+        // sets the teleop swerve command as default command with the input from driver joysticks
+        // to control the swerve
         s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
                         s_Swerve,
@@ -160,6 +161,8 @@ public class RobotContainer {
         operatorRightBumper.onTrue(new AutoTeleopScore());
     }
 
+    // the methods below abstract functionality of the subsystems to make it easier for driver control
+    // uses the cone boolean to set the states in either cube or cone mode based on which is selcted
     boolean cone = true;
 
     public Command onIntake() {
@@ -221,36 +224,7 @@ public class RobotContainer {
                         offIntake()));
     }
 
-    // ParallelCommandGroup zeroCone = new ParallelCommandGroup(
-    // new SetMechanism(MechanismState.ZERO),
-    // new SetIntake(IntakeStates.OFF_CLOSED_CONE));
-    // ParallelCommandGroup zeroCube = new ParallelCommandGroup(
-    // new SetMechanism(MechanismState.ZERO),
-    // new SetIntake(IntakeStates.OFF_OPEN_CUBE));
-
-    // ParallelCommandGroup zeroLayed = new ParallelCommandGroup(
-    // new SetMechanism(MechanismState.ZERO),
-    // new SetIntake(IntakeStates.OFF_RETRACTED_LAYEDCONE));
-
-    // public void zeroCommand() {
-    // CommandScheduler.getInstance().schedule(
-    // s_Intake.intakeState.piece.equals("cube") ? zeroCube : zeroCone);
-    // }
-
-    public void layedConeCommand() {
-        CommandScheduler.getInstance().schedule(
-                new SequentialCommandGroup(
-                        new SetElevator(ElevatorStates.SLEEPCONEINTAKE),
-                        new SetArm(ArmStates.SLEEPCONEINTAKE)));
-    }
-
-    public void layedConeBackCommand() {
-        CommandScheduler.getInstance().schedule(
-                new SequentialCommandGroup(
-                        new SetArm(ArmStates.ZERO),
-                        new SetElevator(ElevatorStates.ZERO)));
-    }
-
+    // does not work
     public void onRobotDisabled() {
         // reset mechanisms so it does not have to be done manually
         CommandScheduler.getInstance().schedule(new SetArm(ArmStates.ZERO));
