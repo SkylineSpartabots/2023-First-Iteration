@@ -216,9 +216,9 @@ public class AutoCommandFactory {
 
         private static Command oneConeDockMiddleCom() {
                 List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("1 cone dock middle com",
-                                new PathConstraints(3.0, 1.0),
-                                new PathConstraints(2.0, 0.6),
-                                new PathConstraints(2.0, 0.5));
+                                new PathConstraints(3.0, 1.5),
+                                new PathConstraints(2.0, 0.8),
+                                new PathConstraints(2.0, 0.8));
                 Pose2d initPose = getPoseFromState(pathGroup.get(0).getInitialState(), 180);
                 return new SequentialCommandGroup(
                                 new InstantCommand(() -> s_Swerve.resetOdometry(initPose)),

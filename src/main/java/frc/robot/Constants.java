@@ -131,7 +131,7 @@ public final class Constants {
         public static final double anglePeakCurrentDuration = 0.1;
         public static final boolean angleEnableCurrentLimit = true;
 
-        public static final int driveContinuousCurrentLimit = 35;
+        public static final int driveContinuousCurrentLimit = 35; 
         public static final int drivePeakCurrentLimit = 60;
         public static final double drivePeakCurrentDuration = 0.1;
         public static final boolean driveEnableCurrentLimit = true;
@@ -166,7 +166,7 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double maxSpeed = 4.5; // TODO: This must be tuned to specific robot
+        public static final double maxSpeed = 4.5; // TODO: This must be tuned to specific robot 
         /** Radians per Second */
         public static final double maxAngularVelocity = 7.0; // TODO: This must be tuned to specific robot
 

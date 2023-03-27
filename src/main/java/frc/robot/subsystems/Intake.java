@@ -58,7 +58,7 @@ public class Intake extends SubsystemBase {
         OFF_OPEN_CONE(true, "cone", 0),
 
         ON_OPEN_CUBE(true, "cube", 0.75),
-        OFF_OPEN_CUBE(true, "cube", 0),
+        OFF_CLOSED_CUBE(false, "cube", 0),
         REV_OPEN_CUBE(true, "cube", -0.5);
 
         // ON_DEPLOYED_LAYEDCONE(true, "layed", 1.2),
@@ -110,11 +110,11 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean motorStopped() {
-        return intakeState == IntakeStates.OFF_CLOSED_CONE || intakeState == IntakeStates.OFF_OPEN_CUBE;
+        return intakeState == IntakeStates.OFF_CLOSED_CONE || intakeState == IntakeStates.OFF_CLOSED_CUBE;
     }
 
     public boolean stopMovingOnAuto(){
-        return intakeState == IntakeStates.OFF_CLOSED_CONE || intakeState == IntakeStates.OFF_OPEN_CUBE || s_Swerve.getPose().getX() > 7;
+        return intakeState == IntakeStates.OFF_CLOSED_CONE || intakeState == IntakeStates.OFF_CLOSED_CUBE || s_Swerve.getPose().getX() > 7;
     }
 
     // private double layedConeThreshold = 0;
@@ -147,7 +147,7 @@ public class Intake extends SubsystemBase {
         if (intakeState == IntakeStates.ON_OPEN_CUBE) {
             if (cubeCounter > 10) {
                 CommandScheduler.getInstance()
-                        .schedule(new WaitCommand(0.0).andThen(new SetIntake(IntakeStates.OFF_OPEN_CUBE)));
+                        .schedule(new WaitCommand(0.0).andThen(new SetIntake(IntakeStates.OFF_CLOSED_CUBE)));
             }
         }
 
