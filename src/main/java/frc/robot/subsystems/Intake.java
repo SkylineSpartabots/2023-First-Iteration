@@ -1,14 +1,15 @@
+/*
+ intake subsystem, encapsulates methods to control the intake mechanism
+*/
+
 package frc.robot.subsystems;
 
-import javax.print.attribute.standard.Compression;
+import java.util.function.BooleanSupplier;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,64 +19,42 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.commands.SetIntake;
 
-public class Intake extends SubsystemBase{
+public class Intake extends SubsystemBase {
+
     private static Intake instance;
+    private Swerve s_Swerve;
+    CANSparkMax m_leaderMotor, m_followerMotor;
+    Solenoid m_solenoid;
+    Compressor m_compressor;
+    public IntakeStates intakeState = IntakeStates.OFF_CLOSED_CONE;
+    public BooleanSupplier motorStopped = () -> motorStopped();
+    public BooleanSupplier shouldStopOnAuto = () -> stopMovingOnAuto();
+    int cubeCounter;
+    int coneCounter;
 
-    public WPI_TalonFX leaderMotor, followerMotor;
-    private Solenoid solenoid;
-    public IntakeStates intakeState = IntakeStates.OFF_DEPLOYED_CONE;
-
-    private Compressor compressor;
-
-    public static Intake getInstance(){
-        if(instance == null){
+    public static Intake getInstance() {
+        if (instance == null) {
             instance = new Intake();
         }
         return instance;
     }
 
+    // all states for the intake mechanism
     private final Light s_Lights = Light.getInstance();
-
-    public Intake(){
-        solenoid = new Solenoid(
-            Constants.HardwarePorts.pneumaticHub,
-            PneumaticsModuleType.REVPH,
-            Constants.HardwarePorts.intakePositionSolenoidChannel);
-        compressor = new Compressor(Constants.HardwarePorts.pneumaticHub, PneumaticsModuleType.REVPH);
-        compressor.enableDigital();
-        leaderMotor = new WPI_TalonFX(Constants.HardwarePorts.intakeMotor);
-        followerMotor = new WPI_TalonFX(Constants.HardwarePorts.followerIntakeMotor);
-        configureMotor(leaderMotor, false);
-        configureMotor(followerMotor, true);
-        followerMotor.set(ControlMode.Follower, Constants.HardwarePorts.intakeMotor); //inverse later
-    }
-
-    private void configureMotor(WPI_TalonFX talon, boolean inverted) {
-        talon.setInverted(inverted);
-        talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
-        talon.enableVoltageCompensation(true);
-        talon.setNeutralMode(NeutralMode.Brake);
-        talon.config_kF(0, 0.05, Constants.timeOutMs);
-        talon.config_kP(0, 0.30, Constants.timeOutMs);
-        talon.config_kI(0, 0, Constants.timeOutMs);
-        talon.config_kD(0, 0, Constants.timeOutMs);
-    }
-
     public enum IntakeStates {
-        ON_DEPLOYED_CONE(false, "cone", 1), //false
-        OFF_DEPLOYED_CONE(false, "cone", 0), //when they put the intake down, doesnt need to change because it shouldn't change initial state
-        REV_DEPLOYED_CONE(false, "cone", -1),
-        OFF_RETRACTED_CONE(true, "cone", 0),
+        ON_CLOSED_CONE(false, "cone", 1.0),
+        OFF_CLOSED_CONE(false, "cone", 0),
+        REV_CLOSED_CONE(false, "cone", -1),
+        OFF_OPEN_CONE(true, "cone", 0),
 
-        ON_RETRACTED_CUBE(true, "cube", 1),
-        OFF_RETRACTED_CUBE(true, "cube", 0),
-        REV_RETRACTED_CUBE(true, "cube", -1);
+        ON_OPEN_CUBE(true, "cube", 0.75),
+        OFF_CLOSED_CUBE(false, "cube", 0),
+        REV_OPEN_CUBE(true, "cube", -0.5);
 
         // ON_DEPLOYED_LAYEDCONE(true, "layed", 1.2),
         // OFF_DEPLOYED_LAYEDCONE(true, "layed", 0.075),
         // OFF_RETRACTED_LAYEDCONE(false, "layed", 0.075),
         // REV_RETRACTED_LAYEDCONE(false, "layed", -1.2);
-
 
         public boolean deployed;
         public String piece;
@@ -88,86 +67,112 @@ public class Intake extends SubsystemBase{
         }
     }
 
+    // initializes hardward components, 2 motors, solenoid, and compressor
+    // one of the motor in in follower moder
+    Intake() {
+        s_Swerve = Swerve.getInstance();
+        cubeCounter = 0;
+        coneCounter = 0;
+        m_solenoid = new Solenoid(
+                Constants.HardwarePorts.pneumaticHub,
+                PneumaticsModuleType.REVPH,
+                Constants.HardwarePorts.intakeSolenoidChannel);
+        m_compressor = new Compressor(Constants.HardwarePorts.pneumaticHub, PneumaticsModuleType.REVPH);
+        m_compressor.enableDigital();
+        m_leaderMotor = new CANSparkMax(Constants.HardwarePorts.intakeLeaderMotor, MotorType.kBrushless);
+        m_leaderMotor.setInverted(true);
+        m_followerMotor = new CANSparkMax(Constants.HardwarePorts.intakeFollowerMotor, MotorType.kBrushless);
+        m_followerMotor.follow(m_leaderMotor, true);
+    }
+
+    // these methods are all pretty straighforward to understand
+    // they do what their name suggests
+
     public void setState(IntakeStates state) {
         this.intakeState = state;
-        solenoid.set(intakeState.deployed);
+        m_solenoid.set(intakeState.deployed);
         final double offset = 0.75;
-        leaderMotor.set(ControlMode.PercentOutput, offset * intakeState.direction);
+        setSpeed(offset * intakeState.direction);
 
         if(state.direction==1) {s_Lights.setSelected(6);}
         if(state.direction==-1) {s_Lights.grabbed = false; s_Lights.setNormal();} // i think this should work
     }
 
+    public void setSpeed(double speed) {
+        m_leaderMotor.set(speed);
+    }
+
     public boolean getIntakeDeployed() {
         return intakeState.deployed;
     }
-    
+
     public String getIntakePiece() {
         return intakeState.piece;
     }
 
-    private double coneThreshold = 46.5;
-    public boolean hasCone(){
-        double currentVolt = leaderMotor.getStatorCurrent();
-        return currentVolt > coneThreshold;
+    private double coneThreshold = 7.8;
+
+    // current limiting methods to detect when a game piece has been intaked, auto stops the intake
+    public boolean hasCone() {
+        return m_leaderMotor.getOutputCurrent() > coneThreshold || m_followerMotor.getOutputCurrent() > coneThreshold;
     }
 
-    public double cubeThreshold = 39;
-    public boolean hasCube(){
-        double currentVolt = leaderMotor.getStatorCurrent();
-        return currentVolt > cubeThreshold;
+    public double cubeThreshold = 7.8; 
+
+    public boolean hasCube() {
+        return m_leaderMotor.getOutputCurrent() > coneThreshold || m_followerMotor.getOutputCurrent() > coneThreshold;
     }
 
-    private double gConeThreshold = 55;
-    public boolean hasLayedCone(){
-        double currentVolt = leaderMotor.getStatorCurrent();
-        return currentVolt > gConeThreshold;
+    public boolean motorStopped() {
+        return intakeState == IntakeStates.OFF_CLOSED_CONE || intakeState == IntakeStates.OFF_CLOSED_CUBE;
     }
+
+    public boolean stopMovingOnAuto(){
+        return intakeState == IntakeStates.OFF_CLOSED_CONE || intakeState == IntakeStates.OFF_CLOSED_CUBE || s_Swerve.getPose().getX() > 7;
+    }
+
+    // private double layedConeThreshold = 0;
+
+    // public boolean hasLayedCone() {
+    // double currentVolt = m_leaderMotor.getOutputCurrent();
+    // return currentVolt > layedConeThreshold;
+    // }
+
+    boolean tempHasCube = false;
 
     @Override
     public void periodic() {
-        SmartDashboard.putString("intake cube", getIntakePiece());
-        // SmartDashboard.putNumber("Intake current", leaderMotor.getStatorCurrent());
+        SmartDashboard.putString("intake piece", getIntakePiece());
+        SmartDashboard.putNumber("intake current", m_leaderMotor.getOutputCurrent());
         // SmartDashboard.putBoolean("intake deployed", getIntakeDeployed());
 
-        if (intakeState == IntakeStates.ON_RETRACTED_CUBE) {
-            if (hasCube()) {
-                CommandScheduler.getInstance().schedule(new WaitCommand(1.0).andThen(new SetIntake(IntakeStates.OFF_RETRACTED_CUBE)));
+        // if the current for a piece has been detected for 10 loops in a row then auto stop the intake
+        // this make it so that it does not stop when the motor spikes when it first starts moving because
+        // that spike does not last that long
+        if (hasCone()) {
+            coneCounter++;
+        } else {
+            coneCounter = 0;
+        }
+
+        if (hasCube()) {
+            cubeCounter++;
+        } else {
+            cubeCounter = 0;
+        }
+
+        if (intakeState == IntakeStates.ON_OPEN_CUBE) {
+            if (cubeCounter > 10) {
+                CommandScheduler.getInstance()
+                        .schedule(new WaitCommand(0.0).andThen(new SetIntake(IntakeStates.OFF_CLOSED_CUBE)));
             }
         }
 
-        if (intakeState == IntakeStates.ON_DEPLOYED_CONE) {
-            if (hasCone()) {
-                CommandScheduler.getInstance().schedule(new WaitCommand(1.0).andThen(new SetIntake(IntakeStates.OFF_DEPLOYED_CONE)));
+        if (intakeState == IntakeStates.ON_CLOSED_CONE) {
+            if (coneCounter > 10) {
+                CommandScheduler.getInstance()
+                        .schedule(new WaitCommand(0.0).andThen(new SetIntake(IntakeStates.OFF_CLOSED_CONE)));
             }
         }
-        
-        // if (intakeState == IntakeStates.ON_DEPLOYED_LAYEDCONE) {
-        //     if (hasLayedCone()) {
-        //         CommandScheduler.getInstance().schedule(new WaitCommand(1.6).andThen(new SetIntake(IntakeStates.OFF_RETRACTED_LAYEDCONE)));
-        //     }
-        // }
-
-        // if (intakeState == IntakeStates.ON_RETRACTED_CONE) {
-        //     if (hasCone()) {
-        //         CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED_CONE));
-        //     }
-        // }
-        // if (intakeState == IntakeStates.ON_RETRACTED_CUBE) {
-        //     if (hasCube()) {
-        //         CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED_CUBE));
-        //     }
-        // }
-        // if (intakeState == IntakeStates.REV_DEPLOYED) {
-        //     if (!hasGamePiece()) {
-        //         CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_DEPLOYED));
-        //     }
-        // }
-        // if (intakeState == IntakeStates.REV_RETRACTED) {
-        //     if (!hasGamePiece()) {
-        //         CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_RETRACTED));
-        //     }
-        // }
     }
-
 }

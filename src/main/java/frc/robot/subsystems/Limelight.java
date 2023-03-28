@@ -1,3 +1,7 @@
+/*
+ limelight subsystem, encapsulates methods to use the limelight
+*/
+
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.util.Units;
@@ -20,8 +24,8 @@ public class Limelight extends SubsystemBase {
 		return instance;
 	}
 
-	private PhotonCamera camera = new PhotonCamera(Constants.Limelight.photonCamName);
-	private PhotonPipelineResult result = camera.getLatestResult();
+	private PhotonCamera camera;
+	private PhotonPipelineResult result;
 	private double lastYaw;
 	private double lastDistance;
 	private double lastPitch;
@@ -29,25 +33,31 @@ public class Limelight extends SubsystemBase {
 	private PhotonTrackedTarget lastTarget;
 
 	public Limelight() {
-		// might have to put some nt initilizations in here...
+		camera = new PhotonCamera(Constants.Limelight.photonCamName);
+		result = camera.getLatestResult();
 	}
 
 	public boolean hasTarget() {
 		if (result.hasTargets()) {
 			if (result.getBestTarget().getFiducialId() > 0 
-			&& result.getBestTarget().getFiducialId() < Constants.Limelight.gameAprilTags.length) {
+			&& result.getBestTarget().getFiducialId() < Constants.Limelight.gameAprilTags.length + 1) {
 				return true;
 			}
 		}
 		return false;
 	}
 
+	// gets the target that the limelight detects
+	// has information about target distance and position relative to robot
 	public PhotonTrackedTarget getBestTarget() {
 		if (hasTarget()) {
 			lastTarget = result.getBestTarget();
 		}
 		return lastTarget;
 	}
+
+	// these methods are all pretty straighforward to understand
+    // they do what their name suggests
 
 	public double getYaw() {
 		if (hasTarget()) {

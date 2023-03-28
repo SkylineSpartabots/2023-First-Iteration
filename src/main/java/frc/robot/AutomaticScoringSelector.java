@@ -1,43 +1,31 @@
-package frc.robot;
+/*
+ automatic scoring selector to generate poses for 
+ targets and create display on shuffleboard
+*/
 
-import java.sql.Driver;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.function.BooleanSupplier;
+package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.Arm.ArmStates;
 import frc.robot.subsystems.CompleteMechanism.MechanismState;
-import frc.robot.subsystems.Elevator.ElevatorStates;
-import frc.robot.subsystems.Intake.IntakeStates;
-import frc.lib.util.COTSFalconSwerveConstants.driveGearRatios;
-import frc.robot.ScoringPosition;
-import frc.robot.Constants.Limelight;
 
 public final class AutomaticScoringSelector {
 
     Swerve s_Swerve;
-    public BooleanSupplier inPosition = () -> inPosition();
     private static AutomaticScoringSelector instance;
-    private ShuffleboardTab scoringGridDisplay = Shuffleboard.getTab("Scoring Display");
+    public ShuffleboardTab scoringGridDisplay = Shuffleboard.getTab("Scoring Display");
 
-    // private ScoringPosition[][] grid = new ScoringPosition[3][9]; // [row][column] 0 row is l1, 0 column is the one
-                                                                  // farthest from load zone
-    private boolean[][] isSelected = new boolean[3][9];
-    private GenericEntry[][] selectionDisplay = new GenericEntry[3][9];
-    private GenericEntry currentGridSelected, selectedX, selectedY, selectedRot, currX, currY, seesTarg;
+    public GenericEntry currPosEntry, currLevelEntry, currentXPosEntry, currentYPosEntry, realXEntry, realYEntry, realRotEntry;
 
-    public int currRow = 0;
-    public int currColumn = 0;
-    private int selectedRow = -1, selectedColumn = -1;
+    public int currPos = 0;
+    public int currLevel = 0;
+    public double currentXpos, currentYpos; 
 
     public static AutomaticScoringSelector getInstance() {
         if (instance == null) {
@@ -47,101 +35,49 @@ public final class AutomaticScoringSelector {
     }
 
     Pose2d[] allPoses = new Pose2d[9];
+    double x = 1.68; //should be the same for every default scoring position
+    double y = 0.59 - 0.1; //only one that changes
+    double yIncrem = Units.inchesToMeters(22); //how much each y varies by - currently unmeasured
 
-
+    // generates all the poses for the targets 
     public AutomaticScoringSelector() {
         s_Swerve = Swerve.getInstance();
-            double x = 1.9; //should be the same for every default scoring position
-            double y = 0.59; //only one that changes
-            double yIncrem = 0.56; //how much each y varies by - currently unmeasured
-
-            
-            for (int i = 0; i < 9; i++) {
-                allPoses[DriverStation.getAlliance() == DriverStation.Alliance.Blue ? 8 - i : i] = new Pose2d(x, y + yIncrem * i, new Rotation2d(Math.PI));
-            }
         
-        isSelected[currRow][currColumn] = true;
-    }
-
-    public void moveDown() {
-        if (currRow >= 2) {
-            return;
+        
+        for (int i = 0; i < 9; i++) {
+            allPoses[DriverStation.getAlliance() == DriverStation.Alliance.Blue ? 8 - i : i] = new Pose2d(x, y + yIncrem * i, new Rotation2d(Math.PI));
         }
-        isSelected[currRow][currColumn] = false;
-        currRow++;
-        isSelected[currRow][currColumn] = true;
-        updateShuffleboard();
+        
+        currPos = 0;
+        currLevel = 0;
     }
 
-    public void moveUp() {
-        if (currRow <= 0) {
-            return;
-        }
-        isSelected[currRow][currColumn] = false;
-        currRow--;
-        isSelected[currRow][currColumn] = true;
-        updateShuffleboard();
-
-    }
-
-    public void moveLeft() {
-        if (currColumn <= 0) {
-            return;
-        }
-        isSelected[currRow][currColumn] = false;
-        currColumn--;
-        isSelected[currRow][currColumn] = true;
-        updateShuffleboard();
-    }
-
-    public void moveRight() {
-        if (currColumn >= 8) {
-            return;
-        }
-        isSelected[currRow][currColumn] = false;
-        currColumn++;
-        isSelected[currRow][currColumn] = true;
-        updateShuffleboard();
-    }
-
-    public void select() {
-        selectedRow = currRow;
-        selectedColumn = currColumn;
-        updateShuffleboard();
-    }
-
+    // creates shuffleboard display
     public void createDisplay() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 8; j > -1; j--) {
-                selectionDisplay[i][j] = scoringGridDisplay.add(i + " " + j, isSelected[i][j])
-                        .getEntry();
-            }
-        }
-        currentGridSelected = scoringGridDisplay
-                .add("selection updated", currRow == selectedRow && currColumn == selectedColumn).getEntry();
-        selectedX = scoringGridDisplay.add("Selected X", getSelectedPose().getX()).getEntry();
-        selectedY = scoringGridDisplay.add("Selected Y", getSelectedPose().getY()).getEntry();
-        selectedRot = scoringGridDisplay.add("Selected Rot", getSelectedPose().getRotation().getDegrees()).getEntry();
-        // currX = scoringGridDisplay.add("Curr X", Swerve.getInstance().getPose().getX()).getEntry();
-        seesTarg =scoringGridDisplay.add("Has Target", frc.robot.subsystems.Limelight.getInstance().hasTarget()).getEntry();
+        currPosEntry = scoringGridDisplay.add("Current Pos", currPos).getEntry();
+        currLevelEntry = scoringGridDisplay.add("Current Level", currLevel).getEntry();
+        currentXPosEntry = scoringGridDisplay.add("Current X pos", currentXpos).getEntry();
+        currentYPosEntry = scoringGridDisplay.add("Current Y pos", currentYpos).getEntry();
+        realXEntry = scoringGridDisplay.add("RealX", 0).getEntry();
+        realYEntry = scoringGridDisplay.add("RealY", 0).getEntry();
+        realRotEntry = scoringGridDisplay.add("RealRot", 0).getEntry();
     }
 
+    // updates shuffleboard display
     public void updateShuffleboard() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 8; j > -1; j--) {
-                selectionDisplay[i][j].setBoolean(isSelected[i][j]);
-            }
-        }
-        currentGridSelected.setBoolean(currRow == selectedRow && currColumn == selectedColumn);
-        selectedX.setDouble(getSelectedPose().getX());
-        selectedY.setDouble(getSelectedPose().getY());
-        selectedRot.setDouble(getSelectedPose().getRotation().getDegrees());
-        // currX.setDouble(Swerve.getInstance().getPose().getX());
-        // currY.setDouble(Swerve.getInstance().getPose().getY());
-        seesTarg.setBoolean(frc.robot.subsystems.Limelight.getInstance().hasTarget());
+        currPosEntry.setDouble(currPos+1);
+        currLevelEntry.setDouble(currLevel+1);
+        currentXpos = convertToRed(allPoses[currPos]).getX();
+        currentYpos = convertToRed(allPoses[currPos]).getY();    
+        currentXPosEntry.setDouble(currentXpos);
+        currentYPosEntry.setDouble(currentYpos);
     }
 
+    // converts positions to red if the alliance is red
     public Pose2d convertToRed(Pose2d a) {
+        for (int i = 0; i < 9; i++) {
+            allPoses[DriverStation.getAlliance() == DriverStation.Alliance.Blue ? 8 - i : i] = new Pose2d(x, y + yIncrem * i, new Rotation2d(Math.PI));
+        }
         if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
             Pose2d b = new Pose2d(a.getX(), Constants.FIELD_WIDTH_METERS - a.getY(), a.getRotation());
             return b;
@@ -150,29 +86,26 @@ public final class AutomaticScoringSelector {
 
     }
 
+    // resturns pose of the current seleced target
     public Pose2d getSelectedPose() {
-        
-        if (selectedRow > -1 && selectedColumn > -1) {
-            return convertToRed(allPoses[selectedColumn]);
-        }
-        return new Pose2d();
+        return convertToRed(allPoses[currPos]);
     }
 
     public MechanismState getMechState() {
-        if (selectedRow == 0) {
-            if (selectedColumn % 3 == 1) {
+        if (currLevel == 0) {
+            if (currPos % 3 == 1) {
                 return MechanismState.L1CUBE;
             } else {
                 return MechanismState.L1CONE;
             }
-        } else if (selectedRow == 1) {
-            if (selectedColumn % 3 == 1) {
+        } else if (currLevel == 1) {
+            if (currPos % 3 == 1) {
                 return MechanismState.L2CUBE;
             } else {
                 return MechanismState.L2CONE;
             }
         } else {
-            if (selectedColumn % 3 == 1) {
+            if (currPos % 3 == 1) {
                 return MechanismState.L3CUBE;
             } else {
                 return MechanismState.L3CONE;
@@ -180,13 +113,22 @@ public final class AutomaticScoringSelector {
         }
     }
 
-
-    
-    public boolean inPosition() {
-        return (Math.abs(s_Swerve.getPose().getX() - getSelectedPose().getX()) < 0.5)
-                && (Math.abs(s_Swerve.getPose().getX() - getSelectedPose().getX()) < 0.5)
-                && (Math.abs(s_Swerve.getPose().getRotation().getDegrees()
-                        - getSelectedPose().getRotation().getDegrees()) < 30);
+    public void setLevel(int level) {
+        currLevel = level;
+        updateShuffleboard();
     }
 
+    public int getLevel() {
+        return currLevel;
+    }
+
+    public void increasePos() {
+        currPos = (currPos + 1) % 9;
+        updateShuffleboard();
+    }
+
+    public void decreasePos() {
+        currPos = (currPos + 8) % 9;
+        updateShuffleboard();
+    }
 }

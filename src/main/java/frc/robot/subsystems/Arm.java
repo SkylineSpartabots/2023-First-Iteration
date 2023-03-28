@@ -1,3 +1,7 @@
+/*
+ arm subsystem, encapsulates methods to control the arm mechanism
+*/
+
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -15,57 +19,60 @@ public class Arm extends SubsystemBase {
     static Arm instance;
 
     public static Arm getInstance() {
-        if (instance == null) instance = new Arm();
+        if (instance == null)
+            instance = new Arm();
         return instance;
     }
 
     private WPI_TalonFX mArmMotor;
     private double velocity;
     private double voltage;
-    private CANCoder armCANCoder = new CANCoder(Constants.HardwarePorts.armCANCoder); // max 420 (i think)
+    private CANCoder armCANCoder = new CANCoder(Constants.HardwarePorts.armCANCoder);
     CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
     private ArmStates armState = ArmStates.ZERO;
 
+    // all positions for the arm mechanism
     public enum ArmStates {
-        ZERO(52.0), 
+        ZERO(12),
+        REALZERO(7),
 
-        CONEINTAKE(220), 
-        CUBEINTAKE(270), 
-        LAYEDCONE(271),
-        SUBSTATION(277), 
-        DOUBLESUBSTATION(125),
+        GROUNDINTAKE(88), 
+        // LAYEDCONE(271),
+        SUBSTATION(38),  
+        CONEDOUBLESUBSTATION(68), 
+        CUBEDOUBLESUBSTATION(68), 
 
-        L1CONE(183), 
-        L2CONE(148), 
-        L3CONE(123), 
+        L1CONE(9),
+        L2CONE(38),
+        L3CONE(58),
 
-        L1CUBE(55), 
-        L2CUBE(111), 
-        L3CUBE(151);
+        L1CUBE(11),
+        L2CUBE(47),
+        L3CUBE(64);
 
         // L1LAYEDCONE(150),
         // L2LAYEDCONE(90),
         // L3LAYEDCONE(143);
-        
 
         double statePosition = 0.0;
 
         private ArmStates(double statePosition) {
             this.statePosition = statePosition;
         }
-
     }
 
+    // initializes hardward components, motor and CANcoder
     public Arm() {
         mArmMotor = new WPI_TalonFX(Constants.HardwarePorts.armMotor);
         configureMotor(mArmMotor, true);
         mArmMotor.setSelectedSensorPosition(0);
-        canCoderConfig.sensorDirection = true;
+        canCoderConfig.sensorDirection = false;
         armCANCoder.configAllSettings(canCoderConfig);
         setCANCoderPosition(0);
     }
 
-    private void configureMotor(WPI_TalonFX talon, boolean inverted){
+    // sets motor configurations
+    private void configureMotor(WPI_TalonFX talon, boolean inverted) {
         talon.setInverted(inverted);
         talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
         talon.enableVoltageCompensation(false);
@@ -75,6 +82,9 @@ public class Arm extends SubsystemBase {
         talon.config_kI(0, 0, Constants.timeOutMs);
         talon.config_kD(0, 0, Constants.timeOutMs);
     }
+
+    // these methods are all pretty straighforward to understand
+    // they do what their name suggests
 
     public void setVelocity(double velocity) {
         this.velocity = velocity;
@@ -93,7 +103,7 @@ public class Arm extends SubsystemBase {
     public double getVelocitySetpoint() {
         return velocity;
     }
-    
+
     public double getVoltageSetpoint() {
         return voltage;
     }
@@ -107,7 +117,7 @@ public class Arm extends SubsystemBase {
     }
 
     public double getCANCoderPosition() {
-        return (armCANCoder.getAbsolutePosition() - 283 + 360) % 360;
+        return (armCANCoder.getAbsolutePosition() - 270 + 360) % 360;
     }
 
     public double getCANCoderVoltage() {
@@ -118,15 +128,19 @@ public class Arm extends SubsystemBase {
         return armCANCoder.getMagnetFieldStrength() == MagnetFieldStrength.BadRange_RedLED;
     }
 
+    public double getCurrent() {
+        return mArmMotor.getStatorCurrent();
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("armCANpos", getCANCoderPosition());
-		SmartDashboard.putNumber("armPosSet", getCANCoderSetpoint());
-		// SmartDashboard.putNumber("arm set velo", getVelocitySetpoint());
-		// SmartDashboard.putNumber("arm set volt", getVoltageSetpoint());
+        SmartDashboard.putNumber("armPosSet", getCANCoderSetpoint());
+        SmartDashboard.putNumber("arm curr", getCurrent());
+        // SmartDashboard.putNumber("arm set velo", getVelocitySetpoint());
+        // SmartDashboard.putNumber("arm set volt", getVoltageSetpoint());
         // SmartDashboard.putNumber("arm CANCoder Voltage", getCANCoderVoltage());
         // SmartDashboard.putNumber("armMotpos", getMotorPosition());
         // SmartDashboard.putBoolean("arm error", armError());
     }
 }
-

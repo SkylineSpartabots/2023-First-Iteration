@@ -1,3 +1,8 @@
+/* 
+ swerve CTRE configs, used by the swerve drivetrain library we use (team 364)
+ https://github.com/Team364/BaseFalconSwerve
+*/
+
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;

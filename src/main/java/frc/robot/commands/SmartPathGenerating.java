@@ -1,3 +1,9 @@
+/*
+ smart path generating command to control the arm and elevator mechanisms
+ uses dijkstra's algorithim to avoid charge station and most efficiently
+ get to a point. Never used, but cool stuff
+*/
+
 package frc.robot.commands;
 
 import java.util.ArrayList;
@@ -32,10 +38,10 @@ public class SmartPathGenerating extends CommandBase {
         this.startPos = startPos;
         this.endPos = endPos;
     }
-    public SmartPathGenerating(){
+
+    public SmartPathGenerating() {
         s_Swerve = Swerve.getInstance();
         selector = AutomaticScoringSelector.getInstance();
-        // addRequirements(s_Swerve, selector);
     }
 
     public Translation2d translation(Pose2d x) {
@@ -104,22 +110,6 @@ public class SmartPathGenerating extends CommandBase {
                 }
             }
         }
-        
-
-        // for (int i = 0; i < 6; i++) {
-        //     for (int j = i + 1; j < 6; j++) {
-        //         if (!checkIfInterfere(convertToRed(Constants.BOTTOM_LEFT_CHARGE),
-        //                 convertToRed(Constants.BOTTOM_RIGHT_CHARGE), convertToRed(Constants.TOP_LEFT_CHARGE),
-        //                 convertToRed(Constants.TOP_RIGHT_CHARGE), tempArray[i], tempArray[j])) {
-        //             SmartDashboard.putNumber("num " + i + j, 0);
-        //         }
-        //     }
-        // }
-
-        // for (int i = 0; i < 6; i++) {
-        //     SmartDashboard.putNumber("dist " + i, distance[i]);
-        //     SmartDashboard.putNumber("last " + i, last[i]);
-        // }
 
         List<PathPoint> result = new ArrayList<>();
         int x = 5;
@@ -173,7 +163,6 @@ public class SmartPathGenerating extends CommandBase {
             return false;
         if (orient(b1, b2, a1) == orient(b1, b2, a2))
             return false;
-        // SmartDashboard.putNumber("intersection", 0);
         return true;
     }
 

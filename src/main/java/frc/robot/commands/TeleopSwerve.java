@@ -1,3 +1,7 @@
+/*
+ teleop swerve command used to drive swerve during teleop from controller input
+*/
+
 package frc.robot.commands;
 
 import frc.robot.Constants;
@@ -23,19 +27,15 @@ public class TeleopSwerve extends CommandBase {
         this.translationSup = translationSup;
         this.strafeSup = strafeSup;
         this.rotationSup = rotationSup;
-        // this.robotCentricSup = robotCentricSup;
-        // removed BooleanSupplier robotCentricSup because it was designed to change from field oriented to robot oriented
-        // no longer needed
     }
 
     @Override
     public void execute() {
-        /* Get Values, Deadband*/
+        // gets the values of the joysticks and then applies is to the swerve drive method
         double translationVal = MathUtil.applyDeadband(translationSup.getAsDouble(), Constants.stickDeadband);
         double strafeVal = MathUtil.applyDeadband(strafeSup.getAsDouble(), Constants.stickDeadband);
         double rotationVal = MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.stickDeadband);
 
-        /* Drive */
         s_Swerve.drive(
             new Translation2d(translationVal, strafeVal).times(Constants.SwerveConstants.maxSpeed), 
             rotationVal * Constants.SwerveConstants.maxAngularVelocity, 

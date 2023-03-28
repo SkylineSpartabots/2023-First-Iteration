@@ -1,3 +1,8 @@
+/* 
+ robot class which has all the different states the robot can be in
+ teleop init, teleop periodic, auto init, auto periodic, etc
+*/
+
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -41,18 +46,22 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
+        // converts poses for targets and other stuff to red
         getRedPose();
         ctreConfigs = new CTREConfigs();
+        // sendable chooser for autos
+        m_chooser.addOption("Test", AutoCommandFactory.AutoType.Test);
         m_chooser.addOption("1C", AutoCommandFactory.AutoType.OneCone);
-        m_chooser.addOption("1C Back", AutoCommandFactory.AutoType.OneConeBack);
+        m_chooser.addOption("1C B Back", AutoCommandFactory.AutoType.OneConeBackBottom);
         m_chooser.addOption("1C M Dock", AutoCommandFactory.AutoType.OneConeDockMiddle);
-        // m_chooser.addOption("1.5C T Dock", AutoCommandFactory.AutoType.OneHalfConeDockTop);
-        // m_chooser.addOption("Wait Auto", AutoCommandFactory.AutoType.Wait);
-        // m_chooser.addOption("2C B", AutoCommandFactory.AutoType.TwoConeBottom);
-        // m_chooser.addOption("2C B Dock", AutoCommandFactory.AutoType.TwoConeDockBottom);
-        // m_chooser.addOption("2C T Dock", AutoCommandFactory.AutoType.TwoConeDockTop);
-        // m_chooser.addOption("2C T", AutoCommandFactory.AutoType.TwoConeTop);
-        // m_chooser.addOption("3C B", AutoCommandFactory.AutoType.ThreeConeBottom);
+        m_chooser.addOption("1C M Dock Com", AutoCommandFactory.AutoType.OneConeDockMiddleCom);
+        m_chooser.addOption("1.5C T Dock", AutoCommandFactory.AutoType.OneHalfConeDockTop);
+        m_chooser.addOption("2C T", AutoCommandFactory.AutoType.TwoConeTop);
+        m_chooser.addOption("2C B", AutoCommandFactory.AutoType.TwoConeBottom);
+        m_chooser.addOption("2C B Dock", AutoCommandFactory.AutoType.TwoConeDockBottom);
+        m_chooser.addOption("2C T Dock", AutoCommandFactory.AutoType.TwoConeDockTop);
+        m_chooser.setDefaultOption("1C M Dock Com", AutoCommandFactory.AutoType.OneConeDockMiddleCom);
+        m_chooser.addOption("3C T", AutoCommandFactory.AutoType.ThreeConeTop);
         SmartDashboard.putData("Auto choices", m_chooser);
         DriverStation.Alliance a = DriverStation.getAlliance();
         SmartDashboard.putString("Alliance",
@@ -61,7 +70,7 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().schedule(new SetMechanism(MechanismState.ZERO));
     }
 
-    public void getRedPose() {
+    public static void getRedPose() {
         for (int i = 0; i < 8; i++) {
             Pose3d a = Constants.Limelight.blueGameAprilTags[i];
             Constants.Limelight.redGameAprilTags[i] = new Pose3d(Constants.FIELD_HEIGHT_METERS - a.getX(),
@@ -76,7 +85,6 @@ public class Robot extends TimedRobot {
             Constants.Limelight.gameAprilTags = Constants.Limelight.blueGameAprilTags;
             Constants.Limelight.gameAprilTags2d = Constants.Limelight.blueGameAprilTags2d;
         }
-
     }
 
     /**
