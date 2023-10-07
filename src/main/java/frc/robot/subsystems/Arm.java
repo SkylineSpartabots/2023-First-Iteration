@@ -40,7 +40,8 @@ public class Arm extends SubsystemBase {
         // LAYEDCONE(271),
         SUBSTATION(38),  
         CONEDOUBLESUBSTATION(68), 
-        CUBEDOUBLESUBSTATION(68), 
+        CUBEDOUBLESUBSTATION(
+            68), 
 
         L1CONE(9),
         L2CONE(38),

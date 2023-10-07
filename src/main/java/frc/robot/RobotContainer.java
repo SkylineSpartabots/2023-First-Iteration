@@ -167,25 +167,25 @@ public class RobotContainer {
 
     public Command onIntake() {
         if (cone) {
-            return new SetIntake(IntakeStates.ON_CLOSED_CONE);
+            return new SetIntake(IntakeStates.ON_CONE);
         } else {
-            return new SetIntake(IntakeStates.ON_OPEN_CUBE);
+            return new SetIntake(IntakeStates.ON_CUBE);
         }
     }
 
     public Command offIntake() {
         if (cone) {
-            return new SetIntake(IntakeStates.OFF_CLOSED_CONE);
+            return new SetIntake(IntakeStates.OFF_CONE);
         } else {
-            return new SetIntake(IntakeStates.OFF_CLOSED_CUBE);
+            return new SetIntake(IntakeStates.OFF_CUBE);
         }
     }
 
     public void reverseIntake() {
         if (cone) {
-            CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_OPEN_CONE));
+            CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_CONE));
         } else {
-            CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.REV_OPEN_CUBE));
+            CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.REV_CUBE));
         }
     }
 
@@ -228,6 +228,6 @@ public class RobotContainer {
     public void onRobotDisabled() {
         // reset mechanisms so it does not have to be done manually
         CommandScheduler.getInstance().schedule(new SetArm(ArmStates.ZERO));
-        CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_OPEN_CONE));
+        CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_CONE));
     }
 }

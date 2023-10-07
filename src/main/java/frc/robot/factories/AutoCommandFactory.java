@@ -69,6 +69,8 @@ public class AutoCommandFactory {
                                 return selectedAuto = threeConeTop();
                         case ThreeConeBottom:
                                 return selectedAuto = threeConeBottom();
+                        case SimpleIntake:
+                                return selectedAuto = simpleIntake();
                         default:
                                 break;
                 }
@@ -88,6 +90,7 @@ public class AutoCommandFactory {
                 TwoConeTop,
                 ThreeConeTop,
                 ThreeConeBottom,
+                SimpleIntake
         }
 
         public static Command getSelectedAuto() {
@@ -172,7 +175,11 @@ public class AutoCommandFactory {
                                                 followPathCommand(path),
                                                 new SetMechanism(MechanismState.GROUNDINTAKE)
                                                                 .andThen(new WaitCommand(0.7))
-                                                                .andThen(new SetIntake(IntakeStates.ON_CLOSED_CONE))));
+                                                                .andThen(new SetIntake(IntakeStates.ON_CONE))));
+        }
+
+        private static Command simpleIntake() {
+                return new InstantCommand(() -> new SetIntake(IntakeStates.ON_CONE));
         }
 
         // simple one cube and no movement
@@ -180,9 +187,9 @@ public class AutoCommandFactory {
                 return new SequentialCommandGroup(
                                 new SetMechanism(MechanismState.L3CUBE),
                                 new WaitCommand(1),
-                                new SetIntake(IntakeStates.REV_OPEN_CUBE),
+                                new SetIntake(IntakeStates.REV_CUBE),
                                 new WaitCommand(0.8),
-                                new SetIntake(IntakeStates.OFF_CLOSED_CONE));
+                                new SetIntake(IntakeStates.OFF_CONE));
         }
 
         // one cone and then back out of community bottom
@@ -193,9 +200,9 @@ public class AutoCommandFactory {
                                 new InstantCommand(() -> s_Swerve.resetOdometry(initPose)),
                                 new SetMechanism(MechanismState.L3CONE),
                                 new WaitCommand(1),
-                                new SetIntake(IntakeStates.OFF_OPEN_CONE),
+                                new SetIntake(IntakeStates.OFF_CONE),
                                 new WaitCommand(0.8),
-                                new SetIntake(IntakeStates.OFF_CLOSED_CONE),
+                                new SetIntake(IntakeStates.OFF_CONE),
                                 new SetMechanism(MechanismState.ZERO),
                                 followPathCommand(path));
         }
@@ -208,9 +215,9 @@ public class AutoCommandFactory {
                                 new InstantCommand(() -> s_Swerve.resetOdometry(initPose)),
                                 new SetMechanism(MechanismState.L3CONE),
                                 new WaitCommand(1),
-                                new SetIntake(IntakeStates.OFF_OPEN_CONE),
+                                new SetIntake(IntakeStates.OFF_CONE),
                                 new WaitCommand(0.8),
-                                new SetIntake(IntakeStates.OFF_CLOSED_CONE),
+                                new SetIntake(IntakeStates.OFF_CONE),
                                 new SetMechanism(MechanismState.ZERO),
                                 followPathCommand(path),
                                 // new WaitCommand(0.3),
@@ -228,9 +235,9 @@ public class AutoCommandFactory {
                                 new InstantCommand(() -> s_Swerve.resetOdometry(initPose)),
                                 new SetMechanism(MechanismState.L3CONE),
                                 new WaitCommand(0.8),
-                                new SetIntake(IntakeStates.OFF_OPEN_CONE),
+                                new SetIntake(IntakeStates.OFF_CONE),
                                 new WaitCommand(0.5),
-                                new SetIntake(IntakeStates.OFF_CLOSED_CONE),
+                                new SetIntake(IntakeStates.OFF_CONE),
                                 new SetMechanism(MechanismState.ZERO),
                                 followPathCommand(pathGroup.get(0)),
                                 followPathCommand(pathGroup.get(1)),
@@ -249,7 +256,7 @@ public class AutoCommandFactory {
                                 new InstantCommand(() -> s_Swerve.resetOdometry(initPose)),
                                 new SetMechanism(MechanismState.L3CONE),
                                 new WaitCommand(0.5),
-                                new SetIntake(IntakeStates.OFF_OPEN_CONE),
+                                new SetIntake(IntakeStates.OFF_CONE),
                                 new WaitCommand(0.5),
                                 new InstantCommand(() -> s_Swerve.goalPoseParameters(
                                                 getPoseFromState(pathGroup.get(0).getEndState(), 0), 3.2, 3.0, 180)),
@@ -260,7 +267,7 @@ public class AutoCommandFactory {
                                                                                                 new Translation2d(0, 0),
                                                                                                 0, false,
                                                                                                 false))),
-                                                new SetIntake(IntakeStates.ON_OPEN_CUBE),
+                                                new SetIntake(IntakeStates.ON_CUBE),
                                                 new SetMechanism(MechanismState.ZERO),
                                                 new WaitUntilCommand(s_Swerve.inPosition).andThen(
                                                                 new SetMechanism(MechanismState.GROUNDINTAKE))
@@ -275,7 +282,7 @@ public class AutoCommandFactory {
                                 new SmartResetOdometry(), 
                                 followPathCommand(pathGroup.get(2)),
                                 new SetMechanism(MechanismState.L3CUBE).andThen(new WaitCommand(0.8)),
-                                new SetIntake(IntakeStates.REV_OPEN_CUBE));
+                                new SetIntake(IntakeStates.REV_CUBE));
         }
 
         // paths were never written because we never got the chance to
@@ -307,7 +314,7 @@ public class AutoCommandFactory {
                                 new InstantCommand(() -> s_Swerve.resetOdometry(initPose)),
                                 new SetMechanism(MechanismState.L3CONE),
                                 new WaitCommand(0.5),
-                                new SetIntake(IntakeStates.OFF_OPEN_CONE),
+                                new SetIntake(IntakeStates.OFF_CONE),
                                 new WaitCommand(0.5),
                                 new InstantCommand(() -> s_Swerve.goalPoseParameters(
                                                 getPoseFromState(pathGroup.get(0).getEndState(), 0), 2.4, 2.4, 180)),
@@ -318,7 +325,7 @@ public class AutoCommandFactory {
                                                                                                 new Translation2d(0, 0),
                                                                                                 0, false,
                                                                                                 false))),
-                                                new SetIntake(IntakeStates.ON_OPEN_CUBE),
+                                                new SetIntake(IntakeStates.ON_CUBE),
                                                 new SetMechanism(MechanismState.ZERO),
                                                 new WaitUntilCommand(s_Swerve.inPosition).andThen(
                                                                 new SetMechanism(MechanismState.GROUNDINTAKE))),
@@ -328,7 +335,7 @@ public class AutoCommandFactory {
                                                 followPathCommand(pathGroup.get(1)),
                                                 new SetMechanism(MechanismState.ZERO)),
                                 new SetMechanism(MechanismState.L3CUBE).andThen(new WaitCommand(0.8)),
-                                new SetIntake(IntakeStates.REV_OPEN_CUBE),
+                                new SetIntake(IntakeStates.REV_CUBE),
                                 new WaitCommand(0.5),
                                 new InstantCommand(() -> s_Swerve.goalPoseParameters(
                                                 getPoseFromState(pathGroup.get(2).getEndState(), 0), 2.4, 2.4, 180)),
@@ -339,7 +346,7 @@ public class AutoCommandFactory {
                                                                                                 new Translation2d(0, 0),
                                                                                                 0, false,
                                                                                                 false))),
-                                                new SetIntake(IntakeStates.ON_OPEN_CUBE),
+                                                new SetIntake(IntakeStates.ON_CUBE),
                                                 new SetMechanism(MechanismState.ZERO),
                                                 new WaitUntilCommand(s_Swerve.inPosition).andThen(
                                                                 new SetMechanism(MechanismState.GROUNDINTAKE))),
@@ -349,7 +356,7 @@ public class AutoCommandFactory {
                                                 followPathCommand(pathGroup.get(3)),
                                                 new SetMechanism(MechanismState.ZERO)),
                                 new SetMechanism(MechanismState.L2CUBE).andThen(new WaitCommand(0.8)),
-                                new SetIntake(IntakeStates.REV_OPEN_CUBE)
+                                new SetIntake(IntakeStates.REV_CUBE)
                                 );
         }
 

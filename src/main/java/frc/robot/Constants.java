@@ -31,10 +31,7 @@ public final class Constants {
         public static final int armMotor = 23;
         public static final int armCANCoder = 26;
         public static final int intakeLeaderMotor = 24; 
-        public static final int intakeFollowerMotor = 28; 
-        public static final int followerIntakeMotor = 27; 
-        public static final int intakeSolenoidChannel = 0;
-        public static final int pneumaticHub = 16;
+        public static final int intakeFollowerMotor = 28;  
     }
 
     public static final double FIELD_WIDTH_METERS = 8.02;
