@@ -38,7 +38,7 @@ public class Intake extends SubsystemBase {
     public enum IntakeStates {
         ON_CONE("cone", 1.0),
         OFF_CONE("cone", 0),
-        REV_CONE("cone", -1),
+        REV_CONE("cone", -0.2),
 
         ON_CUBE("cube", 0.75),
         OFF_CUBE("cube", 0),
@@ -138,18 +138,18 @@ public class Intake extends SubsystemBase {
             cubeCounter = 0;
         }
 
-        if (intakeState == IntakeStates.ON_CUBE) {
-            if (cubeCounter > 10) {
-                CommandScheduler.getInstance()
-                        .schedule(new WaitCommand(0.0).andThen(new SetIntake(IntakeStates.OFF_CUBE)));
-            }
-        }
+        // if (intakeState == IntakeStates.ON_CUBE) {
+        //     if (cubeCounter > 10) {
+        //         CommandScheduler.getInstance()
+        //                 .schedule(new WaitCommand(0.0).andThen(new SetIntake(IntakeStates.OFF_CUBE)));
+        //     }
+        // }
 
-        if (intakeState == IntakeStates.ON_CONE) {
-            if (coneCounter > 10) {
-                CommandScheduler.getInstance()
-                        .schedule(new WaitCommand(0.0).andThen(new SetIntake(IntakeStates.OFF_CONE)));
-            }
-        }
+        // if (intakeState == IntakeStates.ON_CONE) {
+        //     if (coneCounter > 10) {
+        //         CommandScheduler.getInstance()
+        //                 .schedule(new WaitCommand(0.0).andThen(new SetIntake(IntakeStates.OFF_CONE)));
+        //     }
+        // }
     }
 }

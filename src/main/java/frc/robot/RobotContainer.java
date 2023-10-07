@@ -94,7 +94,7 @@ public class RobotContainer {
     private final Intake s_Intake;
     private final CompleteMechanism s_CompleteMechanism;
     private final AutomaticScoringSelector selector;
-    private boolean currentlyCoast;
+    private boolean intakeOn;
 
     /* Commands */
 
@@ -111,6 +111,8 @@ public class RobotContainer {
         s_CompleteMechanism = CompleteMechanism.getInstance();
         selector = AutomaticScoringSelector.getInstance();
         selector.createDisplay();
+
+        intakeOn = false;
 
         s_Swerve.resetOdometry(new Pose2d());
         s_Swerve.zeroGyro();
@@ -183,38 +185,42 @@ public class RobotContainer {
 
     public void reverseIntake() {
         if (cone) {
-            CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_CONE));
+            CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.REV_CONE));
         } else {
             CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.REV_CUBE));
         }
+        intakeOn = true;
     }
 
     public void groundIntake() {
         CommandScheduler.getInstance().schedule(
                 new ParallelCommandGroup(
-                        new SetMechanism(MechanismState.GROUNDINTAKE),
+                        new SetMechanism(MechanismState.GROUNDINTAKE), intakeOn ? offIntake() : 
                         onIntake()));
+        intakeOn = !intakeOn;
     }
 
     public void singleSubIntake() {
         CommandScheduler.getInstance().schedule(
                 new ParallelCommandGroup(
                         new SetMechanism(MechanismState.SUBSTATION),
-                        onIntake()));
+                        intakeOn ? offIntake() : onIntake()));
+        intakeOn = !intakeOn;
     }
 
     public void doubleSubIntake() {
         if (cone) {
             CommandScheduler.getInstance().schedule(
                     new ParallelCommandGroup(
-                            new SetMechanism(MechanismState.CONEDOUBLESUBSTATION),
+                            new SetMechanism(MechanismState.CONEDOUBLESUBSTATION), intakeOn ? offIntake() : 
                             onIntake()));
         } else {
             CommandScheduler.getInstance().schedule(
                     new ParallelCommandGroup(
-                            new SetMechanism(MechanismState.CUBEDOUBLESUBSTATION),
+                            new SetMechanism(MechanismState.CUBEDOUBLESUBSTATION), intakeOn ? offIntake() :
                             onIntake()));
         }
+        intakeOn = !intakeOn;
     }
 
     public void zeroMech() {
@@ -222,6 +228,7 @@ public class RobotContainer {
                 new ParallelCommandGroup(
                         new SetMechanism(MechanismState.ZERO),
                         offIntake()));
+        intakeOn = false;
     }
 
     // does not work

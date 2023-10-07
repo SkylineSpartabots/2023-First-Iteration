@@ -45,7 +45,7 @@ public class Arm extends SubsystemBase {
 
         L1CONE(9),
         L2CONE(38),
-        L3CONE(58),
+        L3CONE(54),
 
         L1CUBE(11),
         L2CUBE(47),
