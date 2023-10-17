@@ -114,6 +114,11 @@ public class SwerveModule {
         ); 
     }
 
+    //added by Yanda to try to debug the drifting by comparing actual bus voltage.
+    public double getDriveBusVoltage(){
+        return mDriveMotor.getBusVoltage();
+    }
+
     public SwerveModulePosition getPosition(){
         return new SwerveModulePosition(
             Conversions.falconToMeters(mDriveMotor.getSelectedSensorPosition(), Constants.SwerveConstants.wheelCircumference, Constants.SwerveConstants.driveGearRatio), 

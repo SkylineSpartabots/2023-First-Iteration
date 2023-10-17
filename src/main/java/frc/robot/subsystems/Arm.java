@@ -36,7 +36,7 @@ public class Arm extends SubsystemBase {
         ZERO(12),
         REALZERO(7),
 
-        GROUNDINTAKE(88), 
+        GROUNDINTAKE(83), //78
         // LAYEDCONE(271),
         SUBSTATION(38),  
         CONEDOUBLESUBSTATION(68), 
@@ -44,8 +44,8 @@ public class Arm extends SubsystemBase {
             68), 
 
         L1CONE(9),
-        L2CONE(38),
-        L3CONE(54),
+        L2CONE(33),
+        L3CONE(50),
 
         L1CUBE(11),
         L2CUBE(47),

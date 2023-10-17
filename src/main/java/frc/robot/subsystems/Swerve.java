@@ -187,11 +187,12 @@ public class Swerve extends SubsystemBase {
         AutomaticScoringSelector.getInstance().realRotEntry.setDouble(getPose().getRotation().getDegrees());
 
         // information about individual swerve modules, uncomment for debugging
-        /* for (SwerveModule mod : mSwerveMods) {
+        for (SwerveModule mod : mSwerveMods) {
              SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
              SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
              SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
-        } */
+             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Bus Voltage", mod.getDriveBusVoltage());
+        }
 
     }
 
