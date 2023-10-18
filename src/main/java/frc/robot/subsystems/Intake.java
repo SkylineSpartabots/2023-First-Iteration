@@ -87,14 +87,14 @@ public class Intake extends SubsystemBase {
         return intakeState.piece;
     }
 
-    private double coneThreshold = 7.8;
+    private double coneThreshold = 4;
 
     // current limiting methods to detect when a game piece has been intaked, auto stops the intake
     public boolean hasCone() {
         return m_leaderMotor.getOutputCurrent() > coneThreshold || m_followerMotor.getOutputCurrent() > coneThreshold;
     }
 
-    public double cubeThreshold = 7.8; 
+    public double cubeThreshold = 7.4; 
 
     public boolean hasCube() {
         return m_leaderMotor.getOutputCurrent() > coneThreshold || m_followerMotor.getOutputCurrent() > coneThreshold;
