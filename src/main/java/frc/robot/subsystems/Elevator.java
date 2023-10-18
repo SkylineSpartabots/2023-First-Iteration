@@ -44,7 +44,8 @@ public class Elevator extends SubsystemBase {
 
         L1CONE(50),
         L2CONE(940),
-        L3CONE(2414),
+        L3CONE(2400),
+        HALFWAYCONE(1000), //used during auto to not hit the L2 Cone when raising mechanism
 
         L1CUBE(50),
         L2CUBE(454),

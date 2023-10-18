@@ -87,14 +87,14 @@ public class Intake extends SubsystemBase {
         return intakeState.piece;
     }
 
-    private double coneThreshold = 4;
+    private double coneThreshold = 10;
 
     // current limiting methods to detect when a game piece has been intaked, auto stops the intake
     public boolean hasCone() {
         return m_leaderMotor.getOutputCurrent() > coneThreshold || m_followerMotor.getOutputCurrent() > coneThreshold;
     }
 
-    public double cubeThreshold = 7.4; 
+    public double cubeThreshold = 10; 
 
     public boolean hasCube() {
         return m_leaderMotor.getOutputCurrent() > coneThreshold || m_followerMotor.getOutputCurrent() > coneThreshold;
@@ -138,18 +138,18 @@ public class Intake extends SubsystemBase {
             cubeCounter = 0;
         }
 
-        // if (intakeState == IntakeStates.ON_CUBE) {
-        //     if (cubeCounter > 10) {
-        //         CommandScheduler.getInstance()
-        //                 .schedule(new WaitCommand(0.0).andThen(new SetIntake(IntakeStates.OFF_CUBE)));
-        //     }
-        // }
+        if (intakeState == IntakeStates.ON_CUBE) {
+            if (cubeCounter > 4) {
+                CommandScheduler.getInstance()
+                        .schedule(new WaitCommand(0.0).andThen(new SetIntake(IntakeStates.OFF_CUBE)));
+            }
+        }
 
-        // if (intakeState == IntakeStates.ON_CONE) {
-        //     if (coneCounter > 10) {
-        //         CommandScheduler.getInstance()
-        //                 .schedule(new WaitCommand(0.0).andThen(new SetIntake(IntakeStates.OFF_CONE)));
-        //     }
-        // }
+        if (intakeState == IntakeStates.ON_CONE) {
+            if (coneCounter > 4) {
+                CommandScheduler.getInstance()
+                        .schedule(new WaitCommand(0.0).andThen(new SetIntake(IntakeStates.OFF_CONE)));
+            }
+        }
     }
 }

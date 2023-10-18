@@ -254,9 +254,10 @@ public class AutoCommandFactory {
                 Pose2d initPose = getPoseFromState(pathGroup.get(0).getInitialState(), 180);
                 return new SequentialCommandGroup(
                                 new InstantCommand(() -> s_Swerve.resetOdometry(initPose)),
+                                new SetMechanism(MechanismState.AUTOHALFWAY),
                                 new SetMechanism(MechanismState.L3CONE),
                                 new WaitCommand(0.5),
-                                new SetIntake(IntakeStates.OFF_CONE),
+                                new SetIntake(IntakeStates.REV_CONE),
                                 new WaitCommand(0.5),
                                 new InstantCommand(() -> s_Swerve.goalPoseParameters(
                                                 getPoseFromState(pathGroup.get(0).getEndState(), 0), 3.2, 3.0, 180)),

@@ -46,6 +46,7 @@ public class Arm extends SubsystemBase {
         L1CONE(9),
         L2CONE(42),
         L3CONE(56),
+        HALFWAYCONE(20), //used when going halfway to L3 during auto
 
         L1CUBE(11),
         L2CUBE(47),
