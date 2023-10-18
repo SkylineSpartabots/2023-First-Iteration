@@ -33,7 +33,7 @@ public class SetMechanism extends CommandBase {
         if(state == MechanismState.L3CUBE || state == MechanismState.L3CONE || state == MechanismState.CONEDOUBLESUBSTATION || state == MechanismState.CUBEDOUBLESUBSTATION) {
             CommandScheduler.getInstance().schedule(
                 new ParallelCommandGroup(
-                        new WaitCommand(0.6).andThen(new SetArm(state.armState)),
+                        new WaitCommand(1.2).andThen(new SetArm(state.armState)),//changed this from 0.6 to 1.2 so that the arm lowers even later
                         new SetElevator(state.elevState)));
 
         } else {
