@@ -18,7 +18,7 @@ public class SetMechanism extends CommandBase {
     private MechanismState state;
     private CompleteMechanism s_Mechanism;
     private Intake s_Intake;
-    boolean done; 
+    boolean done;
 
     public SetMechanism(MechanismState state) {
         this.state = state;

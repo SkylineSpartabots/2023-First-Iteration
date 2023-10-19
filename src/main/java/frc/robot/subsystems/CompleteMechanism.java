@@ -50,6 +50,7 @@ public class CompleteMechanism extends SubsystemBase {
         CONEDOUBLESUBSTATION(ElevatorStates.CONEDOUBLESUBSTATION, ArmStates.CONEDOUBLESUBSTATION),
         CUBEDOUBLESUBSTATION(ElevatorStates.CUBEDOUBLESUBSTATION, ArmStates.CUBEDOUBLESUBSTATION);
 
+        public MechanismState mechState;
         public ElevatorStates elevState;
         public ArmStates armState;
 

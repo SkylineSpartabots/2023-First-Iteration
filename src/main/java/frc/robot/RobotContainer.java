@@ -187,6 +187,7 @@ public class RobotContainer {
         if (cone) {
             CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.REV_CONE));
         } else {
+            if(s_CompleteMechanism.getState()) //TODO: get this to increase Intake power based on what Mechanism state should be.
             CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.REV_CUBE));
         }
         intakeOn = true;

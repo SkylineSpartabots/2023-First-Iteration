@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import java.util.function.BooleanSupplier;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -42,7 +43,7 @@ public class Intake extends SubsystemBase {
 
         ON_CUBE("cube", -0.75),
         OFF_CUBE("cube", 0),
-        REV_CUBE("cube", 0.5);
+        REV_CUBE("cube", 0.7);
 
         // ON_DEPLOYED_LAYEDCONE(true, "layed", 1.2),
         // OFF_DEPLOYED_LAYEDCONE(true, "layed", 0.075),
@@ -66,8 +67,10 @@ public class Intake extends SubsystemBase {
         coneCounter = 0;
         m_leaderMotor = new CANSparkMax(Constants.HardwarePorts.intakeLeaderMotor, MotorType.kBrushless);
         m_leaderMotor.setInverted(true);
+        m_leaderMotor.setIdleMode(IdleMode.kBrake);
         m_followerMotor = new CANSparkMax(Constants.HardwarePorts.intakeFollowerMotor, MotorType.kBrushless);
         m_followerMotor.follow(m_leaderMotor, true);
+        m_followerMotor.setIdleMode(IdleMode.kBrake);
     }
 
     // these methods are all pretty straighforward to understand
@@ -121,6 +124,7 @@ public class Intake extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putString("intake piece", getIntakePiece());
         SmartDashboard.putNumber("intake current", m_leaderMotor.getOutputCurrent());
+        SmartDashboard.putBoolean("Intake On", m_leaderMotor.getOutputCurrent() > 2.0);
         // SmartDashboard.putBoolean("intake deployed", getIntakeDeployed());
 
         // if the current for a piece has been detected for 10 loops in a row then auto stop the intake
@@ -139,14 +143,14 @@ public class Intake extends SubsystemBase {
         }
 
         if (intakeState == IntakeStates.ON_CUBE) {
-            if (cubeCounter > 4) {
+            if (cubeCounter > 15) {
                 CommandScheduler.getInstance()
                         .schedule(new WaitCommand(0.0).andThen(new SetIntake(IntakeStates.OFF_CUBE)));
             }
         }
 
         if (intakeState == IntakeStates.ON_CONE) {
-            if (coneCounter > 4) {
+            if (coneCounter > 6){
                 CommandScheduler.getInstance()
                         .schedule(new WaitCommand(0.0).andThen(new SetIntake(IntakeStates.OFF_CONE)));
             }

@@ -200,7 +200,7 @@ public class AutoCommandFactory {
                                 new InstantCommand(() -> s_Swerve.resetOdometry(initPose)),
                                 new SetMechanism(MechanismState.L3CONE),
                                 new WaitCommand(1),
-                                new SetIntake(IntakeStates.OFF_CONE),
+                                new SetIntake(IntakeStates.REV_CONE),
                                 new WaitCommand(0.8),
                                 new SetIntake(IntakeStates.OFF_CONE),
                                 new SetMechanism(MechanismState.ZERO),
@@ -215,7 +215,7 @@ public class AutoCommandFactory {
                                 new InstantCommand(() -> s_Swerve.resetOdometry(initPose)),
                                 new SetMechanism(MechanismState.L3CONE),
                                 new WaitCommand(1),
-                                new SetIntake(IntakeStates.OFF_CONE),
+                                new SetIntake(IntakeStates.REV_CONE),
                                 new WaitCommand(0.8),
                                 new SetIntake(IntakeStates.OFF_CONE),
                                 new SetMechanism(MechanismState.ZERO),
@@ -235,7 +235,7 @@ public class AutoCommandFactory {
                                 new InstantCommand(() -> s_Swerve.resetOdometry(initPose)),
                                 new SetMechanism(MechanismState.L3CONE),
                                 new WaitCommand(0.8),
-                                new SetIntake(IntakeStates.OFF_CONE),
+                                new SetIntake(IntakeStates.REV_CONE),
                                 new WaitCommand(0.5),
                                 new SetIntake(IntakeStates.OFF_CONE),
                                 new SetMechanism(MechanismState.ZERO),
@@ -276,6 +276,7 @@ public class AutoCommandFactory {
                                 new WaitUntilCommand(s_Intake.shouldStopOnAuto),
                                 new InstantCommand(()-> s_Swerve.drive(new Translation2d(0, 0), 0, false, false)),
                                 new WaitCommand(0.3),
+                                new SetIntake(IntakeStates.OFF_CUBE), //a bit redundant since now it autostops but its ok
                                 new ParallelCommandGroup(
                                                 followPathCommand(pathGroup.get(1)),
                                                 new SetMechanism(MechanismState.ZERO)),
@@ -314,7 +315,7 @@ public class AutoCommandFactory {
                                 new InstantCommand(() -> s_Swerve.resetOdometry(initPose)),
                                 new SetMechanism(MechanismState.L3CONE),
                                 new WaitCommand(0.5),
-                                new SetIntake(IntakeStates.OFF_CONE),
+                                new SetIntake(IntakeStates.REV_CONE),
                                 new WaitCommand(0.5),
                                 new InstantCommand(() -> s_Swerve.goalPoseParameters(
                                                 getPoseFromState(pathGroup.get(0).getEndState(), 0), 2.4, 2.4, 180)),
