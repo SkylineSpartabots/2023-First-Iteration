@@ -94,7 +94,6 @@ public class RobotContainer {
     private final Intake s_Intake;
     private final CompleteMechanism s_CompleteMechanism;
     private final AutomaticScoringSelector selector;
-    private boolean intakeOn;
 
     /* Commands */
 
@@ -112,7 +111,6 @@ public class RobotContainer {
         selector = AutomaticScoringSelector.getInstance();
         selector.createDisplay();
 
-        intakeOn = false;
 
         s_Swerve.resetOdometry(new Pose2d());
         s_Swerve.zeroGyro();
@@ -173,55 +171,48 @@ public class RobotContainer {
         } else {
             return new SetIntake(IntakeStates.ON_CUBE);
         }
+        
     }
 
     public Command offIntake() {
-        if (cone) {
-            return new SetIntake(IntakeStates.OFF_CONE);
-        } else {
-            return new SetIntake(IntakeStates.OFF_CUBE);
-        }
+        return new SetIntake(IntakeStates.OFF);
     }
 
     public void reverseIntake() {
         if (cone) {
             CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.REV_CONE));
         } else {
-            if(s_CompleteMechanism.getState()) //TODO: get this to increase Intake power based on what Mechanism state should be.
+            //if(s_CompleteMechanism.getState()) //TODO: get this to increase Intake power based on what Mechanism state should be.
             CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.REV_CUBE));
         }
-        intakeOn = true;
     }
 
     public void groundIntake() {
         CommandScheduler.getInstance().schedule(
                 new ParallelCommandGroup(
-                        new SetMechanism(MechanismState.GROUNDINTAKE), intakeOn ? offIntake() : 
+                        new SetMechanism(MechanismState.GROUNDINTAKE),
                         onIntake()));
-        intakeOn = !intakeOn;
     }
 
     public void singleSubIntake() {
         CommandScheduler.getInstance().schedule(
                 new ParallelCommandGroup(
                         new SetMechanism(MechanismState.SUBSTATION),
-                        intakeOn ? offIntake() : onIntake()));
-        intakeOn = !intakeOn;
+                        onIntake()));
     }
 
     public void doubleSubIntake() {
         if (cone) {
             CommandScheduler.getInstance().schedule(
                     new ParallelCommandGroup(
-                            new SetMechanism(MechanismState.CONEDOUBLESUBSTATION), intakeOn ? offIntake() : 
+                            new SetMechanism(MechanismState.CONEDOUBLESUBSTATION),  
                             onIntake()));
         } else {
             CommandScheduler.getInstance().schedule(
                     new ParallelCommandGroup(
-                            new SetMechanism(MechanismState.CUBEDOUBLESUBSTATION), intakeOn ? offIntake() :
+                            new SetMechanism(MechanismState.CUBEDOUBLESUBSTATION),
                             onIntake()));
         }
-        intakeOn = !intakeOn;
     }
 
     public void zeroMech() {
@@ -229,13 +220,12 @@ public class RobotContainer {
                 new ParallelCommandGroup(
                         new SetMechanism(MechanismState.ZERO),
                         offIntake()));
-        intakeOn = false;
     }
 
     // does not work
     public void onRobotDisabled() {
         // reset mechanisms so it does not have to be done manually
         CommandScheduler.getInstance().schedule(new SetArm(ArmStates.ZERO));
-        CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF_CONE));
+        CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF));
     }
 }

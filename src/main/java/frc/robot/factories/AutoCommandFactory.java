@@ -69,8 +69,6 @@ public class AutoCommandFactory {
                                 return selectedAuto = threeConeTop();
                         case ThreeConeBottom:
                                 return selectedAuto = threeConeBottom();
-                        case SimpleIntake:
-                                return selectedAuto = simpleIntake();
                         default:
                                 break;
                 }
@@ -177,19 +175,11 @@ public class AutoCommandFactory {
                                                                 .andThen(new WaitCommand(0.7))
                                                                 .andThen(new SetIntake(IntakeStates.ON_CONE))));
         }
-
-        private static Command simpleIntake() {
-                return new InstantCommand(() -> new SetIntake(IntakeStates.ON_CONE));
-        }
-
-        // simple one cube and no movement
+        // simple one cone and no movement
         private static Command oneCone() {
                 return new SequentialCommandGroup(
-                                new SetMechanism(MechanismState.L3CUBE),
-                                new WaitCommand(1),
-                                new SetIntake(IntakeStates.REV_CUBE),
-                                new WaitCommand(0.8),
-                                new SetIntake(IntakeStates.OFF_CONE));
+                                scorePiece(MechanismState.L3CONE, IntakeStates.REV_CONE),
+                                new SetIntake(IntakeStates.OFF));
         }
 
         // one cone and then back out of community bottom
@@ -198,11 +188,8 @@ public class AutoCommandFactory {
                 Pose2d initPose = getPoseFromState(path.getInitialState(), 180);
                 return new SequentialCommandGroup(
                                 new InstantCommand(() -> s_Swerve.resetOdometry(initPose)),
-                                new SetMechanism(MechanismState.L3CONE),
-                                new WaitCommand(1),
-                                new SetIntake(IntakeStates.REV_CONE),
-                                new WaitCommand(0.8),
-                                new SetIntake(IntakeStates.OFF_CONE),
+                                scorePiece(MechanismState.L3CONE, IntakeStates.REV_CONE),
+                                new SetIntake(IntakeStates.OFF),
                                 new SetMechanism(MechanismState.ZERO),
                                 followPathCommand(path));
         }
@@ -213,11 +200,8 @@ public class AutoCommandFactory {
                 Pose2d initPose = getPoseFromState(path.getInitialState(), 180);
                 return new SequentialCommandGroup(
                                 new InstantCommand(() -> s_Swerve.resetOdometry(initPose)),
-                                new SetMechanism(MechanismState.L3CONE),
-                                new WaitCommand(1),
-                                new SetIntake(IntakeStates.REV_CONE),
-                                new WaitCommand(0.8),
-                                new SetIntake(IntakeStates.OFF_CONE),
+                                scorePiece(MechanismState.L3CONE, IntakeStates.REV_CONE),
+                                new SetIntake(IntakeStates.OFF),
                                 new SetMechanism(MechanismState.ZERO),
                                 followPathCommand(path),
                                 // new WaitCommand(0.3),
@@ -233,11 +217,8 @@ public class AutoCommandFactory {
                 Pose2d initPose = getPoseFromState(pathGroup.get(0).getInitialState(), 180);
                 return new SequentialCommandGroup(
                                 new InstantCommand(() -> s_Swerve.resetOdometry(initPose)),
-                                new SetMechanism(MechanismState.L3CONE),
-                                new WaitCommand(0.8),
-                                new SetIntake(IntakeStates.REV_CONE),
-                                new WaitCommand(0.5),
-                                new SetIntake(IntakeStates.OFF_CONE),
+                                scorePiece(MechanismState.L3CONE, IntakeStates.REV_CONE),
+                                new SetIntake(IntakeStates.OFF),
                                 new SetMechanism(MechanismState.ZERO),
                                 followPathCommand(pathGroup.get(0)),
                                 followPathCommand(pathGroup.get(1)),
@@ -254,10 +235,7 @@ public class AutoCommandFactory {
                 Pose2d initPose = getPoseFromState(pathGroup.get(0).getInitialState(), 180);
                 return new SequentialCommandGroup(
                                 new InstantCommand(() -> s_Swerve.resetOdometry(initPose)),
-                                new SetMechanism(MechanismState.L3CONE),
-                                new WaitCommand(0.5),
-                                new SetIntake(IntakeStates.REV_CONE),
-                                new WaitCommand(0.5),
+                                scorePiece(MechanismState.L3CONE, IntakeStates.REV_CONE),
                                 new InstantCommand(() -> s_Swerve.goalPoseParameters(
                                                 getPoseFromState(pathGroup.get(0).getEndState(), 0), 3.2, 3.0, 180)),
                                 new ParallelCommandGroup(
@@ -267,23 +245,25 @@ public class AutoCommandFactory {
                                                                                                 new Translation2d(0, 0),
                                                                                                 0, false,
                                                                                                 false))),
-                                                new SetIntake(IntakeStates.ON_CUBE),
+
                                                 new SetMechanism(MechanismState.ZERO),
+                                                new SetIntake(IntakeStates.OFF),
                                                 new WaitUntilCommand(s_Swerve.inPosition).andThen(
                                                                 new SetMechanism(MechanismState.GROUNDINTAKE))
-                                                                ).andThen(new InstantCommand(() -> s_Swerve.drive(new Translation2d(0.3, 0).times(Constants.SwerveConstants.maxSpeed), 
+                                                                ).andThen(new SetIntake(IntakeStates.ON_CUBE).andThen(new InstantCommand(() -> s_Swerve.drive(new Translation2d(0.3, 0).times(Constants.SwerveConstants.maxSpeed), 
                                                                 0, false, false))),
                                 new WaitUntilCommand(s_Intake.shouldStopOnAuto),
                                 new InstantCommand(()-> s_Swerve.drive(new Translation2d(0, 0), 0, false, false)),
                                 new WaitCommand(0.3),
-                                new SetIntake(IntakeStates.OFF_CUBE), //a bit redundant since now it autostops but its ok
+                                new SetIntake(IntakeStates.OFF), //a bit redundant since now it autostops but its ok
                                 new ParallelCommandGroup(
                                                 followPathCommand(pathGroup.get(1)),
                                                 new SetMechanism(MechanismState.ZERO)),
                                 new SmartResetOdometry(), 
                                 followPathCommand(pathGroup.get(2)),
-                                new SetMechanism(MechanismState.L3CUBE).andThen(new WaitCommand(0.8)),
-                                new SetIntake(IntakeStates.REV_CUBE));
+                                scorePiece(MechanismState.L3CUBE, IntakeStates.REV_CUBE),
+                                new SetMechanism(MechanismState.ZERO),
+                                new SetIntake(IntakeStates.OFF)));
         }
 
         // paths were never written because we never got the chance to
@@ -313,10 +293,7 @@ public class AutoCommandFactory {
                 Pose2d initPose = getPoseFromState(pathGroup.get(0).getInitialState(), 180);
                 return new SequentialCommandGroup(
                                 new InstantCommand(() -> s_Swerve.resetOdometry(initPose)),
-                                new SetMechanism(MechanismState.L3CONE),
-                                new WaitCommand(0.5),
-                                new SetIntake(IntakeStates.REV_CONE),
-                                new WaitCommand(0.5),
+                                scorePiece(MechanismState.L3CONE, IntakeStates.REV_CONE),
                                 new InstantCommand(() -> s_Swerve.goalPoseParameters(
                                                 getPoseFromState(pathGroup.get(0).getEndState(), 0), 2.4, 2.4, 180)),
                                 new ParallelCommandGroup(
@@ -356,12 +333,20 @@ public class AutoCommandFactory {
                                 new ParallelCommandGroup(
                                                 followPathCommand(pathGroup.get(3)),
                                                 new SetMechanism(MechanismState.ZERO)),
-                                new SetMechanism(MechanismState.L2CUBE).andThen(new WaitCommand(0.8)),
-                                new SetIntake(IntakeStates.REV_CUBE)
+                                scorePiece(MechanismState.L2CUBE, IntakeStates.REV_CUBE),
+                                new SetMechanism(MechanismState.ZERO),
+                                new SetIntake(IntakeStates.OFF)
                                 );
         }
 
         private static Command threeConeBottom() {
                 return new WaitCommand(0);
+        }
+
+        private static Command scorePiece(MechanismState mechState, IntakeStates intakeState) {
+                return new ParallelCommandGroup(new SetMechanism(mechState),
+                new WaitCommand(0.8),
+                new SetIntake(intakeState),
+                new WaitCommand(0.8));
         }
 }

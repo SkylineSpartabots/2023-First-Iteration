@@ -22,7 +22,7 @@ public class Intake extends SubsystemBase {
     private static Intake instance;
     private Swerve s_Swerve;
     CANSparkMax m_leaderMotor, m_followerMotor;
-    public IntakeStates intakeState = IntakeStates.OFF_CONE;
+    public IntakeStates intakeState = IntakeStates.OFF;
     public BooleanSupplier motorStopped = () -> motorStopped();
     public BooleanSupplier shouldStopOnAuto = () -> stopMovingOnAuto();
     int cubeCounter;
@@ -38,12 +38,12 @@ public class Intake extends SubsystemBase {
     // all states for the intake mechanism
     public enum IntakeStates {
         ON_CONE("cone", -1),
-        OFF_CONE("cone", 0),
         REV_CONE("cone", 0.3),
 
         ON_CUBE("cube", -0.75),
-        OFF_CUBE("cube", 0),
-        REV_CUBE("cube", 0.7);
+        REV_CUBE("cube", 0.7),
+
+        OFF("", 0);
 
         // ON_DEPLOYED_LAYEDCONE(true, "layed", 1.2),
         // OFF_DEPLOYED_LAYEDCONE(true, "layed", 0.075),
@@ -104,11 +104,11 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean motorStopped() {
-        return intakeState == IntakeStates.OFF_CONE || intakeState == IntakeStates.OFF_CUBE;
+        return intakeState == IntakeStates.OFF;
     }
 
     public boolean stopMovingOnAuto(){
-        return intakeState == IntakeStates.OFF_CONE || intakeState == IntakeStates.OFF_CUBE || s_Swerve.getPose().getX() > 7;
+        return intakeState == IntakeStates.OFF || s_Swerve.getPose().getX() > 7;
     }
 
     // private double layedConeThreshold = 0;
@@ -145,14 +145,14 @@ public class Intake extends SubsystemBase {
         if (intakeState == IntakeStates.ON_CUBE) {
             if (cubeCounter > 15) {
                 CommandScheduler.getInstance()
-                        .schedule(new WaitCommand(0.0).andThen(new SetIntake(IntakeStates.OFF_CUBE)));
+                        .schedule(new SetIntake(IntakeStates.OFF));
             }
         }
 
         if (intakeState == IntakeStates.ON_CONE) {
             if (coneCounter > 6){
                 CommandScheduler.getInstance()
-                        .schedule(new WaitCommand(0.0).andThen(new SetIntake(IntakeStates.OFF_CONE)));
+                        .schedule(new SetIntake(IntakeStates.OFF));
             }
         }
     }
