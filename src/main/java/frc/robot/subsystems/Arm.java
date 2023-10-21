@@ -50,7 +50,7 @@ public class Arm extends SubsystemBase {
 
         L1CUBE(11),
         L2CUBE(20), //47
-        L3CUBE(35); //64
+        L3CUBE(45); //64
 
         // L1LAYEDCONE(150),
         // L2LAYEDCONE(90),

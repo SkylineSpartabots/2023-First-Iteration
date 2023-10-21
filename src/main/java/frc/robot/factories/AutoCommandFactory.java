@@ -239,12 +239,7 @@ public class AutoCommandFactory {
                                 new InstantCommand(() -> s_Swerve.goalPoseParameters(
                                                 getPoseFromState(pathGroup.get(0).getEndState(), 0), 3.2, 3.0, 180)),
                                 new ParallelCommandGroup(
-                                                followPathCommand(pathGroup.get(0))
-                                                                .andThen(new InstantCommand(
-                                                                                () -> s_Swerve.drive(
-                                                                                                new Translation2d(0, 0),
-                                                                                                0, false,
-                                                                                                false))),
+                                                followPathCommand(pathGroup.get(0)),
 
                                                 new SetMechanism(MechanismState.ZERO),
                                                 new SetIntake(IntakeStates.OFF),
@@ -253,7 +248,6 @@ public class AutoCommandFactory {
                                                                 ).andThen(new SetIntake(IntakeStates.ON_CUBE).andThen(new InstantCommand(() -> s_Swerve.drive(new Translation2d(0.3, 0).times(Constants.SwerveConstants.maxSpeed), 
                                                                 0, false, false))),
                                 new WaitUntilCommand(s_Intake.shouldStopOnAuto),
-                                new InstantCommand(()-> s_Swerve.drive(new Translation2d(0, 0), 0, false, false)),
                                 new WaitCommand(0.3),
                                 new SetIntake(IntakeStates.OFF), //a bit redundant since now it autostops but its ok
                                 new ParallelCommandGroup(
@@ -261,6 +255,10 @@ public class AutoCommandFactory {
                                                 new SetMechanism(MechanismState.ZERO)),
                                 new SmartResetOdometry(), 
                                 followPathCommand(pathGroup.get(2)),
+                                new InstantCommand(() -> s_Swerve.drive(new Translation2d(0.3, 0).times(Constants.SwerveConstants.maxSpeed), 
+                                                                0, false, false)),
+                                new WaitCommand(0.2),
+                                new InstantCommand(() -> s_Swerve.drive(new Translation2d(0, 0), 0, false, false)),
                                 scorePiece(MechanismState.L3CUBE, IntakeStates.REV_CUBE),
                                 new SetMechanism(MechanismState.ZERO),
                                 new SetIntake(IntakeStates.OFF)));
@@ -344,7 +342,7 @@ public class AutoCommandFactory {
         }
 
         private static Command scorePiece(MechanismState mechState, IntakeStates intakeState) {
-                return new ParallelCommandGroup(new SetMechanism(mechState),
+                return new SequentialCommandGroup(new SetMechanism(mechState),
                 new WaitCommand(0.8),
                 new SetIntake(intakeState),
                 new WaitCommand(0.8));

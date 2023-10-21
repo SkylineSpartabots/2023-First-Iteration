@@ -38,7 +38,7 @@ public class Intake extends SubsystemBase {
     // all states for the intake mechanism
     public enum IntakeStates {
         ON_CONE("cone", -1),
-        REV_CONE("cone", 0.3),
+        REV_CONE("cone", 0.25),
 
         ON_CUBE("cube", -0.75),
         REV_CUBE("cube", 0.7),
