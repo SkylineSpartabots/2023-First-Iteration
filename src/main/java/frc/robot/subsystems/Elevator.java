@@ -43,7 +43,7 @@ public class Elevator extends SubsystemBase {
         CUBEDOUBLESUBSTATION(1990),
 
         L1CONE(50),
-        L2CONE(940),
+        L2CONE(950),
         L3CONE(2400),
         HALFWAYCONE(1000), //used during auto to not hit the L2 Cone when raising mechanism
 
@@ -83,7 +83,7 @@ public class Elevator extends SubsystemBase {
         talon.enableVoltageCompensation(false);
         talon.setNeutralMode(NeutralMode.Brake);
         talon.config_kF(0, 0.05, Constants.timeOutMs);
-        talon.config_kP(0, 0.12, Constants.timeOutMs);
+        talon.config_kP(0, 0.15, Constants.timeOutMs);
         talon.config_kI(0, 0, Constants.timeOutMs);
         talon.config_kD(0, 0, Constants.timeOutMs);
     }

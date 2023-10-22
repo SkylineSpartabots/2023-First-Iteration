@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -23,10 +24,12 @@ import com.pathplanner.lib.PathConstraints;
 
 import frc.robot.Constants;
 import frc.robot.commands.AutoBalance;
+import frc.robot.commands.SetArm;
 import frc.robot.commands.SetIntake;
 import frc.robot.commands.SetMechanism;
 import frc.robot.commands.SmartResetOdometry;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.Arm.ArmStates;
 import frc.robot.subsystems.CompleteMechanism.MechanismState;
 import frc.robot.subsystems.Intake.IntakeStates;
 
@@ -253,7 +256,7 @@ public class AutoCommandFactory {
                                 new ParallelCommandGroup(
                                                 followPathCommand(pathGroup.get(1)),
                                                 new SetMechanism(MechanismState.ZERO)),
-                                new SmartResetOdometry(), 
+                                //new SmartResetOdometry(), 
                                 followPathCommand(pathGroup.get(2)),
                                 new InstantCommand(() -> s_Swerve.drive(new Translation2d(0.3, 0).times(Constants.SwerveConstants.maxSpeed), 
                                                                 0, false, false)),
@@ -342,9 +345,11 @@ public class AutoCommandFactory {
         }
 
         private static Command scorePiece(MechanismState mechState, IntakeStates intakeState) {
-                return new SequentialCommandGroup(new SetMechanism(mechState),
-                new WaitCommand(0.8),
+                return new SequentialCommandGroup(new SetMechanism(MechanismState.HALF),
+                new SetMechanism(mechState),
+                //new InstantCommand(() -> SmartDashboard.putString("next", "running")),
+                new WaitCommand(0.6),
                 new SetIntake(intakeState),
-                new WaitCommand(0.8));
+                new WaitCommand(0.4));
         }
 }

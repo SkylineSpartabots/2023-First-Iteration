@@ -48,7 +48,9 @@ public class CompleteMechanism extends SubsystemBase {
         // LAYEDCONE(ElevatorStates.LAYEDCONE, ArmStates.LAYEDCONE),
         SUBSTATION(ElevatorStates.SUBSTATION, ArmStates.SUBSTATION),
         CONEDOUBLESUBSTATION(ElevatorStates.CONEDOUBLESUBSTATION, ArmStates.CONEDOUBLESUBSTATION),
-        CUBEDOUBLESUBSTATION(ElevatorStates.CUBEDOUBLESUBSTATION, ArmStates.CUBEDOUBLESUBSTATION);
+        CUBEDOUBLESUBSTATION(ElevatorStates.CUBEDOUBLESUBSTATION, ArmStates.CUBEDOUBLESUBSTATION),
+
+        HALF(ElevatorStates.ZERO, ArmStates.HALFWAYCONE);
 
         public MechanismState mechState;
         public ElevatorStates elevState;
@@ -87,9 +89,9 @@ public class CompleteMechanism extends SubsystemBase {
     }
 
     public boolean inState() {
-        return ((Math.abs(s_Elevator.getCANCoderSetpoint() - s_Elevator.getCANCoderPosition()) < 45)
+        return (Math.abs(s_Elevator.getCANCoderSetpoint() - s_Elevator.getCANCoderPosition()) < 45)
                 &&
-                (Math.abs(s_Arm.getCANCoderSetpoint() - s_Arm.getCANCoderPosition()) < 15));
+                (Math.abs(s_Arm.getCANCoderSetpoint() - s_Arm.getCANCoderPosition()) < 15);
     }
 
     @Override

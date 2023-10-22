@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -95,6 +96,8 @@ public class RobotContainer {
     private final CompleteMechanism s_CompleteMechanism;
     private final AutomaticScoringSelector selector;
 
+    private boolean cone = true;
+
     /* Commands */
 
     /**
@@ -117,8 +120,7 @@ public class RobotContainer {
         // sets the teleop swerve command as default command with the input from driver joysticks
         // to control the swerve
         s_Swerve.setDefaultCommand(
-                new TeleopSwerve(
-                        s_Swerve,
+                new TeleopSwerve(s_Swerve,
                         () -> -driver.getRawAxis(translationAxis),
                         () -> -driver.getRawAxis(strafeAxis),
                         () -> -driver.getRawAxis(rotationAxis)));
@@ -135,17 +137,17 @@ public class RobotContainer {
         driverRightBumper.onTrue(new InstantCommand(() -> groundIntake()));
         driverRightTrigger.onTrue(new InstantCommand(() -> doubleSubIntake()));
         driverLeftTrigger.onTrue(new InstantCommand(() -> singleSubIntake()));
-        driverLeftBumper.onTrue(new InstantCommand(() -> cone = !cone));
+        driverLeftBumper.onTrue(new InstantCommand(() -> {display(); cone = !cone;}));
 
         driverDpadDown.onTrue(new InstantCommand(() -> s_CompleteMechanism.l1State()));
         driverDpadRight.onTrue(new InstantCommand(() -> s_CompleteMechanism.l2State()));
-        driverDpadUp.onTrue(new InstantCommand(() -> s_CompleteMechanism.l3State()));
+        driverDpadUp.onTrue(l3());
         // driverDpadLeft.onTrue(new AutoBalance());
 
         driverA.onTrue(new InstantCommand(() -> zeroMech()));
         driverX.onTrue(new InstantCommand(() -> reverseIntake()));
         driverB.onTrue(new ZeroElevator());
-        driverY.onTrue(new ZeroArm());
+        driverY.onTrue(onIntake());
 
         // operator controls
         operatorStart.onTrue(new SmartResetOdometry());
@@ -163,10 +165,21 @@ public class RobotContainer {
 
     // the methods below abstract functionality of the subsystems to make it easier for driver control
     // uses the cone boolean to set the states in either cube or cone mode based on which is selcted
-    boolean cone = true;
+    
+
+    public Command l3() {
+        if (cone == true) {
+            return new SetMechanism(MechanismState.L3CONE);
+        }
+        return new SetMechanism(MechanismState.L3CUBE);
+    }
+
+    public void display() {
+        SmartDashboard.putBoolean("cone", cone);
+    }
 
     public Command onIntake() {
-        if (cone) {
+        if (cone == true) {
             return new SetIntake(IntakeStates.ON_CONE);
         } else {
             return new SetIntake(IntakeStates.ON_CUBE);
@@ -224,7 +237,7 @@ public class RobotContainer {
 
     // does not work
     public void onRobotDisabled() {
-        // reset mechanisms so it does not have to be done manually
+        // reset mechanisms so it doesnot have to be done manually
         CommandScheduler.getInstance().schedule(new SetArm(ArmStates.ZERO));
         CommandScheduler.getInstance().schedule(new SetIntake(IntakeStates.OFF));
     }

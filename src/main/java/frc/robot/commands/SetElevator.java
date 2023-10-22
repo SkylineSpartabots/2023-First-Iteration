@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Elevator.ElevatorStates;
@@ -52,11 +53,12 @@ public class SetElevator extends CommandBase {
 	@Override
 	public boolean isFinished() {
 		// constantly run, only ends if an elevator error is detected (i.e. CANcode disconnects)
-		return s_Elevator.elevatorError();
+		return Math.abs(s_Elevator.getCANCoderSetpoint() - s_Elevator.getCANCoderPosition()) < 45;
 	}
 		
 	@Override
 	public void end(boolean interrupted) {
 		s_Elevator.setVoltage(0);
+		SmartDashboard.putString("eleEnd", "elevator end");
 	}
 }
