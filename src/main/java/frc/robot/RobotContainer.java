@@ -96,7 +96,7 @@ public class RobotContainer {
     private final CompleteMechanism s_CompleteMechanism;
     private final AutomaticScoringSelector selector;
 
-    private boolean cone = true;
+    private boolean cone;
 
     /* Commands */
 
@@ -104,6 +104,7 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
+        cone = true;
         // initialize subsystems
         s_Swerve = Swerve.getInstance();
         s_Limelight = Limelight.getInstance();
@@ -147,18 +148,23 @@ public class RobotContainer {
         driverA.onTrue(new InstantCommand(() -> zeroMech()));
         driverX.onTrue(new InstantCommand(() -> reverseIntake()));
         driverB.onTrue(new ZeroElevator());
-        driverY.onTrue(onIntake());
+        // driverY.onTrue(onIntake());
+        driverY.onTrue(cone ? new SetMechanism(MechanismState.L3CONE) : new SetMechanism(MechanismState.L3CUBE));
 
         // operator controls
+        operatorRightTrigger.onTrue(new InstantCommand(() -> Constants.SwerveConstants.lowerRobotSpeed()));
+        operatorRightTrigger.onFalse(new InstantCommand(() -> Constants.SwerveConstants.resetRobotSpeed()));
+        operatorA.onTrue(new AutoDoublesubAlign());
+
         operatorStart.onTrue(new SmartResetOdometry());
         operatorBack.onTrue(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d())));
 
-        operatorDpadRight.onTrue(new InstantCommand(() -> selector.increasePos()));
-        operatorDpadLeft.onTrue(new InstantCommand(() -> selector.decreasePos()));
+        // operatorDpadRight.onTrue(new InstantCommand(() -> selector.increasePos()));
+        // operatorDpadLeft.onTrue(new InstantCommand(() -> selector.decreasePos()));
 
-        operatorRightTrigger.onTrue(new InstantCommand(() -> selector.setLevel(2)));
-        operatorLeftTrigger.onTrue(new InstantCommand(() -> selector.setLevel(1)));
-        operatorLeftBumper.onTrue(new InstantCommand(() -> selector.setLevel(0)));
+        // operatorRightTrigger.onTrue(new InstantCommand(() -> selector.setLevel(2)));
+        // operatorLeftTrigger.onTrue(new InstantCommand(() -> selector.setLevel(1)));
+        // operatorLeftBumper.onTrue(new InstantCommand(() -> selector.setLevel(0)));
 
         operatorRightBumper.onTrue(new AutoTeleopScore());
     }

@@ -173,9 +173,20 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double maxSpeed = 4.5; 
+        public static double maxSpeed = 4.5;
+
         /** Radians per Second */
-        public static final double maxAngularVelocity = 7.0; 
+        public static double maxAngularVelocity = 7.0; 
+
+        public static void lowerRobotSpeed(){
+                maxAngularVelocity = 2.0;
+                maxSpeed = 2.0;
+        }
+
+        public static void resetRobotSpeed(){
+                maxAngularVelocity = 7.0;
+                maxSpeed = 4.5;
+        }
 
         /* Neutral Modes */
         public static final NeutralMode angleNeutralMode = NeutralMode.Brake;
