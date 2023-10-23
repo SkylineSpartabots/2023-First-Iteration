@@ -152,8 +152,8 @@ public class RobotContainer {
         driverY.onTrue(cone ? new SetMechanism(MechanismState.L3CONE) : new SetMechanism(MechanismState.L3CUBE));
 
         // operator controls
-        operatorRightTrigger.onTrue(new InstantCommand(() -> Constants.SwerveConstants.lowerRobotSpeed()));
-        operatorRightTrigger.onFalse(new InstantCommand(() -> Constants.SwerveConstants.resetRobotSpeed()));
+        // operatorRightTrigger.onTrue(new InstantCommand(() -> Constants.SwerveConstants.lowerRobotSpeed()));
+        // operatorRightTrigger.onFalse(new InstantCommand(() -> Constants.SwerveConstants.resetRobotSpeed()));
         operatorA.onTrue(new AutoDoublesubAlign());
 
         operatorStart.onTrue(new SmartResetOdometry());

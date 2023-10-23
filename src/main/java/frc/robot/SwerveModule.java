@@ -8,13 +8,14 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-
+import edu.wpi.first.math.spline.CubicHermiteSpline;
 import frc.lib.math.Conversions;
 import frc.lib.util.CTREModuleState;
 import frc.lib.util.SwerveModuleConstants;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 
@@ -44,6 +45,9 @@ public class SwerveModule {
         /* Drive Motor Config */
         mDriveMotor = new TalonFX(moduleConstants.driveMotorID, "2976 CANivore");
         configDriveMotor();
+        // if(moduleConstants.driveMotorID == 1 || moduleConstants.driveMotorID == 2){
+        //     mDriveMotor.setInverted(true);
+        // }
 
         lastAngle = getState().angle;
     }
@@ -96,7 +100,7 @@ public class SwerveModule {
         mAngleMotor.configAllSettings(Robot.ctreConfigs.swerveAngleFXConfig);
         mAngleMotor.setInverted(Constants.SwerveConstants.angleMotorInvert);
         mAngleMotor.setNeutralMode(Constants.SwerveConstants.angleNeutralMode);
-        resetToAbsolute();
+        // mAngleMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30.0, 30.0, 0.2));
     }
 
     private void configDriveMotor(){        
@@ -104,6 +108,7 @@ public class SwerveModule {
         mDriveMotor.configAllSettings(Robot.ctreConfigs.swerveDriveFXConfig);
         mDriveMotor.setInverted(Constants.SwerveConstants.driveMotorInvert);
         mDriveMotor.setNeutralMode(Constants.SwerveConstants.driveNeutralMode);
+        // mDriveMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 20.0, 20.0, 0.05));
         mDriveMotor.setSelectedSensorPosition(0);
     }
 
