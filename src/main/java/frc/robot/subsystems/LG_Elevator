@@ -1,0 +1,45 @@
+package frc.robot.subsystems;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.MagnetFieldStrength;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+
+public class LG_Elevator {
+    public static void main(String[] args) {
+        private WPI_TalonFX mLeaderElevatorMotor, mFollowerElevatorMotor;
+        private double velocity;
+        private double voltage;
+        private CANCoder elevatorCANCoder = new CANCoder(Constants.HardwarePorts.elevatorCANCoder); // max 2470
+        CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
+        ElevatorStates elevatorState = ElevatorStates.ZERO;
+        public Elevator() {
+            mLeaderElevatorMotor = new WPI_TalonFX(Constants.HardwarePorts.elevatorLeaderMotor);
+            configureMotor(mLeaderElevatorMotor, true);
+            //Configures a motor as the leader
+            mFollowerElevatorMotor = new WPI_TalonFX(Constants.HardwarePorts.elevatorFollowerMotor);
+            configureMotor(mFollowerElevatorMotor, true);
+            //Configures a motor as a follower
+            mFollowerElevatorMotor.set(ControlMode.Follower, Constants.HardwarePorts.elevatorLeaderMotor);
+            //Makes it so that the leader is leading the follower
+            canCoderConfig.sensorDirection = false;
+            elevatorCANCoder.configAllSettings(canCoderConfig);
+            setCANCoderPosition(0);
+        private void configureMotor(WPI_TalonFX talon, boolean inverted) {
+                talon.setInverted(inverted);
+                talon.configVoltageCompSaturation(12.0, Constants.timeOutMs);
+                talon.enableVoltageCompensation(false);
+                talon.setNeutralMode(NeutralMode.Brake);
+                talon.config_kF(0, 0.05, Constants.timeOutMs);
+                talon.config_kP(0, 0.15, Constants.timeOutMs);
+                talon.config_kI(0, 0, Constants.timeOutMs);
+                talon.config_kD(0, 0, Constants.timeOutMs);     
+        }
+    }
+}
