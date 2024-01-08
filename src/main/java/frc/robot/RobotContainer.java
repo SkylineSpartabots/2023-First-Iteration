@@ -150,6 +150,7 @@ public class RobotContainer {
         driverB.onTrue(new ZeroElevator());
         // driverY.onTrue(onIntake());
         driverY.onTrue(cone ? new SetMechanism(MechanismState.L3CONE) : new SetMechanism(MechanismState.L3CUBE));
+        driverY.onTrue();
 
         // operator controls
         // operatorRightTrigger.onTrue(new InstantCommand(() -> Constants.SwerveConstants.lowerRobotSpeed()));
@@ -161,6 +162,10 @@ public class RobotContainer {
 
         // operatorDpadRight.onTrue(new InstantCommand(() -> selector.increasePos()));
         // operatorDpadLeft.onTrue(new InstantCommand(() -> selector.decreasePos()));
+        operatorDpadRight.onTrue(new InstantCommand(() -> selector.increasePos()));
+        operatorDpadLeft.onTrue(new InstantCommand(() -> selector.decreasePos()));
+        
+        operatorY.onTrue(new InstantCommand() -> s_Swerve.se)
 
         // operatorRightTrigger.onTrue(new InstantCommand(() -> selector.setLevel(2)));
         // operatorLeftTrigger.onTrue(new InstantCommand(() -> selector.setLevel(1)));
